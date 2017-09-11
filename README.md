@@ -1,2 +1,154 @@
 # baba
 Organization register for ninkasi users
+
+## Liveness and readyiness
+In production, Baba can be probed with:
+- http://localhost:8080/health/live
+- http://localhost:8080/health/ready
+to check liveness and readiness, accordingly
+
+## Example application.properties file for development
+
+```
+server.port=9004
+
+# activemq settings
+spring.activemq.broker-url=tcp://activemq:61616
+#spring.activemq.pooled=true
+spring.activemq.user=admin
+spring.activemq.password=admin
+spring.jms.pub-sub-domain=true
+
+# marduk file upload queue
+queue.upload.destination.name=MardukInboundQueue
+
+# blob store config
+blobstore.gcs.project.id=carbon-1287
+blobstore.gcs.container.name=marduk-exchange
+blobstore.gcs.credential.path=/home/tomgag/.ssh/Carbon-a4d50ca8176c.json
+
+# JPA settings (in-memory)
+spring.jpa.show-sql=false
+spring.jpa.hibernate.ddl-auto=create
+
+# logging settings
+logging.level.no.rutebanken=INFO
+logging.level.org.apache=INFO
+```
+
+## Example application.properties file for test
+
+```
+
+server.port=9006
+
+# activemq settings
+spring.activemq.broker-url=tcp://activemq:61616
+#spring.activemq.pooled=true
+spring.activemq.user=admin
+spring.activemq.password=admin
+
+# marduk file upload queue
+queue.upload.destination.name=MardukInboundQueue
+
+# logging settings
+logging.level.org.hibernate.tool.hbm2ddl=INFO
+logging.level.org.hibernate.SQL=INFO
+logging.level.org.hibernate.type=WARN
+logging.level.org.springframework.orm.hibernate4.support=WARN
+logging.level.no.rutebanken=INFO
+logging.level.org.apache=WARN
+
+# blobstore settings
+blobstore.gcs.project.id=carbon-1287
+blobstore.gcs.container.name=marduk-exchange
+blobstore.gcs.credential.path=/home/tomgag/.ssh/Carbon-a4d50ca8176c.json
+
+# JPA settings (postgres)
+spring.jpa.database=POSTGRESQL
+spring.datasource.platform=postgres
+spring.jpa.show-sql=false
+spring.jpa.hibernate.ddl-auto=update
+spring.database.driverClassName=org.postgresql.Driver
+spring.datasource.url=jdbc:postgresql://nabudb:5432/baba
+spring.datasource.username=baba
+spring.datasource.password=topsecret
+
+spring.datasource.username=postgres
+spring.datasource.password=mysecretpassword
+spring.datasource.initializationFailFast=false
+
+```
+
+
+## Build and Run
+
+* Building
+`mvn clean install`
+
+* Building docker image (using profile h2 for in-memory DB)
+`mvn -Pf8-build,h2`
+
+* Running
+`mvn spring-boot:run -Ph2 -Dspring.config.location=/path/to/application.properties`
+
+
+## Enable baba to admin users in keycloak
+
+In order to mange keycloak users from Baba 
+
+###  Add client to Realm 'Master'
+  * Go to the keycloak admin console 
+  * Select realm=Master
+  * Select 'clients'
+  * Create new client: baba
+  * Set 'Access Type' to "Confidential", toggle 'Service Accounts Enabled' on and provide a valid url (whatever) as a redirect url and 'Save'
+  * Add role 'Admin' on tab 'Service Account roles'
+  * Secret for client is displayed on tab 'Credentials'
+
+ 
+### Configure baba with username+password for new user and clientID for new client
+```
+iam.keycloak.admin.client=baba
+iam.keycloak.admin.client.secret=<See 'Credentials' tab for Client.>
+```
+
+
+# Flyway
+To create the database for baba, download and use the flyway command line tool:
+https://flywaydb.org/documentation/commandline/
+
+## Migration
+Execute the migration. Point to the migration files in baba.
+
+```
+./flyway -url=jdbc:postgresql://localhost:5432/baba -locations=filesystem:/path/to/tiamat/src/main/resources/db/migrations migrate
+```
+
+### Example migration
+```
+./flyway -url=jdbc:postgresql://localhost:5432/baba -locations=filesystem:/path/to/tiamat/src/main/resources/db/migrations migrate
+Flyway 4.2.0 by Boxfuse
+
+Database password: 
+Database: jdbc:postgresql://localhost:5432/baba (PostgreSQL 9.6)
+Successfully validated 1 migration (execution time 00:00.016s)
+Creating Metadata table: "public"."schema_version"
+Current version of schema "public": << Empty Schema >>
+Migrating schema "public" to version 1 - Base version
+Successfully applied 1 migration to schema "public" (execution time 00:04.220s).
+```
+
+
+## Baseline existing database
+To baseline an existing database that does not contain the table `schema_version`.
+The schema of this database must be exactly equivalent to the first migration file. If not, you might be better off by starting from scratch and using the restoring_import to repopulate the new database.
+
+```
+./flyway -url=jdbc:postgresql://localhost:5432/baba -locations=filesystem:/path/to/baba/src/main/resources/db/migrations baseline
+```
+
+
+## Schema changes
+Create a new file according to the flyway documentation in the folder `resources/db/migrations`.
+Commit the migration together with code changes that requires this schema change.
