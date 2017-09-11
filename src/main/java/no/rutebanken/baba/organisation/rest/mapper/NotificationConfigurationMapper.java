@@ -1,5 +1,6 @@
 package no.rutebanken.baba.organisation.rest.mapper;
 
+import no.rutebanken.baba.organisation.model.responsibility.EntityClassification;
 import no.rutebanken.baba.organisation.model.user.NotificationConfiguration;
 import no.rutebanken.baba.organisation.model.user.NotificationType;
 import no.rutebanken.baba.organisation.model.user.eventfilter.CrudEventFilter;
@@ -8,6 +9,8 @@ import no.rutebanken.baba.organisation.model.user.eventfilter.JobEventFilter;
 import no.rutebanken.baba.organisation.repository.AdministrativeZoneRepository;
 import no.rutebanken.baba.organisation.repository.EntityClassificationRepository;
 import no.rutebanken.baba.organisation.repository.OrganisationRepository;
+import no.rutebanken.baba.organisation.rest.dto.responsibility.EntityClassificationDTO;
+import no.rutebanken.baba.organisation.rest.dto.responsibility.EntityTypeDTO;
 import no.rutebanken.baba.organisation.rest.dto.user.EventFilterDTO;
 import no.rutebanken.baba.organisation.rest.dto.user.NotificationConfigDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +35,13 @@ public class NotificationConfigurationMapper {
     private OrganisationRepository organisationRepository;
 
 
-    public Set<NotificationConfigDTO> toDTO(Collection<NotificationConfiguration> entity) {
+    public Set<NotificationConfigDTO> toDTO(Collection<NotificationConfiguration> entity, boolean fullDetails) {
         if (CollectionUtils.isEmpty(entity)) {
             return new HashSet<>();
         }
 
         return entity.stream().map(n -> new NotificationConfigDTO(n.getNotificationType(), n.isEnabled(),
-                                                                         toDTO(n.getEventFilter()))).collect(Collectors.toSet());
+                                                                         toDTO(n.getEventFilter(), fullDetails))).collect(Collectors.toSet());
     }
 
 
@@ -50,7 +53,7 @@ public class NotificationConfigurationMapper {
     }
 
 
-    private EventFilterDTO toDTO(EventFilter eventFilter) {
+    private EventFilterDTO toDTO(EventFilter eventFilter, boolean fullDetails) {
         EventFilterDTO dto = new EventFilterDTO();
 
         if (eventFilter instanceof JobEventFilter) {
@@ -63,6 +66,10 @@ public class NotificationConfigurationMapper {
             CrudEventFilter crudEventFilter = (CrudEventFilter) eventFilter;
             dto.type = EventFilterDTO.EventFilterType.CRUD;
             dto.entityClassificationRefs = crudEventFilter.getEntityClassifications().stream().map(ec -> ec.getId()).collect(Collectors.toSet());
+            if (fullDetails) {
+                dto.entityClassifications = crudEventFilter.getEntityClassifications().stream().map(ec -> toDTO(ec)).collect(Collectors.toSet());
+            }
+
             dto.administrativeZoneRefs = crudEventFilter.getAdministrativeZones().stream().map(az -> az.getId()).collect(Collectors.toSet());
         }
 
@@ -72,6 +79,23 @@ public class NotificationConfigurationMapper {
         return dto;
     }
 
+
+    private EntityClassificationDTO toDTO(EntityClassification entity) {
+        EntityClassificationDTO dto = new EntityClassificationDTO();
+        dto.codeSpace = entity.getCodeSpace().getPrivateCode();
+        dto.id = entity.getId();
+        dto.name = entity.getName();
+        dto.privateCode = entity.getPrivateCode();
+
+        EntityTypeDTO typeDTO = new EntityTypeDTO();
+        typeDTO.codeSpace = dto.codeSpace;
+        typeDTO.id = entity.getEntityType().getId();
+        typeDTO.name = entity.getEntityType().getName();
+        typeDTO.privateCode = entity.getEntityType().getPrivateCode();
+
+        dto.entityType = typeDTO;
+        return dto;
+    }
 
     // TODO recreate at every change? or match existing
     private NotificationConfiguration fromDTO(NotificationConfigDTO dto) {

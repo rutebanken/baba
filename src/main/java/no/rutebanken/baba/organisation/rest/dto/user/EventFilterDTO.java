@@ -3,7 +3,9 @@ package no.rutebanken.baba.organisation.rest.dto.user;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import no.rutebanken.baba.organisation.model.user.eventfilter.JobState;
 import no.rutebanken.baba.organisation.rest.dto.organisation.OrganisationDTO;
+import no.rutebanken.baba.organisation.rest.dto.responsibility.EntityClassificationDTO;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -34,6 +36,9 @@ public class EventFilterDTO {
     public Set<String> administrativeZoneRefs;
 
     public Set<String> entityClassificationRefs;
+
+    // Full objects included for ease of use, disregarded in CRUD
+    public Set<EntityClassificationDTO> entityClassifications=new HashSet<>();
 
 
     public EventFilterDTO(EventFilterType type) {

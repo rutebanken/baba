@@ -43,7 +43,7 @@ public class NotificationConfigurationResource {
     @PreAuthorize("#userName == authentication.name or hasRole('" + ROLE_ORGANISATION_EDIT + "')")
     public Set<NotificationConfigDTO> get(@PathParam("userName") String userName, @QueryParam("full") boolean fullObject) {
         User entity = getUser(userName);
-        return mapper.toDTO(entity.getNotificationConfigurations());
+        return mapper.toDTO(entity.getNotificationConfigurations(),false);
     }
 
 

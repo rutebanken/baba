@@ -47,7 +47,7 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
         dto.organisationRef = org.getOrganisation().getId();
 
         if (fullDetails) {
-            dto.notifications = notificationConfigurationMapper.toDTO(org.getNotificationConfigurations());
+            dto.notifications = notificationConfigurationMapper.toDTO(org.getNotificationConfigurations(), fullDetails);
             dto.organisation = organisationMapper.toDTO(org.getOrganisation(), false);
             dto.responsibilitySets = org.getResponsibilitySets().stream().map(rs -> responsibilitySetMapper.toDTO(rs, false)).collect(Collectors.toList());
         }
@@ -77,7 +77,6 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
 
         return entity;
     }
-
 
 
     private ContactDetailsDTO toDTO(ContactDetails entity) {
