@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -39,7 +40,11 @@ public class ProviderResource {
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#providerId)")
     public Provider getProvider(@PathParam("providerId") Long providerId) {
         logger.debug("Returning provider with id '" + providerId + "'");
-        return providerRepository.getProvider(providerId);
+        Provider provider = providerRepository.getProvider(providerId);
+        if (provider == null) {
+            throw new NotFoundException("Unable to find provider with id=" + providerId);
+        }
+        return provider;
     }
 
     @DELETE
@@ -51,7 +56,7 @@ public class ProviderResource {
     }
 
     @PUT
-    @Path("/update")
+    @Path("/{providerId}")
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#provider.id)")
     public void updateProvider(Provider provider) {
         logger.info("Updating provider " + provider);
@@ -59,7 +64,6 @@ public class ProviderResource {
     }
 
     @POST
-    @Path("/create")
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#provider.id)")
     public Provider createProvider(Provider provider) {
         logger.info("Creating provider " + provider);
