@@ -1,4 +1,4 @@
-package no.rutebanken.baba.organisation.config;
+package no.rutebanken.baba.config;
 
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.keycloak.admin.client.KeycloakBuilder;
