@@ -23,7 +23,7 @@ import javax.ws.rs.Produces;
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
 
 @Component
-@Path("/services/organisations/responsibility_sets")
+@Path("organisations/responsibility_sets")
 @Produces("application/json")
 @Transactional
 @PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")

@@ -33,7 +33,7 @@ import java.util.List;
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
 
 @Component
-@Path("/services/organisations/users")
+@Path("organisations/users")
 @Produces("application/json")
 @Transactional
 @PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")

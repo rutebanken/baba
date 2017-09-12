@@ -17,7 +17,6 @@ import javax.ws.rs.core.Response;
 
 @Component
 @Produces("application/json")
-@Path("/health")
 @Api(tags = {"Application status resource"}, produces = "text/plain")
 public class HealthResource {
 
