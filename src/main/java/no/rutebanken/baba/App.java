@@ -13,7 +13,6 @@ import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EnableAutoConfiguration(exclude = {ErrorMvcAutoConfiguration.class})
 @EnableJpaRepositories(basePackages = {"no.rutebanken.baba.organisation.repository"},
         repositoryBaseClass = BaseRepositoryImpl.class)
 @EntityScan(basePackageClasses = {CodeSpace.class, Provider.class, Jsr310JpaConverters.class})
