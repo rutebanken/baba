@@ -26,7 +26,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 
 @Component
 @Produces("application/json")
-@Path("/services/providers")
+@Path("providers")
 @Api
 public class ProviderResource {
 
