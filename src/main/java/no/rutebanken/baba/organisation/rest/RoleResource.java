@@ -26,7 +26,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 
 
 @Component
-@Path("organisations/roles")
+@Path("roles")
 @Produces("application/json")
 @Transactional
 @PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")

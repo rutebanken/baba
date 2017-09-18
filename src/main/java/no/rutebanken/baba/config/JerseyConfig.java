@@ -30,13 +30,31 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class JerseyConfig {
 
+
+
     @Bean
-    public ServletRegistrationBean publicJersey() {
+    public ServletRegistrationBean organisationsAPIJerseyConfig() {
         ServletRegistrationBean publicJersey
-                = new ServletRegistrationBean(new ServletContainer(new ServicesConfig()));
-        publicJersey.addUrlMappings("/services/*");
-        publicJersey.setName("PublicJersey");
+                = new ServletRegistrationBean(new ServletContainer(new OrganisationsAPIConfig()));
+        publicJersey.addUrlMappings("/services/organisations/*");
+        publicJersey.setName("OrganisationAPI");
         publicJersey.setLoadOnStartup(0);
+        publicJersey.getInitParameters().put("swagger.scanner.id", "organisations-scanner");
+        publicJersey.getInitParameters().put("swagger.config.id","organisations-swagger-doc" );
+        return publicJersey;
+    }
+
+
+
+    @Bean
+    public ServletRegistrationBean providersAPIJerseyConfig() {
+        ServletRegistrationBean publicJersey
+                = new ServletRegistrationBean(new ServletContainer(new ProvidersAPIConfig()));
+        publicJersey.addUrlMappings("/services/providers/*");
+        publicJersey.setName("ProvidersAPI");
+        publicJersey.setLoadOnStartup(0);
+        publicJersey.getInitParameters().put("swagger.scanner.id", "providers-scanner");
+        publicJersey.getInitParameters().put("swagger.config.id", "providers-swagger-doc");
         return publicJersey;
     }
 
@@ -46,17 +64,19 @@ public class JerseyConfig {
                 = new ServletRegistrationBean(new ServletContainer(new HealthConfig()));
         privateJersey.addUrlMappings("/health/*");
         privateJersey.setName("PrivateJersey");
-        privateJersey.setLoadOnStartup(1);
+        privateJersey.setLoadOnStartup(0);
+        privateJersey.getInitParameters().put("swagger.scanner.id", "health-scanner");
+        privateJersey.getInitParameters().put("swagger.config.id","baba-health-swagger-doc");
         return privateJersey;
     }
 
 
-    private class ServicesConfig extends ResourceConfig {
 
-        public ServicesConfig() {
+
+    private class OrganisationsAPIConfig extends ResourceConfig {
+
+        public OrganisationsAPIConfig() {
             register(CorsResponseFilter.class);
-
-            register(ProviderResource.class);
 
             register(CodeSpaceResource.class);
             register(OrganisationResource.class);
@@ -85,14 +105,49 @@ public class JerseyConfig {
             this.register(SwaggerSerializers.class);
 
             BeanConfig config = new BeanConfig();
-            config.setConfigId("organisation-registry-swagger-doc");
-            config.setTitle("Organisation Registry API");
+            config.setConfigId("organisations-swagger-doc");
+            config.setTitle("Organisations API");
             config.setVersion("v1");
             config.setSchemes(new String[]{"http", "https"});
-            config.setBasePath("/services");
             config.setResourcePackage("no.rutebanken.baba.organisation");
             config.setPrettyPrint(true);
             config.setScan(true);
+            config.setScannerId("organisations-scanner");
+        }
+    }
+
+    private class ProvidersAPIConfig extends ResourceConfig {
+
+        public ProvidersAPIConfig() {
+            register(CorsResponseFilter.class);
+
+            register(ProviderResource.class);
+
+            register(NotAuthenticatedExceptionMapper.class);
+            register(PersistenceExceptionMapper.class);
+            register(SpringExceptionMapper.class);
+            register(IllegalArgumentExceptionMapper.class);
+            register(AccessDeniedExceptionMapper.class);
+            register(OrganisationExceptionMapper.class);
+
+            configureSwagger();
+        }
+
+
+        private void configureSwagger() {
+            // Available at localhost:port/api/swagger.json
+            this.register(ApiListingResource.class);
+            this.register(SwaggerSerializers.class);
+
+            BeanConfig config = new BeanConfig();
+            config.setConfigId("providers-swagger-doc");
+            config.setTitle("Providers API");
+            config.setVersion("v1");
+            config.setSchemes(new String[]{"http", "https"});
+            config.setResourcePackage("no.rutebanken.baba.provider");
+            config.setPrettyPrint(true);
+            config.setScan(true);
+            config.setScannerId("providers-scanner");
         }
     }
 
@@ -115,10 +170,12 @@ public class JerseyConfig {
             config.setTitle("Baba Health API");
             config.setVersion("v1");
             config.setSchemes(new String[]{"http", "https"});
-            config.setBasePath("/services");
+            config.setBasePath("/health");
             config.setResourcePackage("no.rutebanken.baba.health");
             config.setPrettyPrint(true);
             config.setScan(true);
+            config.setScannerId("health-scanner");
+
         }
     }
 }

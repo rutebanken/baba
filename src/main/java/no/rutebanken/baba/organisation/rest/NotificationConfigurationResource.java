@@ -25,7 +25,7 @@ import java.util.Set;
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
 
 @Component
-@Path("organisations/users/{userName}/notification_configurations")
+@Path("users/{userName}/notification_configurations")
 @Produces("application/json")
 @Transactional
 @PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
