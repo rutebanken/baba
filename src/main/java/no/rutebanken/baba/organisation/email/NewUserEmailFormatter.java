@@ -24,7 +24,7 @@ public class NewUserEmailFormatter {
     @Value("${email.link.password.reset:https://www.dit.no/auth/realms/rutebanken/login-actions/reset-credentials}")
     private String forgotPasswordLink;
 
-    @Value("${email.link.operator:https://operator.rutebanken.org/}")
+    @Value("${email.link.operator:#{null}}")
     private String operatorLink;
     @Value("${email.link.stop.place:https://stoppested.entur.org/}")
     private String stopPlaceLink;

@@ -51,9 +51,12 @@ ${message("new.user.email.stop.place.user.guide.text")} <a href="${stopPlaceUser
     <tr>
         <td><a href="${stopPlaceLink}">${stopPlaceLink}</a></td> <td>${message("new.user.email.link.stopplace")}</td>
     </tr>
-    <#--<tr>-->
-        <#--<td><a href="${operatorLink}">${operatorLink}</a></td> <td>${message("new.user.email.link.operator")}</td>-->
-    <#--</tr>-->
+    <#if operatorLink?has_content>
+    <tr>
+        <td><a href="${operatorLink}">${operatorLink}</a></td> <td>${message("new.user.email.link.operator")}</td>
+    </tr>
+    </#if>
+
     <#--<tr>-->
         <#--<td><a href="${routedbLink}">${routedbLink}</a></td> <td>${message("new.user.email.link.routedb")}</td>-->
     <#--</tr>-->
