@@ -24,7 +24,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 @Path("code_spaces")
 @Transactional
 @PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
-@Api
+@Api(tags = {"Code space resource"}, produces = "application/json")
 public class CodeSpaceResource extends AnnotatedBaseResource<CodeSpace, CodeSpaceDTO> {
 
 

@@ -1,6 +1,8 @@
 package no.rutebanken.baba.organisation.rest.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import no.rutebanken.baba.organisation.model.user.eventfilter.JobState;
 import no.rutebanken.baba.organisation.rest.dto.organisation.OrganisationDTO;
 import no.rutebanken.baba.organisation.rest.dto.responsibility.EntityClassificationDTO;
@@ -8,6 +10,7 @@ import no.rutebanken.baba.organisation.rest.dto.responsibility.EntityClassificat
 import java.util.HashSet;
 import java.util.Set;
 
+@ApiModel(description = "Filter describing events of interest")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EventFilterDTO {
 
@@ -19,9 +22,6 @@ public class EventFilterDTO {
     public EventFilterType type;
 
     public String organisationRef;
-
-    // Full objects included for ease of use, disregarded in CRUD
-    public OrganisationDTO organisation;
 
     // TODO components/subclasses?
 
@@ -37,8 +37,12 @@ public class EventFilterDTO {
 
     public Set<String> entityClassificationRefs;
 
-    // Full objects included for ease of use, disregarded in CRUD
-    public Set<EntityClassificationDTO> entityClassifications=new HashSet<>();
+    @ApiModelProperty("Fully mapped object for ease of use. Disregarded in CRUD operations (use reference)")
+    public Set<EntityClassificationDTO> entityClassifications = new HashSet<>();
+
+
+    @ApiModelProperty("Fully mapped object for ease of use. Disregarded in CRUD operations (use reference)")
+    public OrganisationDTO organisation;
 
 
     public EventFilterDTO(EventFilterType type) {

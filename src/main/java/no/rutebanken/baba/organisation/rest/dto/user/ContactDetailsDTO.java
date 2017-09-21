@@ -1,7 +1,9 @@
 package no.rutebanken.baba.organisation.rest.dto.user;
 
-public class ContactDetailsDTO {
+import io.swagger.annotations.ApiModel;
 
+@ApiModel(description = "Contact details for a user")
+public class ContactDetailsDTO {
 
 	public String firstName;
 

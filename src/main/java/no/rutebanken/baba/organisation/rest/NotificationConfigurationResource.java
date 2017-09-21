@@ -29,7 +29,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 @Produces("application/json")
 @Transactional
 @PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
-@Api
+@Api(tags = {"Notification configuration resource"}, produces = "application/json")
 public class NotificationConfigurationResource {
 
     @Autowired
