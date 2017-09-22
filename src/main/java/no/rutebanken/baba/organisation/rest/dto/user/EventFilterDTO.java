@@ -14,7 +14,7 @@ import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EventFilterDTO {
 
-    public enum JobDomain {TIMETABLE, GEOCODER, GRAPH, TIAMAT}
+    public enum JobDomain {TIMETABLE, GEOCODER, GRAPH, TIAMAT, TIMETABLE_PUBLISH}
 
     public enum EventFilterType {JOB, CRUD}
 
