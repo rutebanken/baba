@@ -29,6 +29,8 @@ public class ChouetteInfo {
     public boolean allowCreateMissingStopPlace;
     public boolean enableStopPlaceIdMapping;
     public boolean enableCleanImport;
+    public boolean enableAutoImport;
+
     public Long migrateDataToProvider = null;
 
     public ChouetteInfo(){}
@@ -61,6 +63,7 @@ public class ChouetteInfo {
                 ", allowCreateMissingStopPlace='" + allowCreateMissingStopPlace + '\'' +
                 ", enableStopPlaceIdMapping='" + enableStopPlaceIdMapping + '\'' +
                 ", enableCleanImport='" + enableCleanImport + '\'' +
+                ", enableAutoImport='" + enableAutoImport + '\'' +
                 '}';
     }
 
