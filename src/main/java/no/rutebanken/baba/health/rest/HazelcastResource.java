@@ -1,15 +1,13 @@
 package no.rutebanken.baba.health.rest;
 
-import com.hazelcast.core.HazelcastInstance;
 import io.swagger.annotations.Api;
+import no.rutebanken.baba.hazelcast.BabaHazelcastService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @Produces("application/json")
@@ -18,11 +16,11 @@ import java.util.stream.Collectors;
 public class HazelcastResource {
 
     @Autowired
-    private HazelcastInstance hazelcastInstance;
+    private BabaHazelcastService hazelcastService;
 
 
     @GET
-    public List<String> getMembers() {
-        return hazelcastInstance.getCluster().getMembers().stream().map(member -> member.toString()).collect(Collectors.toList());
+    public String getInformation() {
+        return hazelcastService.information();
     }
 }
