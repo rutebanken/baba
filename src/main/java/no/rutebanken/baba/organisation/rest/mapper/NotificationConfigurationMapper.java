@@ -34,6 +34,9 @@ public class NotificationConfigurationMapper {
     @Autowired
     private OrganisationRepository organisationRepository;
 
+    @Autowired
+    private OrganisationMapper organisationMapper;
+
 
     public Set<NotificationConfigDTO> toDTO(Collection<NotificationConfiguration> entity, boolean fullDetails) {
         if (CollectionUtils.isEmpty(entity)) {
@@ -75,6 +78,9 @@ public class NotificationConfigurationMapper {
 
         if (eventFilter.getOrganisation() != null) {
             dto.organisationRef = eventFilter.getOrganisation().getId();
+            if (fullDetails) {
+                dto.organisation = organisationMapper.toDTO(eventFilter.getOrganisation(), fullDetails);
+            }
         }
         return dto;
     }
