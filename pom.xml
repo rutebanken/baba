@@ -135,7 +135,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.rutebanken.helpers</groupId>
+            <groupId>org.entur.helpers</groupId>
             <artifactId>gcp-storage</artifactId>
             <version>${rutebanken.helpers.version}</version>
             <exclusions>
@@ -157,7 +157,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.rutebanken.helpers</groupId>
+            <groupId>org.entur.helpers</groupId>
             <artifactId>hazelcast-helper</artifactId>
             <version>${rutebanken.helpers.version}</version>
         </dependency>
