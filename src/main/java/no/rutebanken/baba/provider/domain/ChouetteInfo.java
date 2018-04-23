@@ -46,6 +46,7 @@ public class ChouetteInfo {
     public boolean enableStopPlaceIdMapping;
     public boolean enableCleanImport;
     public boolean enableAutoImport;
+    public boolean generateMissingServiceLinks;
 
     public Long migrateDataToProvider = null;
 
@@ -80,6 +81,7 @@ public class ChouetteInfo {
                 ", enableStopPlaceIdMapping='" + enableStopPlaceIdMapping + '\'' +
                 ", enableCleanImport='" + enableCleanImport + '\'' +
                 ", enableAutoImport='" + enableAutoImport + '\'' +
+                ", generateMissingServiceLinks='" + generateMissingServiceLinks + '\'' +
                 '}';
     }
 
