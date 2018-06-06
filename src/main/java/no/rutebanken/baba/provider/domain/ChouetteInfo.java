@@ -18,24 +18,32 @@ package no.rutebanken.baba.provider.domain;
 
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Table;
+import java.util.Set;
 
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 public class ChouetteInfo {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
     public String xmlns;
     public String xmlnsurl;
     public String referential;
     public String organisation;
-    @Column(name="cuser")
+    @Column(name = "cuser")
     public String user;
     public String regtoppVersion;
     public String regtoppCoordinateProjection;
@@ -46,13 +54,19 @@ public class ChouetteInfo {
     public boolean enableStopPlaceIdMapping;
     public boolean enableCleanImport;
     public boolean enableAutoImport;
-    public boolean generateMissingServiceLinks;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "CHOUETTE_INFO_SERVICE_LINK_MODES", joinColumns = @JoinColumn(name = "CHOUETTE_INFO_ID"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "TRANSPORT_MODE")
+    public Set<TransportMode> generateMissingServiceLinksForModes;
 
     public Long migrateDataToProvider = null;
 
-    public ChouetteInfo(){}
+    public ChouetteInfo() {
+    }
 
-    public ChouetteInfo(String xmlns,String xmlnsurl, String referential, String organisation, String user) {
+    public ChouetteInfo(String xmlns, String xmlnsurl, String referential, String organisation, String user) {
         this.xmlns = xmlns;
         this.referential = referential;
         this.organisation = organisation;
@@ -60,29 +74,29 @@ public class ChouetteInfo {
     }
 
     public ChouetteInfo(Long id, String prefix, String xmlnsurl, String referential, String organisation, String user) {
-        this(prefix, xmlnsurl,referential, organisation, user);
+        this(prefix, xmlnsurl, referential, organisation, user);
         this.id = id;
     }
 
     @Override
     public String toString() {
         return "ChouetteInfo{" +
-                "id=" + id +
-                ", xmlns='" + xmlns + '\'' +
-                ", xmlnsurl='" + xmlnsurl + '\'' +
-                ", referential='" + referential + '\'' +
-                ", organisationDTO='" + organisation + '\'' +
-                ", user='" + user + '\'' +
-                (regtoppVersion != null ? ", regtoppVersion='" + regtoppVersion + '\'' : "") +
-                (regtoppCoordinateProjection != null? ", regtoppCoordinateProjection='" + regtoppCoordinateProjection + '\'' : "")+
-                (regtoppCalendarStrategy != null? ", regtoppCalendarStrategy='" + regtoppCalendarStrategy + '\'' : "")+
-                ", enableValidation='" + enableValidation + '\'' +
-                ", allowCreateMissingStopPlace='" + allowCreateMissingStopPlace + '\'' +
-                ", enableStopPlaceIdMapping='" + enableStopPlaceIdMapping + '\'' +
-                ", enableCleanImport='" + enableCleanImport + '\'' +
-                ", enableAutoImport='" + enableAutoImport + '\'' +
-                ", generateMissingServiceLinks='" + generateMissingServiceLinks + '\'' +
-                '}';
+                       "id=" + id +
+                       ", xmlns='" + xmlns + '\'' +
+                       ", xmlnsurl='" + xmlnsurl + '\'' +
+                       ", referential='" + referential + '\'' +
+                       ", organisationDTO='" + organisation + '\'' +
+                       ", user='" + user + '\'' +
+                       (regtoppVersion != null ? ", regtoppVersion='" + regtoppVersion + '\'' : "") +
+                       (regtoppCoordinateProjection != null ? ", regtoppCoordinateProjection='" + regtoppCoordinateProjection + '\'' : "") +
+                       (regtoppCalendarStrategy != null ? ", regtoppCalendarStrategy='" + regtoppCalendarStrategy + '\'' : "") +
+                       ", enableValidation='" + enableValidation + '\'' +
+                       ", allowCreateMissingStopPlace='" + allowCreateMissingStopPlace + '\'' +
+                       ", enableStopPlaceIdMapping='" + enableStopPlaceIdMapping + '\'' +
+                       ", enableCleanImport='" + enableCleanImport + '\'' +
+                       ", enableAutoImport='" + enableAutoImport + '\'' +
+                       ", generateMissingServiceLinksForModes='" + generateMissingServiceLinksForModes + '\'' +
+                       '}';
     }
 
     @Override

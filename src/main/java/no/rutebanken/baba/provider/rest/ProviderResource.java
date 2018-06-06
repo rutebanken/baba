@@ -19,6 +19,7 @@ package no.rutebanken.baba.provider.rest;
 import io.swagger.annotations.Api;
 
 import no.rutebanken.baba.provider.domain.Provider;
+import no.rutebanken.baba.provider.domain.TransportMode;
 import no.rutebanken.baba.provider.repository.ProviderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,6 +98,13 @@ public class ProviderResource {
     public Collection<Provider> getProviders() {
         logger.debug("Returning all providers.");
         return providerRepository.getProviders();
+    }
+
+
+    @GET
+    @Path("transport_modes")
+    public TransportMode[] getTransportModes() {
+        return TransportMode.values();
     }
 
 }
