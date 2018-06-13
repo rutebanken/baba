@@ -20,7 +20,6 @@ public enum TransportMode {
     Air,
     Bus,
     Coach,
-    Ferry,
     Metro,
     Rail,
     Tram,
