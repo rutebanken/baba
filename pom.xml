@@ -42,18 +42,18 @@
         <!-- versions for use in mvn plugins as we cannot inherit them from a BOM -->
         <rutebanken.helpers.version>0.0.3-SNAPSHOT</rutebanken.helpers.version>
         <docker.maven.plugin.version>0.21.0</docker.maven.plugin.version>
-        <spring-boot-plugin.version>1.5.6.RELEASE</spring-boot-plugin.version>
-        <spring-boot.version>1.5.6.RELEASE</spring-boot.version>
-        <spring.security.version>4.2.3.RELEASE</spring.security.version>
+        <spring-boot-plugin.version>2.0.3.RELEASE</spring-boot-plugin.version>
+        <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
+        <spring.security.version>5.0.7.RELEASE</spring.security.version>
         <postgresql.version>9.4-1201-jdbc41</postgresql.version>
-        <keycloak.version>3.2.1.Final</keycloak.version>
+        <keycloak.version>4.1.0.Final</keycloak.version>
 
         <!-- Docker & Fabric8 Configs -->
         <docker.from>eu.gcr.io/carbon-1287/java-base-image</docker.from>
         <fabric8.dockerUser>carbon-1287/</fabric8.dockerUser>
         <docker.image>eu.gcr.io/${fabric8.dockerUser}${project.artifactId}:${project.version}</docker.image>
         <docker.cleanup>none</docker.cleanup>
-        <hazelcast-hibernate5.version>1.2.2</hazelcast-hibernate5.version>
+        <hazelcast-hibernate52.version>1.2.3</hazelcast-hibernate52.version>
         <fabric8.service.name>springboot-webmvc</fabric8.service.name>
         <fabric8.service.port>80</fabric8.service.port>
         <fabric8.service.containerPort>9004</fabric8.service.containerPort>
@@ -69,15 +69,15 @@
         <docker.port.container.jolokia>8778</docker.port.container.jolokia>
         <jackson-jaxrs-xml-provider.version>2.9.0</jackson-jaxrs-xml-provider.version>
 
-        <flyway-core.version>4.2.0</flyway-core.version>
+        <flyway-core.version>5.1.4</flyway-core.version>
         <httpcomponents-fluent.version>4.5.3</httpcomponents-fluent.version>
         <assertj-core.version>3.8.0</assertj-core.version>
         <rest-assured.version>2.9.0</rest-assured.version>
-        <geodb.version>0.8</geodb.version>
+        <geodb.version>0.9</geodb.version>
         <geotools.version>17.2</geotools.version>
-        <hibernate-spatial.version>5.1.9.Final</hibernate-spatial.version>
+        <hibernate-spatial.version>5.2.17.Final</hibernate-spatial.version>
         <!-- Hibernate version deliberatly kept back as hazelcast cache does not support newer version-->
-        <hibernate.version>5.1.9.Final</hibernate.version>
+        <hibernate.version>5.2.17.Final</hibernate.version>
         <fabric8.version>2.3.4</fabric8.version>
         <swagger-jersey2.version>1.5.16</swagger-jersey2.version>
         <javax.jdo.jdo2-api.version>2.3-eb</javax.jdo.jdo2-api.version>
@@ -215,8 +215,8 @@
 
         <dependency>
             <groupId>com.hazelcast</groupId>
-            <artifactId>hazelcast-hibernate5</artifactId>
-            <version>${hazelcast-hibernate5.version}</version>
+            <artifactId>hazelcast-hibernate52</artifactId>
+            <version>${hazelcast-hibernate52.version}</version>
         </dependency>
 
         <dependency>
@@ -310,7 +310,7 @@
 
         <dependency>
             <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-spring-boot-adapter</artifactId>
+            <artifactId>keycloak-spring-boot-2-adapter</artifactId>
             <version>${keycloak.version}</version>
         </dependency>
 
