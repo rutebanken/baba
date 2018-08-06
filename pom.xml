@@ -76,7 +76,6 @@
         <geodb.version>0.9</geodb.version>
         <geotools.version>17.2</geotools.version>
         <hibernate-spatial.version>5.2.17.Final</hibernate-spatial.version>
-        <!-- Hibernate version deliberatly kept back as hazelcast cache does not support newer version-->
         <hibernate.version>5.2.17.Final</hibernate.version>
         <fabric8.version>2.3.4</fabric8.version>
         <swagger-jersey2.version>1.5.16</swagger-jersey2.version>
