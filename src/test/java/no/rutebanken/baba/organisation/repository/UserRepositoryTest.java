@@ -87,7 +87,7 @@ public class UserRepositoryTest extends BaseIntegrationTest {
         Assert.assertTrue(usersWithRespSet.contains(userWithRespSet));
         Assert.assertFalse(usersWithRespSet.contains(userWithoutRespSet));
 
-        userRepository.delete(userWithRespSet);
+        userRepository.delete(usersWithRespSet);
 
         em.flush();
     }
