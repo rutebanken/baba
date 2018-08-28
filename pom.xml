@@ -46,7 +46,7 @@
         <spring-boot.version>1.5.6.RELEASE</spring-boot.version>
         <spring.security.version>4.2.3.RELEASE</spring.security.version>
         <postgresql.version>9.4-1201-jdbc41</postgresql.version>
-        <keycloak.version>3.2.1.Final</keycloak.version>
+        <keycloak.version>4.0.0.Final</keycloak.version>
 
         <!-- Docker & Fabric8 Configs -->
         <docker.from>eu.gcr.io/carbon-1287/java-base-image</docker.from>
@@ -80,7 +80,7 @@
         <!-- Hibernate version deliberatly kept back as hazelcast cache does not support newer version-->
         <hibernate.version>5.1.9.Final</hibernate.version>
         <fabric8.version>2.3.4</fabric8.version>
-        <swagger-jersey2.version>1.5.16</swagger-jersey2.version>
+        <swagger-jersey2.version>1.5.19</swagger-jersey2.version>
         <javax.jdo.jdo2-api.version>2.3-eb</javax.jdo.jdo2-api.version>
     </properties>
 
