@@ -1,4 +1,4 @@
-# baba
+# baba [![CircleCI](https://circleci.com/gh/entur/baba/tree/master.svg?style=svg)](https://circleci.com/gh/entur/baba/tree/master)
 Organization register for ninkasi users
 
 ## Liveness and readyiness
