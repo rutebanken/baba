@@ -55,6 +55,9 @@ public class ChouetteInfo {
     public boolean enableCleanImport;
     public boolean enableAutoImport;
     public boolean generateDatedServiceJourneyIds;
+    public boolean googleUpload;
+    @Column(name = "google_qa_upload")
+    public boolean googleQAUpload;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "CHOUETTE_INFO_SERVICE_LINK_MODES", joinColumns = @JoinColumn(name = "CHOUETTE_INFO_ID"))
@@ -98,6 +101,8 @@ public class ChouetteInfo {
                        ", enableAutoImport='" + enableAutoImport + '\'' +
                        ", generateMissingServiceLinksForModes='" + generateMissingServiceLinksForModes + '\'' +
                        ", generateDatedServiceJourneyIds='" + generateDatedServiceJourneyIds + '\'' +
+                       ", googleUpload='" + googleUpload + '\'' +
+                       ", googleQAUpload='" + googleQAUpload + '\'' +
                        '}';
     }
 
