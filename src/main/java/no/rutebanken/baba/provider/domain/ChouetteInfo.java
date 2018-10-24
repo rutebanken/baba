@@ -54,6 +54,7 @@ public class ChouetteInfo {
     public boolean enableStopPlaceIdMapping;
     public boolean enableCleanImport;
     public boolean enableAutoImport;
+    public boolean enableAutoValidation;
     public boolean generateDatedServiceJourneyIds;
     public boolean googleUpload;
     @Column(name = "google_qa_upload")
@@ -99,6 +100,7 @@ public class ChouetteInfo {
                        ", enableStopPlaceIdMapping='" + enableStopPlaceIdMapping + '\'' +
                        ", enableCleanImport='" + enableCleanImport + '\'' +
                        ", enableAutoImport='" + enableAutoImport + '\'' +
+                       ", enableAutoValidation='" + enableAutoImport + '\'' +
                        ", generateMissingServiceLinksForModes='" + generateMissingServiceLinksForModes + '\'' +
                        ", generateDatedServiceJourneyIds='" + generateDatedServiceJourneyIds + '\'' +
                        ", googleUpload='" + googleUpload + '\'' +
