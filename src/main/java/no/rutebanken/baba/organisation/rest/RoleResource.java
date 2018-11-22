@@ -70,9 +70,9 @@ public class RoleResource extends BaseResource<Role, TypeDTO> {
 
 	@POST
 	public Response create(TypeDTO dto, @Context UriInfo uriInfo) {
-		Role Role = createEntity(dto);
-		iamService.createRole(Role);
-		return buildCreatedResponse(uriInfo, Role);
+		Role role = createEntity(dto);
+		iamService.createRole(role);
+		return buildCreatedResponse(uriInfo, role);
 	}
 
 	@PUT
