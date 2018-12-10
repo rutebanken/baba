@@ -17,7 +17,7 @@
 package no.rutebanken.baba.organisation.model.organisation;
 
 import com.google.common.base.Joiner;
-import com.vividsolutions.jts.geom.Polygon;
+import org.locationtech.jts.geom.Polygon;
 import no.rutebanken.baba.organisation.model.CodeSpaceEntity;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 

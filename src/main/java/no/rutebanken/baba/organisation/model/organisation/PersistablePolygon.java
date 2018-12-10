@@ -16,7 +16,7 @@
 
 package no.rutebanken.baba.organisation.model.organisation;
 
-import com.vividsolutions.jts.geom.Polygon;
+import org.locationtech.jts.geom.Polygon;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
