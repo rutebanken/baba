@@ -16,14 +16,13 @@
 
 package no.rutebanken.baba.organisation.repository;
 
-
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.LinearRing;
-import org.locationtech.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Polygon;
 import no.rutebanken.baba.organisation.model.organisation.AdministrativeZone;
 import no.rutebanken.baba.organisation.model.organisation.AdministrativeZoneType;
 import org.junit.Test;
-import org.locationtech.jts.geom.Coordinate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 

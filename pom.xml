@@ -50,8 +50,8 @@
         <!-- versions for use in mvn plugins as we cannot inherit them from a BOM -->
         <entur.helpers.version>0.0.4-SNAPSHOT</entur.helpers.version>
         <docker.maven.plugin.version>0.21.0</docker.maven.plugin.version>
-        <spring-boot-plugin.version>1.5.18.RELEASE</spring-boot-plugin.version>
-        <spring-boot.version>1.5.18.RELEASE</spring-boot.version>
+        <spring-boot-plugin.version>1.5.6.RELEASE</spring-boot-plugin.version>
+        <spring-boot.version>1.5.6.RELEASE</spring-boot.version>
         <spring.security.version>4.2.3.RELEASE</spring.security.version>
         <postgresql.version>9.4-1201-jdbc41</postgresql.version>
         <keycloak.version>3.2.1.Final</keycloak.version>
@@ -61,18 +61,18 @@
         <fabric8.dockerUser>carbon-1287/</fabric8.dockerUser>
         <docker.image>eu.gcr.io/${fabric8.dockerUser}${project.artifactId}:${project.version}</docker.image>
         <docker.cleanup>none</docker.cleanup>
-        <hazelcast-hibernate5.version>1.2.3</hazelcast-hibernate5.version>
+        <hazelcast-hibernate5.version>1.2.2</hazelcast-hibernate5.version>
 
         <maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
         <docker.port.container.jolokia>8778</docker.port.container.jolokia>
-        <jackson-jaxrs-xml-provider.version>2.9.7</jackson-jaxrs-xml-provider.version>
+        <jackson-jaxrs-xml-provider.version>2.9.0</jackson-jaxrs-xml-provider.version>
 
         <flyway-core.version>4.2.0</flyway-core.version>
         <httpcomponents-fluent.version>4.5.3</httpcomponents-fluent.version>
         <assertj-core.version>3.8.0</assertj-core.version>
         <rest-assured.version>2.9.0</rest-assured.version>
         <geodb.version>0.8</geodb.version>
-        <geotools.version>20.1</geotools.version>
+        <geotools.version>17.2</geotools.version>
         <hibernate.version>5.2.17.Final</hibernate.version>
         <hibernate-spatial.version>5.1.9.Final</hibernate-spatial.version>
         <!-- Hibernate version deliberatly kept back as hazelcast cache does not support newer version-->
@@ -115,7 +115,7 @@
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
-            <version>5.2</version>
+            <version>4.11</version>
         </dependency>
 
         <dependency>
@@ -226,7 +226,7 @@
         <dependency>
             <groupId>org.wololo</groupId>
             <artifactId>jts2geojson</artifactId>
-            <version>0.13.0</version>
+            <version>0.11.0</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
