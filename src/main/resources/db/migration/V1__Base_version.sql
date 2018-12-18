@@ -405,26 +405,6 @@ CREATE TABLE role (
 ALTER TABLE role OWNER TO baba;
 
 --
--- Name: schema_version; Type: TABLE; Schema: public; Owner: baba
---
-
-CREATE TABLE schema_version (
-    installed_rank integer NOT NULL,
-    version character varying(50),
-    description character varying(200) NOT NULL,
-    type character varying(20) NOT NULL,
-    script character varying(1000) NOT NULL,
-    checksum integer,
-    installed_by character varying(100) NOT NULL,
-    installed_on timestamp without time zone DEFAULT now() NOT NULL,
-    execution_time integer NOT NULL,
-    success boolean NOT NULL
-);
-
-
-ALTER TABLE schema_version OWNER TO baba;
-
---
 -- Name: user_account; Type: TABLE; Schema: public; Owner: baba
 --
 
@@ -714,14 +694,6 @@ ALTER TABLE ONLY responsibility_role_assignment
 
 
 --
--- Name: schema_version_pk; Type: CONSTRAINT; Schema: public; Owner: baba
---
-
-ALTER TABLE ONLY schema_version
-    ADD CONSTRAINT schema_version_pk PRIMARY KEY (installed_rank);
-
-
---
 -- Name: uk_7ghge2jt2h0cgdv60ucgppy89; Type: CONSTRAINT; Schema: public; Owner: baba
 --
 
@@ -791,13 +763,6 @@ ALTER TABLE ONLY user_account_responsibility_sets
 
 ALTER TABLE ONLY user_account
     ADD CONSTRAINT user_unique_username UNIQUE (private_code, entity_version);
-
-
---
--- Name: schema_version_s_idx; Type: INDEX; Schema: public; Owner: baba
---
-
-CREATE INDEX schema_version_s_idx ON schema_version USING btree (success);
 
 
 --
