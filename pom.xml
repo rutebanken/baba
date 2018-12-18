@@ -67,7 +67,7 @@
 
         <maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
         <docker.port.container.jolokia>8778</docker.port.container.jolokia>
-        <jackson-jaxrs-xml-provider.version>2.9.8</jackson-jaxrs-xml-provider.version>
+        <jackson.version>2.9.8</jackson.version>
 
         <flyway-core.version>4.2.0</flyway-core.version>
         <httpcomponents-fluent.version>4.5.3</httpcomponents-fluent.version>
@@ -140,7 +140,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-xml-provider</artifactId>
-            <version>${jackson-jaxrs-xml-provider.version}</version>
+            <version>${jackson.version}</version>
         </dependency>
 
         <dependency>
@@ -238,7 +238,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>23.0</version>
+            <version>27.0-jre</version>
         </dependency>
         <dependency>
             <groupId>org.freemarker</groupId>
@@ -298,6 +298,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
 
         <dependency>
@@ -390,6 +391,11 @@
                         </image>
                     </images>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>4.0.0</version>
             </plugin>
         </plugins>
     </build>
