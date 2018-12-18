@@ -54,6 +54,8 @@
         <spring-boot.version>1.5.6.RELEASE</spring-boot.version>
         <spring.security.version>4.2.3.RELEASE</spring.security.version>
         <postgresql.version>9.4-1201-jdbc41</postgresql.version>
+
+        <!-- Keycloak server still at 3.2.1, cannot upgrade as admin client has breaking changes. Prohibits upgrade to spring boot 2 and java 11 -->
         <keycloak.version>3.2.1.Final</keycloak.version>
 
         <!-- Docker & Fabric8 Configs -->
@@ -65,7 +67,7 @@
 
         <maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
         <docker.port.container.jolokia>8778</docker.port.container.jolokia>
-        <jackson-jaxrs-xml-provider.version>2.9.0</jackson-jaxrs-xml-provider.version>
+        <jackson-jaxrs-xml-provider.version>2.9.8</jackson-jaxrs-xml-provider.version>
 
         <flyway-core.version>4.2.0</flyway-core.version>
         <httpcomponents-fluent.version>4.5.3</httpcomponents-fluent.version>
@@ -75,7 +77,6 @@
         <geotools.version>17.2</geotools.version>
         <hibernate.version>5.2.17.Final</hibernate.version>
         <hibernate-spatial.version>5.1.9.Final</hibernate-spatial.version>
-        <!-- Hibernate version deliberatly kept back as hazelcast cache does not support newer version-->
         <hibernate.version>5.1.9.Final</hibernate.version>
         <swagger-jersey2.version>1.5.16</swagger-jersey2.version>
         <javax.jdo.jdo2-api.version>2.3-eb</javax.jdo.jdo2-api.version>
@@ -115,7 +116,7 @@
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
-            <version>4.11</version>
+            <version>5.2</version>
         </dependency>
 
         <dependency>
