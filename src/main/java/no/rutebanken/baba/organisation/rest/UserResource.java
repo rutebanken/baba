@@ -27,9 +27,12 @@ import no.rutebanken.baba.organisation.rest.mapper.UserMapper;
 import no.rutebanken.baba.organisation.rest.validation.DTOValidator;
 import no.rutebanken.baba.organisation.rest.validation.UserValidator;
 import no.rutebanken.baba.organisation.service.IamService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.DELETE;
@@ -55,7 +58,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 @PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
 @Api(tags = {"User resource"}, produces = "application/json")
 public class UserResource extends BaseResource<User, UserDTO> {
-
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private UserRepository repository;
     @Autowired
@@ -75,10 +78,21 @@ public class UserResource extends BaseResource<User, UserDTO> {
         return getMapper().toDTO(entity, fullObject);
     }
 
+    /**
+     * Do not wrap method in a single transaction. Need to commit local storage before creating user in IAM, to avoid having users in IAM that does not exist in local storage.
+     */
+    @Transactional(propagation = Propagation.NEVER)
     @POST
     public Response create(UserDTO dto, @Context UriInfo uriInfo) {
         User user = createEntity(dto);
-        String password = iamService.createUser(user);
+        String password;
+        try {
+            password = iamService.createUser(user);
+        } catch (RuntimeException e) {
+            logger.warn("Creation of new user in IAM failed. Removing user from local storage. Exception: " + e.getMessage());
+            deleteEntity(user.getId());
+            throw e;
+        }
         newUserEmailSender.sendEmail(user);
         return buildCreatedResponse(uriInfo, user, password);
     }
