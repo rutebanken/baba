@@ -29,8 +29,8 @@ public class KeyCloakClientConfiguration {
 	@Value("${iam.keycloak.admin.path}")
 	private String adminPath;
 
-	@Value("${iam.keycloak.admin.realm:master}")
-	private String masterRealm;
+	@Value("${keycloak.realm:master}")
+	private String realm;
 
 	@Value("${iam.keycloak.user.realm:rutebanken}")
 	private String userRealm;
@@ -46,7 +46,7 @@ public class KeyCloakClientConfiguration {
 	public RealmResource keycloakAdminClient() {
 		return KeycloakBuilder.builder()
 				       .serverUrl(adminPath)
-				       .realm(masterRealm)
+				       .realm(realm)
 				       .clientId(clientId)
 					   .clientSecret(clientSecret)
 				       .grantType("client_credentials")

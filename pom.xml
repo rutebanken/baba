@@ -55,8 +55,7 @@
         <spring.security.version>4.2.3.RELEASE</spring.security.version>
         <postgresql.version>9.4-1201-jdbc41</postgresql.version>
 
-        <!-- Keycloak server still at 3.2.1, cannot upgrade as admin client has breaking changes. Prohibits upgrade to spring boot 2 and java 11 -->
-        <keycloak.version>3.2.1.Final</keycloak.version>
+        <keycloak.version>4.8.2.Final</keycloak.version>
 
         <!-- Docker & Fabric8 Configs -->
         <docker.from>eu.gcr.io/carbon-1287/java-base-image</docker.from>
