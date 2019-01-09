@@ -16,11 +16,12 @@
 
 package no.rutebanken.baba.organisation.rest.mapper;
 
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Polygon;
+import org.locationtech.jts.geom.Geometry;
+
 import no.rutebanken.baba.organisation.model.organisation.AdministrativeZone;
 import no.rutebanken.baba.organisation.repository.CodeSpaceRepository;
 import no.rutebanken.baba.organisation.rest.dto.organisation.AdministrativeZoneDTO;
+import org.locationtech.jts.geom.Polygon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.wololo.jts2geojson.GeoJSONReader;
