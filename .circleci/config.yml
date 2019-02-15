@@ -25,7 +25,7 @@ jobs:
         username: _json_key
         password: $GCLOUD_SERVICE_KEY
     environment:
-      MAVEN_OPTS: -Xmx3G
+      MAVEN_OPTS: -Xmx1G
     steps:
     - checkout
     - restore_cache:
@@ -43,7 +43,6 @@ jobs:
           mkdir -p ~/junit/
           find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} ~/junit/ \;
           find . -type f -regex ".*/target/surefire-reports/.*dumpstream" -exec cp {} ~/junit/ \;
-          find . -type f -regex ".*/target/surefire-reports/.*dump" -exec cp {} ~/junit/ \;
           find . -type f -regex ".*/target/surefire-reports/.*log" -exec cp {} ~/junit/ \;
         when: always
     - store_test_results:
