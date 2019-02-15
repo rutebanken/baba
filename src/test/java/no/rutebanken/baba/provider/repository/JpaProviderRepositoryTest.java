@@ -37,7 +37,7 @@ public class JpaProviderRepositoryTest extends BaseIntegrationTest {
     @Test
     public void testGetProviders() {
         Collection<Provider> providers = repository.getProviders();
-        assertThat(providers).hasSize(2);
+        assertThat(providers).hasSize(3);
     }
 
     @Test
