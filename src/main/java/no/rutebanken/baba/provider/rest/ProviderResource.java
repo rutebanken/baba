@@ -65,6 +65,11 @@ public class ProviderResource {
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#providerId)")
     public void deleteProvider(@PathParam("providerId") Long providerId) {
         logger.info("Deleting provider with id '" + providerId + "'");
+        Provider provider = providerRepository.getProvider(providerId);
+        if (provider == null) {
+            throw new NotFoundException("Unable to find provider with id=" + providerId);
+        }
+        chouetteReferentialService.deleteChouetteReferential(provider);
         providerRepository.deleteProvider(providerId);
     }
 

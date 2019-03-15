@@ -21,6 +21,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -49,7 +50,13 @@ public class ChouetteReferentialRestClient {
     }
 
     public void deleteReferential(ChouetteReferentialInfo referential) {
-        postForChouetteReferentialInfo(referential, "/drop");
+        RestTemplate restTemplate = new RestTemplate(getClientHttpRequestFactory());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<ChouetteReferentialInfo> entity = new HttpEntity<>(referential, headers);
+        restTemplate.exchange(chouetteRestServiceBaseUrl + "/delete", HttpMethod.DELETE, entity, Void.class);
     }
 
     private void postForChouetteReferentialInfo(ChouetteReferentialInfo referential, String method) {
