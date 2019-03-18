@@ -34,7 +34,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class ChouetteReferentialRestClient {
 
-    private static final int HTTP_TIMEOUT = 5000;
+    private static final int HTTP_TIMEOUT = 30000;
 
 
     @Value("${chouette.rest.referential.base.url:http://chouette/referentials}")
@@ -42,31 +42,25 @@ public class ChouetteReferentialRestClient {
 
 
     public void createReferential(ChouetteReferentialInfo referential) {
-        postForChouetteReferentialInfo(referential, "/create");
+        exchangeForChouetteReferentialInfo(referential, HttpMethod.POST, "/create");
     }
 
     public void updateReferential(ChouetteReferentialInfo referential) {
-        postForChouetteReferentialInfo(referential, "/update");
+        exchangeForChouetteReferentialInfo(referential, HttpMethod.POST, "/update");
     }
 
     public void deleteReferential(ChouetteReferentialInfo referential) {
-        RestTemplate restTemplate = new RestTemplate(getClientHttpRequestFactory());
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<ChouetteReferentialInfo> entity = new HttpEntity<>(referential, headers);
-        restTemplate.exchange(chouetteRestServiceBaseUrl + "/delete", HttpMethod.DELETE, entity, Void.class);
+        exchangeForChouetteReferentialInfo(referential, HttpMethod.DELETE, "/delete");
     }
 
-    private void postForChouetteReferentialInfo(ChouetteReferentialInfo referential, String method) {
+    private void exchangeForChouetteReferentialInfo(ChouetteReferentialInfo referential, HttpMethod httpMethod, String service) {
         RestTemplate restTemplate = new RestTemplate(getClientHttpRequestFactory());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<ChouetteReferentialInfo> entity = new HttpEntity<>(referential, headers);
-        restTemplate.postForEntity(chouetteRestServiceBaseUrl + method, entity, Void.class);
+        restTemplate.exchange(chouetteRestServiceBaseUrl + service, httpMethod, entity, Void.class);
     }
 
     private ClientHttpRequestFactory getClientHttpRequestFactory() {

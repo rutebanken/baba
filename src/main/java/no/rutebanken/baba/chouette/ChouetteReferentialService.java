@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 @Component
 public class ChouetteReferentialService {
 
-    private  static final Pattern SCHEMA_PATTERN = Pattern.compile("^(rb_)?[a-z]{3}$");
+    private static final Pattern SCHEMA_PATTERN = Pattern.compile("^(rb_)?[a-z]{3}$");
 
     @Autowired
     ChouetteReferentialRestClient chouetteReferentialRestClient;
@@ -21,16 +21,16 @@ public class ChouetteReferentialService {
         ChouetteReferentialInfo referential = new ChouetteReferentialInfo(provider);
 
         String schemaName = referential.getSchemaName();
-        if(!validateSchemaName(schemaName)) {
+        if (!validateSchemaName(schemaName)) {
             throw new IllegalArgumentException("Invalid referential name: '" + schemaName + "'. Should be 3 lowercase letters optionally prefixed by 'rb_'");
         }
-        if(referential.getDataspaceName() == null) {
+        if (referential.getDataspaceName() == null) {
             throw new IllegalArgumentException("Mandatory field missing: dataspace name");
         }
-        if(referential.getOrganisationName() == null) {
+        if (referential.getOrganisationName() == null) {
             throw new IllegalArgumentException("Mandatory field missing: organisation name");
         }
-        if(referential.getUserName() == null) {
+        if (referential.getUserName() == null) {
             throw new IllegalArgumentException("Mandatory field missing: user name");
         }
 
@@ -49,7 +49,7 @@ public class ChouetteReferentialService {
         chouetteReferentialRestClient.deleteReferential(referential);
     }
 
-    protected boolean validateSchemaName(final String schemaName){
+    protected boolean validateSchemaName(final String schemaName) {
         return SCHEMA_PATTERN.matcher(schemaName).matches();
     }
 
