@@ -17,7 +17,7 @@
 package no.rutebanken.baba.provider.rest;
 
 import io.swagger.annotations.Api;
-
+import no.rutebanken.baba.chouette.ChouetteReferentialService;
 import no.rutebanken.baba.provider.domain.Provider;
 import no.rutebanken.baba.provider.domain.TransportMode;
 import no.rutebanken.baba.provider.repository.ProviderRepository;
@@ -27,14 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import java.util.Collection;
 
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_ADMIN;
@@ -51,6 +44,9 @@ public class ProviderResource {
 
     @Autowired
     ProviderRepository providerRepository;
+
+    @Autowired
+    ChouetteReferentialService chouetteReferentialService;
 
     @GET
     @Path("/{providerId}")
@@ -69,6 +65,11 @@ public class ProviderResource {
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#providerId)")
     public void deleteProvider(@PathParam("providerId") Long providerId) {
         logger.info("Deleting provider with id '" + providerId + "'");
+        Provider provider = providerRepository.getProvider(providerId);
+        if (provider == null) {
+            throw new NotFoundException("Unable to find provider with id=" + providerId);
+        }
+        chouetteReferentialService.deleteChouetteReferential(provider);
         providerRepository.deleteProvider(providerId);
     }
 
@@ -77,6 +78,7 @@ public class ProviderResource {
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#provider.id)")
     public void updateProvider(Provider provider) {
         logger.info("Updating provider " + provider);
+        chouetteReferentialService.updateChouetteReferential(provider);
         providerRepository.updateProvider(provider);
     }
 
@@ -84,6 +86,7 @@ public class ProviderResource {
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#provider.id)")
     public Provider createProvider(Provider provider) {
         logger.info("Creating provider " + provider);
+        chouetteReferentialService.createChouetteReferential(provider);
         return providerRepository.createProvider(provider);
     }
 
