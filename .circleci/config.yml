@@ -88,6 +88,3 @@ workflows:
         context: org-carbon
         requires:
         - build
-        filters:
-          branches:
-            only: master
