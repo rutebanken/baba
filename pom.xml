@@ -49,7 +49,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- versions for use in mvn plugins as we cannot inherit them from a BOM -->
         <entur.helpers.version>0.0.4-SNAPSHOT</entur.helpers.version>
-        <docker.maven.plugin.version>0.21.0</docker.maven.plugin.version>
         <spring-boot-plugin.version>2.1.1.RELEASE</spring-boot-plugin.version>
         <spring-boot.version>2.1.1.RELEASE</spring-boot.version>
         <spring.security.version>5.0.7.RELEASE</spring.security.version>
@@ -57,11 +56,6 @@
 
         <keycloak.version>4.8.2.Final</keycloak.version>
 
-        <!-- Docker & Fabric8 Configs -->
-        <docker.from>eu.gcr.io/carbon-1287/openjdk11-base-image</docker.from>
-        <fabric8.dockerUser>carbon-1287/</fabric8.dockerUser>
-        <docker.image>eu.gcr.io/${fabric8.dockerUser}${project.artifactId}:${project.version}</docker.image>
-        <docker.cleanup>none</docker.cleanup>
         <hazelcast-hibernate53.version>1.3.0</hazelcast-hibernate53.version>
 
         <maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
@@ -393,30 +387,6 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>io.fabric8</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>${docker.maven.plugin.version}</version>
-                <configuration>
-                    <autoPull>always</autoPull>
-                    <images>
-                        <image>
-                            <name>${docker.image}</name>
-                            <build>
-                                <from>${docker.from}</from>
-                                <cleanup>${docker.cleanup}</cleanup>
-                                <assembly>
-                                    <basedir>/deployments</basedir>
-                                    <descriptorRef>artifact</descriptorRef>
-                                </assembly>
-                                <env>
-                                    <JAVA_APP_JAR>${project.build.finalName}.jar</JAVA_APP_JAR>
-                                </env>
-                            </build>
-                        </image>
-                    </images>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
