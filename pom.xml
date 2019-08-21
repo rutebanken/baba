@@ -37,6 +37,7 @@
         <developerConnection>scm:git:ssh://git@github.com/rutebanken/baba.git</developerConnection>
     </scm>
 
+
     <repositories>
         <repository>
             <id>osgeo</id>
