@@ -71,7 +71,7 @@
         <geotools.version>20.1</geotools.version>
         <hibernate.version>5.4.4.Final</hibernate.version>
         <hibernate-spatial.version>5.4.4.Final</hibernate-spatial.version>
-        <swagger-jersey2.version>1.5.16</swagger-jersey2.version>
+        <swagger-jersey2.version>1.5.23</swagger-jersey2.version>
         <javax.jdo.jdo2-api.version>2.3-eb</javax.jdo.jdo2-api.version>
     </properties>
 
