@@ -36,7 +36,7 @@ public class NewUserEmailSender {
     @Autowired
     private NewUserEmailFormatter newUserEmailFormatter;
 
-    @Value("${new.user.email.from:noreply@entur.no}")
+    @Value("${new.user.email.from:noreply@entur.org}")
     private String emailFrom;
 
     @Value("${new.user.email.language.default:no}")
