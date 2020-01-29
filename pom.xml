@@ -54,18 +54,18 @@
 
         <flyway-core.version>5.2.4</flyway-core.version>
         <rest-assured.version>2.9.0</rest-assured.version>
+        <postgis-jdbc.version>2.2.2</postgis-jdbc.version>
         <geodb.version>0.9</geodb.version>
         <geotools.version>20.1</geotools.version>
-        <hibernate.version>5.4.4.Final</hibernate.version>
         <swagger-jersey2.version>1.5.16</swagger-jersey2.version>
         <javax.jdo.jdo2-api.version>2.3-eb</javax.jdo.jdo2-api.version>
         <wololo.version>0.13.0</wololo.version>
         <commons-io.version>2.6</commons-io.version>
         <resteasy.version>3.6.1.Final</resteasy.version>
-
-        <postgis-jdbc.version>2.2.2</postgis-jdbc.version>
-
         <guava.version>28.1-jre</guava.version>
+
+        <com.h2database.version>1.4.196</com.h2database.version>
+
 
     </properties>
 
@@ -231,14 +231,13 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-spatial</artifactId>
-            <version>${hibernate.version}</version>
-        </dependency>
+       </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>${hibernate.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.opengeo</groupId>
             <artifactId>geodb</artifactId>
@@ -300,6 +299,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <version>${com.h2database.version}</version>
             <scope>test</scope>
         </dependency>
 
