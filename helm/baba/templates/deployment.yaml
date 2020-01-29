@@ -25,7 +25,7 @@ spec:
       containers:
         - command:
             - /cloud_sql_proxy
-            - -instances=neon-1287:europe-west1:baba-db-1=tcp:5432
+            - -instances={{ .Values.gcpDatabaseInstance}}
             - -credential_file=/etc/baba-service-account/baba-service-account.json
             - -log_debug_stdout
           image: gcr.io/cloudsql-docker/gce-proxy:1.15
