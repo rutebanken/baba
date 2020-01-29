@@ -1,3 +1,4 @@
+gcpExchangeKeyName: marduk-exchange-radon-storage-key
 keycloakUrl: https://kc-stage.devstage.entur.io/auth
 mail:
   newUserFrom: noreply-staging@entur.org

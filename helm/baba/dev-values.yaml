@@ -1,3 +1,4 @@
+gcpExchangeKeyName: marduk-exchange-carbon-storage-key
 keycloakUrl: https://kc-dev.devstage.entur.io/auth
 mail:
   newUserFrom: noreply@entur.org
