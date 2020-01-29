@@ -1,0 +1,135 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "baba.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+        {{- include "common.labels" . | indent 4 }}
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      name: baba
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: baba
+    spec:
+      containers:
+        - command:
+            - /cloud_sql_proxy
+            - -instances=neon-1287:europe-west1:baba-db-1=tcp:5432
+            - -credential_file=/etc/baba-service-account/baba-service-account.json
+            - -log_debug_stdout
+          image: gcr.io/cloudsql-docker/gce-proxy:1.15
+          imagePullPolicy: IfNotPresent
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                - /bin/sh
+                - -c
+                - sleep 30
+          name: cloudsql-proxy
+          resources:
+            requests:
+              cpu: 50m
+              memory: 40Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /etc/baba-service-account
+              name: baba-service-account
+        - env:
+            - name: JAVA_OPTIONS
+              value: -Xms512m -Xmx512m -Xss64m -server -Dspring.config.location=/etc/application-config/application.properties
+                -Dfile.encoding=UTF-8
+            - name: TZ
+              value: Europe/Oslo
+            - name: SPRING_MAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: smtp-user
+                  name: baba-smtp-credentials
+            - name: SPRING_MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: smtp-password
+                  name: baba-smtp-credentials
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: babadb-password
+                  name: platform-passwords
+            - name: IAM_KEYCLOAK_ADMIN_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: baba-keycloak-secret
+          image: eu.gcr.io/entur-system-1287/baba:{{ .Chart.AppVersion }}
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health/live
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 180
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 30
+          name: baba
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health/ready
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 2
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: 600m
+              memory: 800Mi
+            requests:
+              cpu: 100m
+              memory: 551Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /etc/application-config
+              name: application-config
+              readOnly: true
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+        - name: rutebanken-registry-key
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: marduk-exchange-key
+          secret:
+            defaultMode: 420
+            secretName: marduk-exchange-neon-storage-key
+        - name: baba-service-account
+          secret:
+            defaultMode: 420
+            secretName: baba-service-account
+        - configMap:
+            defaultMode: 420
+            name: baba-config
+          name: application-config

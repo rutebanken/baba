@@ -1,0 +1,8 @@
+keycloakUrl: https://auth.entur.org/auth
+mail:
+  newUserFrom: noreply@entur.org
+  link:
+    routeDB: https://rutedb.entur.org/
+    stopPlace: https://stoppested.entur.org/
+    operator:
+
