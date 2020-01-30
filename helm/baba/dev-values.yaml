@@ -1,3 +1,4 @@
+env: dev
 gcpDatabaseInstance: carbon-1287:europe-west1:baba-db-1=tcp:5432
 gcpExchangeKeyName: marduk-exchange-carbon-storage-key
 keycloakUrl: https://kc-dev.devstage.entur.io/auth
