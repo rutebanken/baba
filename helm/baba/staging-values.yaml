@@ -1,4 +1,5 @@
 env: staging
+replicas: 2
 gcpDatabaseInstance: radon-1287:europe-west1:baba-db-1=tcp:5432
 gcpExchangeKeyName: marduk-exchange-radon-storage-key
 keycloakUrl: https://kc-stage.devstage.entur.io/auth

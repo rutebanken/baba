@@ -7,7 +7,7 @@ metadata:
         {{- include "common.labels" . | indent 4 }}
 spec:
   progressDeadlineSeconds: 600
-  replicas: 2
+  replicas: {{ .Values.replicas }}
   revisionHistoryLimit: 10
   selector:
     matchLabels:
