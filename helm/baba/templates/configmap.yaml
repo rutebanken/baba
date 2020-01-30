@@ -32,7 +32,7 @@ data:
     new.user.email.enabled=true
     new.user.email.from={{ .Values.mail.newUserFrom}}
     spring.mail.properties.mail.smtp.connecttimeout=5000
-    server.port=8080
+    server.port={{ .Values.service.http.internalPort }}
     # Temporary setting until bug in KeycloakWebSecurityConfigurerAdapter is fixed (The bean 'httpSessionManager', defined in class path resource [xx/XXSecurityConfiguration.class], could not be registered. A bean with that name has already been defined in URL)
     spring.main.allow-bean-definition-overriding=true
     chouette.rest.referential.base.url=http://chouette:8080/chouette_iev/referentials

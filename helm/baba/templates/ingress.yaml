@@ -12,14 +12,14 @@ metadata:
     {{ else if eq .Values.env "dev"}}
     external-dns.alpha.kubernetes.io/target: {{ .Values.ingress.devIp }}
     {{- end}}
-  name: timetable-admin-v1-organisation
+  name: timetable-admin-v1-organisations
   namespace: {{ .Release.Namespace }}
 spec:
   rules:
   {{- if eq .Values.env "production"}}
-  - host: timetable-admin-v1-organisation-{{ .Release.Namespace }}.entur.io
+  - host: timetable-admin-v1-organisations-{{ .Release.Namespace }}.entur.io
   {{ else }}
-  - host: timetable-admin-v1-organisation-{{ .Release.Namespace }}.{{ .Release.Namespace }}.entur.io
+  - host: timetable-admin-v1-organisations-{{ .Release.Namespace }}.{{ .Release.Namespace }}.entur.io
   {{- end}}
     http:
       paths:
