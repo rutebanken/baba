@@ -1,0 +1,11 @@
+env: dev
+replicas: 1
+gcpDatabaseInstance: carbon-1287:europe-west1:baba-db-1=tcp:5432
+gcpExchangeKeyName: marduk-exchange-carbon-storage-key
+keycloakUrl: https://kc-dev.devstage.entur.io/auth
+mail:
+  newUserFrom: noreply@entur.org
+  link:
+    routeDB: https://rutedb.dev.entur.org/
+    stopPlace: https://stoppested.dev.entur.org/
+    operator: https://operator-test.rutebanken.org/

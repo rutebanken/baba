@@ -1,0 +1,11 @@
+env: staging
+replicas: 2
+gcpDatabaseInstance: radon-1287:europe-west1:baba-db-1=tcp:5432
+gcpExchangeKeyName: marduk-exchange-radon-storage-key
+keycloakUrl: https://kc-stage.devstage.entur.io/auth
+mail:
+  newUserFrom: noreply-staging@entur.org
+  link:
+    routeDB: https://rutedb.staging.entur.org/
+    stopPlace: https://stoppested.staging.entur.org/
+    operator: https://operator-stage.rutebanken.org/
