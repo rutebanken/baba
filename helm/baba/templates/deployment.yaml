@@ -11,7 +11,7 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: baba
+      app: {{ template "baba.name" . }}
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -19,8 +19,12 @@ spec:
     type: RollingUpdate
   template:
     metadata:
+      annotations:
+        prometheus.io/path: /prometheus
+        prometheus.io/port: '9001'
+        prometheus.io/scrape: 'true'
       labels:
-        name: baba
+          {{- include "common.labels" . | indent 8 }}
     spec:
       containers:
         - command:
