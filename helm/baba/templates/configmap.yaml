@@ -16,7 +16,6 @@ data:
     iam.keycloak.admin.clientID=baba
     keycloak.resource=baba
     spring.jpa.hibernate.use-new-id-generator-mappings=true
-    spring.datasource.username=baba
     spring.database.driverClassName=org.postgresql.Driver
     spring.mail.properties.mail.smtp.timeout=3000
     iam.keycloak.admin.path={{ .Values.keycloakUrl}}

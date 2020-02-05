@@ -1,8 +1,12 @@
 env: production
 replicas: 2
-gcpDatabaseInstance: neon-1287:europe-west1:baba-db-1=tcp:5432
-gcpExchangeKeyName: marduk-exchange-neon-storage-key
+
+gcp:
+  databaseInstance: neon-1287:europe-west1:baba-db-1=tcp:5432
+  exchangeKeyName: marduk-exchange-neon-storage-key
+
 keycloakUrl: https://auth.entur.org/auth
+
 mail:
   newUserFrom: noreply@entur.org
   link:

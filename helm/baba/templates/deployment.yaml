@@ -29,7 +29,7 @@ spec:
       containers:
         - command:
             - /cloud_sql_proxy
-            - -instances={{ .Values.gcpDatabaseInstance}}
+            - -instances={{ .Values.gcp.databaseInstance}}
             - -credential_file=/etc/baba-service-account/baba-service-account.json
             - -log_debug_stdout
           image: gcr.io/cloudsql-docker/gce-proxy:1.15
@@ -67,6 +67,11 @@ spec:
                 secretKeyRef:
                   key: smtp-password
                   name: baba-smtp-credentials
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: babadb-username
+                  name: platform-passwords
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -128,7 +133,7 @@ spec:
         - name: marduk-exchange-key
           secret:
             defaultMode: 420
-            secretName: {{ .Values.gcpExchangeKeyName}}
+            secretName: {{ .Values.gcp.exchangeKeyName}}
         - name: baba-service-account
           secret:
             defaultMode: 420
