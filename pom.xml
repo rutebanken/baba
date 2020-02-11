@@ -64,7 +64,9 @@
         <resteasy.version>3.6.1.Final</resteasy.version>
         <guava.version>28.1-jre</guava.version>
 
+        <hibernate.version>5.4.4.Final</hibernate.version>
         <com.h2database.version>1.4.196</com.h2database.version>
+        <com.vividsolutions.version>1.13</com.vividsolutions.version>
 
 
     </properties>
