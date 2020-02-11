@@ -42,6 +42,7 @@ data:
     management.endpoint.prometheus.enabled=true
     management.endpoints.web.base-path=/
     management.endpoints.web.exposure.include=info,health,prometheus
+    rutebanken.kubernetes.namespace={{ .Release.Namespace }}
 kind: ConfigMap
 metadata:
   name: {{ template "baba.name" . }}-config
