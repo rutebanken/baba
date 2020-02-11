@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.rutebanken.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>0.0.13-SNAPSHOT</version>
+        <version>0.0.14-SNAPSHOT</version>
     </parent>
 
     <groupId>no.rutebanken</groupId>
@@ -64,7 +64,9 @@
         <resteasy.version>3.6.1.Final</resteasy.version>
         <guava.version>28.1-jre</guava.version>
 
+        <hibernate.version>5.3.15.Final</hibernate.version>
         <com.h2database.version>1.4.196</com.h2database.version>
+        <com.vividsolutions.version>1.13</com.vividsolutions.version>
 
 
     </properties>
@@ -238,6 +240,12 @@
             <artifactId>hibernate-core</artifactId>
         </dependency>
 
+
+        <dependency>
+            <groupId>com.vividsolutions</groupId>
+            <artifactId>jts</artifactId>
+            <version>${com.vividsolutions.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.opengeo</groupId>
             <artifactId>geodb</artifactId>
