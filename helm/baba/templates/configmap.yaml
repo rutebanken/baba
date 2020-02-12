@@ -34,7 +34,7 @@ data:
     server.port={{ .Values.service.http.internalPort }}
     # Temporary setting until bug in KeycloakWebSecurityConfigurerAdapter is fixed (The bean 'httpSessionManager', defined in class path resource [xx/XXSecurityConfiguration.class], could not be registered. A bean with that name has already been defined in URL)
     spring.main.allow-bean-definition-overriding=true
-    chouette.rest.referential.base.url=http://chouette.{{ .Release.Namespace }}:8080/chouette_iev/referentials
+    chouette.rest.referential.base.url=http://chouette:8080/chouette_iev/referentials
     management.server.port=9001
     management.endpoints.enabled-by-default=false
     management.endpoint.info.enabled=true
