@@ -26,6 +26,10 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +40,23 @@ import java.io.StringWriter;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,classes = BabaTestApp.class)
 @Transactional
 public abstract class BaseIntegrationTest {
+
+
+	@TestConfiguration
+	@EnableWebSecurity
+	static class AdminRestMardukRouteBuilderTestContextConfiguration extends WebSecurityConfigurerAdapter {
+
+		@Override
+		protected void configure(HttpSecurity http) throws Exception {
+			http.csrf().disable()
+					.authorizeRequests(authorizeRequests ->
+							authorizeRequests
+									.anyRequest().permitAll()
+					);
+
+		}
+
+	}
 
 	@Autowired
 	protected CodeSpaceRepository codeSpaceRepository;
