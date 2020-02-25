@@ -20,7 +20,7 @@ spec:
   template:
     metadata:
       annotations:
-        prometheus.io/path: /prometheus
+        prometheus.io/path: /actuator/prometheus
         prometheus.io/port: '9001'
         prometheus.io/scrape: 'true'
       labels:
@@ -87,8 +87,8 @@ spec:
           livenessProbe:
             failureThreshold: 3
             httpGet:
-              path: /health/live
-              port: 8080
+              path: /actuator/health
+              port: 9001
               scheme: HTTP
             initialDelaySeconds: 180
             periodSeconds: 10
@@ -102,8 +102,8 @@ spec:
           readinessProbe:
             failureThreshold: 3
             httpGet:
-              path: /health/ready
-              port: 8080
+              path: /actuator/health
+              port: 9001
               scheme: HTTP
             initialDelaySeconds: 2
             periodSeconds: 10
