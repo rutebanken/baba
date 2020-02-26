@@ -2,10 +2,8 @@
 Organization register for ninkasi users
 
 ## Liveness and readiness
-In production, Baba can be probed with:
-- http://localhost:8080/health/live
-- http://localhost:8080/health/ready
-to check liveness and readiness, accordingly
+The liveness and readiness probes are provided by Spring Actuator and exposed with the following endpoint:
+https://<host>:<management port>/actuator/health
 
 ## Example application.properties file for development
 
