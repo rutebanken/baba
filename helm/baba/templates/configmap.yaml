@@ -6,7 +6,7 @@ data:
     spring.jpa.open-in-view=false
     spring.jpa.properties.hibernate.cache.region.factory_class=com.hazelcast.hibernate.HazelcastCacheRegionFactory
     spring.datasource.url=jdbc:postgresql://localhost:5432/baba
-    flyway.table=schema_version
+    spring.flyway.table=schema_version
     spring.mail.port=2525
     spring.mail.properties.mail.smtp.writetimeout=5000
     iam.keycloak.user.realm=rutebanken
