@@ -53,7 +53,7 @@ spec:
               name: baba-service-account
         - env:
             - name: JAVA_OPTIONS
-              value: -Xms512m -Xmx512m -Xss64m -server -Dspring.config.location=/etc/application-config/application.properties
+              value: -Xmx512m -server -Dspring.config.location=/etc/application-config/application.properties
                 -Dfile.encoding=UTF-8
             - name: TZ
               value: Europe/Oslo
