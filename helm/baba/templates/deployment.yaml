@@ -82,7 +82,7 @@ spec:
                 secretKeyRef:
                   key: password
                   name: baba-keycloak-secret
-          image: eu.gcr.io/entur-system-1287/baba:{{ .Chart.AppVersion }}
+          image: {{ .Values.image.identifier }}
           imagePullPolicy: Always
           livenessProbe:
             failureThreshold: 3
@@ -130,14 +130,10 @@ spec:
       securityContext: {}
       terminationGracePeriodSeconds: 30
       volumes:
-        - name: marduk-exchange-key
-          secret:
-            defaultMode: 420
-            secretName: {{ .Values.gcp.exchangeKeyName}}
         - name: baba-service-account
           secret:
             defaultMode: 420
-            secretName: baba-service-account
+            secretName: ror-extime-sa
         - configMap:
             defaultMode: 420
             name: baba-config
