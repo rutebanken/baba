@@ -1,40 +1,38 @@
 apiVersion: v1
 data:
   application.properties: |+
-    keycloak.principal-attribute=preferred_username
+    spring.jpa.database=POSTGRESQL
     spring.jpa.properties.hibernate.dialect=org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
-    spring.jpa.open-in-view=false
     spring.jpa.properties.hibernate.cache.region.factory_class=com.hazelcast.hibernate.HazelcastCacheRegionFactory
-    spring.datasource.url=jdbc:postgresql://localhost:5432/baba
-    spring.flyway.table=schema_version
-    spring.mail.port=2525
-    spring.mail.properties.mail.smtp.writetimeout=5000
-    iam.keycloak.user.realm=rutebanken
-    spring.datasource.platform=postgres
-    spring.mail.properties.mail.smtp.ssl.enable=false
-    spring.mail.host=smtp.postmarkapp.com
-    keycloak.realm=rutebanken
-    iam.keycloak.admin.clientID=baba
-    keycloak.resource=baba
-    spring.jpa.hibernate.use-new-id-generator-mappings=true
-    spring.database.driverClassName=org.postgresql.Driver
-    spring.mail.properties.mail.smtp.timeout=3000
-    iam.keycloak.admin.path={{ .Values.keycloakUrl}}
     spring.jpa.properties.hibernate.cache.use_second_level_cache=false
     spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults=false
+    spring.jpa.hibernate.use-new-id-generator-mappings=true
+    spring.jpa.open-in-view=false
+    spring.datasource.url=jdbc:postgresql://localhost:5432/baba
+    spring.datasource.platform=postgres
+    spring.database.driverClassName=org.postgresql.Driver
+    spring.flyway.table=schema_version
     spring.mail.properties.mail.smtp.starttls.enable=true
-    spring.jpa.database=POSTGRESQL
-    keycloak.auth-server-url={{ .Values.keycloakUrl}}
+    spring.mail.port=2525
+    spring.mail.properties.mail.smtp.writetimeout=5000
+    spring.mail.properties.mail.smtp.ssl.enable=false
+    spring.mail.host=smtp.postmarkapp.com
+    spring.mail.properties.mail.smtp.timeout=3000
+    spring.mail.properties.mail.smtp.connecttimeout=5000
     email.link.routedb={{ .Values.mail.link.routeDB}}
     email.link.stop.place={{ .Values.mail.link.stopPlace}}
     email.link.operator={{ .Values.mail.link.operator}}
     email.link.password.reset:{{ .Values.keycloakUrl}}/realms/rutebanken/login-actions/reset-credentials
     new.user.email.enabled=true
     new.user.email.from={{ .Values.mail.newUserFrom}}
-    spring.mail.properties.mail.smtp.connecttimeout=5000
+    keycloak.auth-server-url={{ .Values.keycloakUrl}}
+    keycloak.realm=rutebanken
+    keycloak.principal-attribute=preferred_username
+    keycloak.resource=baba
+    iam.keycloak.user.realm=rutebanken
+    iam.keycloak.admin.clientID=baba
+    iam.keycloak.admin.path={{ .Values.keycloakUrl}}
     server.port={{ .Values.service.http.internalPort }}
-    # Temporary setting until bug in KeycloakWebSecurityConfigurerAdapter is fixed (The bean 'httpSessionManager', defined in class path resource [xx/XXSecurityConfiguration.class], could not be registered. A bean with that name has already been defined in URL)
-    spring.main.allow-bean-definition-overriding=true
     chouette.rest.referential.base.url=http://chouette:8080/chouette_iev/referentials
     management.server.port=9001
     management.endpoints.enabled-by-default=false
@@ -43,6 +41,8 @@ data:
     management.endpoint.prometheus.enabled=true
     management.endpoints.web.exposure.include=info,health,prometheus
     rutebanken.kubernetes.namespace={{ .Release.Namespace }}
+    # Temporary setting until bug in KeycloakWebSecurityConfigurerAdapter is fixed (The bean 'httpSessionManager', defined in class path resource [xx/XXSecurityConfiguration.class], could not be registered. A bean with that name has already been defined in URL)
+    spring.main.allow-bean-definition-overriding=true
 kind: ConfigMap
 metadata:
   name: {{ template "baba.name" . }}-config
