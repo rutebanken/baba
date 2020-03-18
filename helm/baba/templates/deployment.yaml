@@ -131,7 +131,7 @@ spec:
         - name: baba-service-account
           secret:
             defaultMode: 420
-            secretName: ror-baba-sa
+            secretName: ror-baba-sa-key
         - configMap:
             defaultMode: 420
             name: baba-config
