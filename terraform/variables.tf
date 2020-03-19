@@ -42,6 +42,22 @@ variable "service_account_cloudsql_role" {
   default     = "roles/cloudsql.client"
 }
 
+variable ror-baba-db-username {
+  description = "baba database username"
+}
+
 variable ror-baba-db-password {
   description = "baba database password"
+}
+
+variable ror-baba-smtp-username {
+  description = "baba smtp username"
+}
+
+variable ror-baba-smtp-password {
+  description = "baba smtp password"
+}
+
+variable ror-baba-keycloak-secret {
+  description = "baba keycloak secret"
 }

@@ -40,13 +40,18 @@ resource "kubernetes_secret" "baba_service_account_credentials" {
   }
 }
 
-resource "kubernetes_secret" "ror-baba-db-password" {
+resource "kubernetes_secret" "ror-baba-secret" {
   metadata {
-    name      = "${var.labels.team}-${var.labels.app}-db-password"
+    name      = "${var.labels.team}-${var.labels.app}-secret"
     namespace = var.kube_namespace
   }
 
   data = {
-    "password"     = var.ror-baba-db-password
+    "baba-db-username"     = var.ror-baba-db-username
+    "baba-db-password"     = var.ror-baba-db-password
+    "baba-smtp-username"     = var.ror-baba-smtp-username
+    "baba-smtp-password"     = var.ror-baba-smtp-password
+    "baba-keycloak-secret"     = var.ror-baba-keycloak-secret
+
   }
 }
