@@ -63,28 +63,28 @@ spec:
             - name: SPRING_MAIL_USERNAME
               valueFrom:
                 secretKeyRef:
-                  key: smtp-user
-                  name: baba-smtp-credentials
+                  key: baba-smtp-username
+                  name: ror-baba-secret
             - name: SPRING_MAIL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  key: smtp-password
-                  name: baba-smtp-credentials
+                  key: baba-smtp-password
+                  name: ror-baba-secret
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
-                  key: babadb-username
-                  name: platform-passwords
+                  key: baba-db-username
+                  name: ror-baba-secret
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  key: babadb-password
-                  name: platform-passwords
+                  key: baba-db-password
+                  name: ror-baba-secret
             - name: IAM_KEYCLOAK_ADMIN_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  key: password
-                  name: baba-keycloak-secret
+                  key: baba-keycloak-secret
+                  name: ror-baba-secret
           image: {{ .Values.image.identifier }}
           imagePullPolicy: Always
           livenessProbe:
