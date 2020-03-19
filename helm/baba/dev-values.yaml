@@ -1,5 +1,5 @@
 env: dev
-replicas: 1
+replicas: 2
 gcp:
   databaseInstance: carbon-1287:europe-west1:baba-db-1=tcp:5432
   exchangeKeyName: marduk-exchange-carbon-storage-key
