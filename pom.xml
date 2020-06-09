@@ -63,9 +63,6 @@
         <resteasy.version>3.6.1.Final</resteasy.version>
         <guava.version>28.1-jre</guava.version>
 
-        <!--H2 version set to 1.4.199 until the following issue is fixed :  https://hibernate.atlassian.net/projects/HHH/issues/HHH-13711 -->
-        <com.h2database.version>1.4.199</com.h2database.version>
-
     </properties>
 
     <dependencies>
@@ -309,7 +306,6 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>${com.h2database.version}</version>
             <scope>test</scope>
         </dependency>
 
