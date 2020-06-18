@@ -129,6 +129,7 @@ spec:
       restartPolicy: Always
       schedulerName: default-scheduler
       securityContext: {}
+      serviceAccountName: baba-service-account
       terminationGracePeriodSeconds: 30
       volumes:
         - name: baba-service-account
