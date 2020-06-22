@@ -15,4 +15,4 @@ mail:
     operator: https://operator-stage.rutebanken.org/
 
 ingress:
-  loadBalancerIP: 130.211.80.129
+  loadBalancerIP: 35.195.146.93
