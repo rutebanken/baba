@@ -42,39 +42,8 @@ ${message("new.user.email.password.text")} <a href="${forgotPasswordLink}">${mes
 
 
 <p>
-${message("new.user.email.stop.place.user.guide.text")} <a href="${stopPlaceUserGuideLink}">${message("new.user.email.stop.place.user.guide.link.text")}</a>
+${message("new.user.email.user.guide.text")} <a href="${userGuideLink}">${message("new.user.email.user.guide.link.text")}</a>
 </p>
-
-
-<h4>${message("new.user.email.link.text")}: </h4>
-<table>
-    <tr>
-        <td><a href="${stopPlaceLink}">${stopPlaceLink}</a></td> <td>${message("new.user.email.link.stopplace")}</td>
-    </tr>
-    <#if operatorLink?has_content>
-    <tr>
-        <td><a href="${operatorLink}">${operatorLink}</a></td> <td>${message("new.user.email.link.operator")}</td>
-    </tr>
-    </#if>
-
-    <#--<tr>-->
-        <#--<td><a href="${routedbLink}">${routedbLink}</a></td> <td>${message("new.user.email.link.routedb")}</td>-->
-    <#--</tr>-->
-    <tr>
-        <td><a href="${devLink}">${devLink}</a></td> <td>${message("new.user.email.link.dev")}</td>
-    </tr>
-    <tr>
-        <td><a href="${manualLink}">${manualLink}</a></td> <td>${message("new.user.email.link.manual")}</td>
-    </tr>
-    <tr>
-        <td><a href="${netexProfileLink}">${netexProfileLink}</a></td> <td>${message("new.user.email.link.netexprofile")}</td>
-    </tr>
-    <tr>
-        <td><a href="${siriProfileLink}">${siriProfileLink}</a></td> <td>${message("new.user.email.link.siriprofile")}</td>
-    </tr>
-
-</table>
-
 
 <h4>${message("new.user.email.contact.info.text")}: <a href="${contactInfoEmail}">${contactInfoEmail}</a></td></h4>
 
