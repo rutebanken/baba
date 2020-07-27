@@ -19,9 +19,6 @@ data:
     spring.mail.host=smtp.postmarkapp.com
     spring.mail.properties.mail.smtp.timeout=3000
     spring.mail.properties.mail.smtp.connecttimeout=5000
-    email.link.routedb={{ .Values.mail.link.routeDB}}
-    email.link.stop.place={{ .Values.mail.link.stopPlace}}
-    email.link.operator={{ .Values.mail.link.operator}}
     email.link.password.reset:{{ .Values.keycloakUrl}}/realms/rutebanken/login-actions/reset-credentials
     new.user.email.enabled=true
     new.user.email.from={{ .Values.mail.newUserFrom}}

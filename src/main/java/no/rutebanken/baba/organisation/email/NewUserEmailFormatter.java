@@ -40,22 +40,8 @@ public class NewUserEmailFormatter {
     @Value("${email.link.password.reset}")
     private String forgotPasswordLink;
 
-    @Value("${email.link.operator:#{null}}")
-    private String operatorLink;
-    @Value("${email.link.stop.place:https://stoppested.entur.org/}")
-    private String stopPlaceLink;
-    @Value("${email.link.routedb:https://rutedb.entur.org/}")
-    private String routedbLink;
-    @Value("${email.link.dev:http://dev.entur.org}")
-    private String devLink;
-    @Value("${email.link.manual:https://rutebanken.atlassian.net/wiki/pages/viewpage.action?pageId=13729884}")
-    private String manualLink;
-    @Value("${email.link.netexprofile:https://rutebanken.atlassian.net/wiki/display/PUBLIC/NeTEx+profil+Norge}")
-    private String netexProfileLink;
-    @Value("${email.link.siriprofile:https://rutebanken.atlassian.net/wiki/display/PUBLIC/SIRI+profil+Norge}")
-    private String siriProfileLink;
-    @Value("${email.link.stop.place.user.guide:https://rutebanken.atlassian.net/wiki/pages/viewpage.action?pageId=69735716}")
-    private String stopPlaceUserGuideLink;
+    @Value("${email.link.user.guide:https://enturas.atlassian.net/wiki/spaces/PUBLIC/pages/1444216931/Using+our+services}")
+    private String userGuideLink;
 
 
     @Value("${email.contact.info:kollektivdata@entur.org}")
@@ -72,16 +58,9 @@ public class NewUserEmailFormatter {
         model.put("user", user);
         model.put("message", new MessageResolverMethod(messageSource, locale));
 
-        model.put("stopPlaceLink", stopPlaceLink);
-        model.put("operatorLink", operatorLink);
-        model.put("routedbLink", routedbLink);
-        model.put("devLink", devLink);
-        model.put("manualLink", manualLink);
-        model.put("netexProfileLink", netexProfileLink);
-        model.put("siriProfileLink", siriProfileLink);
         model.put("forgotPasswordLink", forgotPasswordLink);
         model.put("contactInfoEmail", contactInfoEmail);
-        model.put("stopPlaceUserGuideLink", stopPlaceUserGuideLink);
+        model.put("userGuideLink", userGuideLink);
 
         return geFreeMarkerTemplateContent(model);
     }
