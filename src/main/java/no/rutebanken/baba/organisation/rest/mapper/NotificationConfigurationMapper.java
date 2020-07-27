@@ -68,7 +68,7 @@ public class NotificationConfigurationMapper {
         if (CollectionUtils.isEmpty(dtos)) {
             return new HashSet<>();
         }
-        return dtos.stream().map(n -> fromDTO(n)).collect(Collectors.toSet());
+        return dtos.stream().map(this::fromDTO).collect(Collectors.toSet());
     }
 
 
@@ -86,7 +86,7 @@ public class NotificationConfigurationMapper {
             dto.type = EventFilterDTO.EventFilterType.CRUD;
             dto.entityClassificationRefs = crudEventFilter.getEntityClassifications().stream().map(ec -> ec.getId()).collect(Collectors.toSet());
             if (fullDetails) {
-                dto.entityClassifications = crudEventFilter.getEntityClassifications().stream().map(ec -> toDTO(ec)).collect(Collectors.toSet());
+                dto.entityClassifications = crudEventFilter.getEntityClassifications().stream().map(this::toDTO).collect(Collectors.toSet());
             }
 
             dto.administrativeZoneRefs = crudEventFilter.getAdministrativeZones().stream().map(az -> az.getId()).collect(Collectors.toSet());

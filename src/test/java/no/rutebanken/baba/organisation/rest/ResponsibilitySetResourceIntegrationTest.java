@@ -32,6 +32,7 @@ import org.springframework.util.CollectionUtils;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 
 public class ResponsibilitySetResourceIntegrationTest extends BaseIntegrationTest {
@@ -42,14 +43,14 @@ public class ResponsibilitySetResourceIntegrationTest extends BaseIntegrationTes
     private static final String PATH = "/services/organisations/responsibility_sets";
 
     @Test
-    public void responsibilitySetNotFound() throws Exception {
+    public void responsibilitySetNotFound() {
         ResponseEntity<ResponsibilitySetDTO> entity = restTemplate.getForEntity(PATH + "/unknownResponsibilitySet",
                 ResponsibilitySetDTO.class);
         Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
     }
 
     @Test
-    public void crudResponsibilitySet() throws Exception {
+    public void crudResponsibilitySet() {
 
         ResponsibilitySetDTO createResponsibilitySet = createResponsibilitySet("RspSet", "RspSet name",
                 new ResponsibilityRoleAssignmentDTO(TestConstantsOrganisation.ROLE_ID, TestConstantsOrganisation.ORGANISATION_ID));
@@ -76,14 +77,14 @@ public class ResponsibilitySetResourceIntegrationTest extends BaseIntegrationTes
     }
 
     @Test
-    public void updateResponsibilitySetRoles() throws Exception {
+    public void updateResponsibilitySetRoles() {
         ResponsibilityRoleAssignmentDTO role1 = new ResponsibilityRoleAssignmentDTO(TestConstantsOrganisation.ROLE_ID, TestConstantsOrganisation.ORGANISATION_ID);
         role1.responsibleOrganisationRef = TestConstantsOrganisation.ORGANISATION_ID;
         role1.typeOfResponsibilityRoleRef = TestConstantsOrganisation.ROLE_ID;
         role1.responsibleAreaRef = ResourceTestUtils.addAdminZone(restTemplate, "respArea1");
 
         ResponsibilityRoleAssignmentDTO role2 = new ResponsibilityRoleAssignmentDTO(TestConstantsOrganisation.ROLE_ID, TestConstantsOrganisation.ORGANISATION_ID);
-        role2.entityClassificationAssignments = Arrays.asList(new EntityClassificationAssignmentDTO(TestConstantsOrganisation.ENTITY_CLASSIFICATION_ID, true));
+        role2.entityClassificationAssignments = Collections.singletonList(new EntityClassificationAssignmentDTO(TestConstantsOrganisation.ENTITY_CLASSIFICATION_ID, true));
 
         ResponsibilitySetDTO responsibilitySet = createResponsibilitySet("RspSetUpdate", "RspSet name", role1, role2);
         URI uri = restTemplate.postForLocation(PATH, responsibilitySet);
@@ -99,7 +100,7 @@ public class ResponsibilitySetResourceIntegrationTest extends BaseIntegrationTes
 
         ResponsibilityRoleAssignmentDTO role3 = new ResponsibilityRoleAssignmentDTO(TestConstantsOrganisation.ROLE_ID, TestConstantsOrganisation.ORGANISATION_ID);
         responsibilitySet.roles.add(role3);
-        role1.entityClassificationAssignments = Arrays.asList(new EntityClassificationAssignmentDTO(TestConstantsOrganisation.ENTITY_CLASSIFICATION_ID_2, true));
+        role1.entityClassificationAssignments = Collections.singletonList(new EntityClassificationAssignmentDTO(TestConstantsOrganisation.ENTITY_CLASSIFICATION_ID_2, true));
         role2.entityClassificationAssignments = null;
 
         restTemplate.put(uri, responsibilitySet);
@@ -176,7 +177,7 @@ public class ResponsibilitySetResourceIntegrationTest extends BaseIntegrationTes
     }
 
     @Test
-    public void createInvalidResponsibilitySetWithMissingRoles() throws Exception {
+    public void createInvalidResponsibilitySetWithMissingRoles() {
         ResponsibilityRoleAssignmentDTO roleWithoutName = new ResponsibilityRoleAssignmentDTO();
         ResponsibilitySetDTO inResponsibilitySet = createResponsibilitySet("privateCode", "responsibilitySet name", roleWithoutName);
         ResponseEntity<String> rsp = restTemplate.postForEntity(PATH, inResponsibilitySet, String.class);
@@ -185,7 +186,7 @@ public class ResponsibilitySetResourceIntegrationTest extends BaseIntegrationTes
     }
 
     @Test
-    public void createOrgWithExistingPrivateCode() throws Exception {
+    public void createOrgWithExistingPrivateCode() {
         ResponsibilitySetDTO inResponsibilitySet = createResponsibilitySet("OrgPrivateCode", "responsibilitySet name",
                 new ResponsibilityRoleAssignmentDTO(TestConstantsOrganisation.ROLE_ID, TestConstantsOrganisation.ORGANISATION_ID));
 

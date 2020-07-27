@@ -46,7 +46,7 @@ public class NotificationConfigurationResourceTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void userNotFound() throws Exception {
+    public void userNotFound() {
         ResponseEntity<String> entity = restTemplate.getForEntity(url("unknownUser"),
                 String.class);
         Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
@@ -55,7 +55,7 @@ public class NotificationConfigurationResourceTest extends BaseIntegrationTest {
 
 
     @Test
-    public void crudNotificationConfig() throws Exception {
+    public void crudNotificationConfig() {
 
         String url = url(TestConstantsOrganisation.USER_USERNAME);
 
@@ -119,7 +119,7 @@ public class NotificationConfigurationResourceTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void createInvalidNotificationConfig() throws Exception {
+    public void createInvalidNotificationConfig() {
         Set<NotificationConfigDTO> inConfig = Sets.newHashSet(
                 new NotificationConfigDTO(null, true, jobEventFilter()));
         restTemplate.put(PATH, inConfig);

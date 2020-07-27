@@ -28,8 +28,7 @@ public class ChouetteReferentialInfo {
      */
     public ChouetteReferentialInfo(Provider provider) {
 
-        String schemaName = provider.getChouetteInfo().referential;
-        this.schemaName = schemaName;
+        this.schemaName = provider.getChouetteInfo().referential;
         this.dataspaceFormat = provider.getChouetteInfo().dataFormat;
 
         String regtoppCoordinateProjection = provider.getChouetteInfo().regtoppCoordinateProjection;

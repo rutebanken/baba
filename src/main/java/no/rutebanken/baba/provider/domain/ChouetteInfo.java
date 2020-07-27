@@ -29,7 +29,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Table;
+import java.util.Objects;
 import java.util.Set;
 
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -115,11 +115,11 @@ public class ChouetteInfo {
 
         ChouetteInfo that = (ChouetteInfo) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (xmlns != null ? !xmlns.equals(that.xmlns) : that.xmlns != null) return false;
-        if (referential != null ? !referential.equals(that.referential) : that.referential != null) return false;
-        if (organisation != null ? !organisation.equals(that.organisation) : that.organisation != null) return false;
-        return user != null ? user.equals(that.user) : that.user == null;
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(xmlns, that.xmlns)) return false;
+        if (!Objects.equals(referential, that.referential)) return false;
+        if (!Objects.equals(organisation, that.organisation)) return false;
+        return Objects.equals(user, that.user);
 
     }
 

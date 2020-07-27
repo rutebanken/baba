@@ -16,6 +16,7 @@
 
 package no.rutebanken.baba.organisation.rest.mapper;
 
+import no.rutebanken.baba.exceptions.BabaException;
 import no.rutebanken.baba.organisation.model.CodeSpaceEntity;
 import no.rutebanken.baba.organisation.model.TypeEntity;
 import no.rutebanken.baba.organisation.model.VersionedEntity;
@@ -54,9 +55,9 @@ public class TypeMapper<R extends VersionedEntity & TypeEntity> implements DTOMa
 
 	private R createInstance(Class<R> clazz) {
 		try {
-			return clazz.newInstance();
+			return  clazz.getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
-			throw new RuntimeException("Failed to create instance of class: " + clazz + " : " + e.getMessage());
+			throw new BabaException("Failed to create instance of class: " + clazz + " : " + e.getMessage());
 		}
 	}
 

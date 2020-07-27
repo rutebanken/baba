@@ -51,10 +51,7 @@ public class Id {
 	}
 
 	private static boolean isValid(String publicId) {
-		if (StringUtils.isEmpty(publicId)) {
-			return false;
-		}
-		return true;
+		return !StringUtils.isEmpty(publicId);
 	}
 
 	public String getCodeSpace() {

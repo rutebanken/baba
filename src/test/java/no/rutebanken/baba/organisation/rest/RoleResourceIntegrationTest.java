@@ -38,14 +38,14 @@ public class RoleResourceIntegrationTest extends BaseIntegrationTest {
     private static final String PATH = "/services/organisations/roles";
 
     @Test
-    public void roleNotFound() throws Exception {
+    public void roleNotFound() {
         ResponseEntity<TypeDTO> entity = restTemplate.getForEntity(PATH + "/unknownRoles",
                 TypeDTO.class);
         Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
     }
 
     @Test
-    public void crudRole() throws Exception {
+    public void crudRole() {
         TypeDTO createRole = createRole("role name", "privateCode");
         URI uri = restTemplate.postForLocation(PATH, createRole);
         ResourceTestUtils.assertType(createRole, uri, restTemplate);
@@ -85,7 +85,7 @@ public class RoleResourceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void createInvalidRole() throws Exception {
+    public void createInvalidRole() {
         TypeDTO inRole = createRole("role name", null);
         ResponseEntity<String> rsp = restTemplate.postForEntity(PATH, inRole, String.class);
 

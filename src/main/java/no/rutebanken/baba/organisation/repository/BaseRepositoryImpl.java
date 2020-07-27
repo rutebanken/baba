@@ -60,8 +60,7 @@ public class BaseRepositoryImpl<T extends VersionedEntity> extends SimpleJpaRepo
         List<T> results = query.getResultList().stream().filter(r -> id.getType() == null || r.getType().equals(id.getType())).collect(Collectors.toList());
 
         if (results.size() == 1) {
-            T result = results.get(0);
-            return result;
+            return results.get(0);
         } else if (results.isEmpty()) {
             return null;
         }

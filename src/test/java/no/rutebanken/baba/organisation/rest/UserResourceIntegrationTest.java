@@ -36,6 +36,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Set;
 
 
@@ -47,7 +48,7 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
 
 
     @Test
-    public void userNotFound() throws Exception {
+    public void userNotFound() {
         ResponseEntity<UserDTO> entity = restTemplate.getForEntity(PATH + "/unknownUser",
                 UserDTO.class);
         Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
@@ -55,7 +56,7 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
 
 
     @Test
-    public void crudUser() throws Exception {
+    public void crudUser() {
         ContactDetailsDTO createContactDetails = new ContactDetailsDTO("first", "last", "phone", "email@email.com");
         UserDTO createUser = createUser("userName", TestConstantsOrganisation.ORGANISATION_ID, createContactDetails);
         ResponseEntity<String> createResponse = restTemplate.postForEntity(PATH, createUser, String.class);
@@ -105,13 +106,13 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void updateUsersResponsibilitySets() throws Exception {
+    public void updateUsersResponsibilitySets() {
         ContactDetailsDTO contactDetails = new ContactDetailsDTO("first", "last", "phone", "email@email.com");
         UserDTO user = createUser("userName", TestConstantsOrganisation.ORGANISATION_ID, contactDetails);
         URI uri = restTemplate.postForLocation(PATH, user);
         assertUser(user, uri);
 
-        user.responsibilitySetRefs = Arrays.asList(TestConstantsOrganisation.RESPONSIBILITY_SET_ID);
+        user.responsibilitySetRefs = Collections.singletonList(TestConstantsOrganisation.RESPONSIBILITY_SET_ID);
         restTemplate.put(uri, user);
         assertUser(user, uri);
 
@@ -119,7 +120,7 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
         restTemplate.put(uri, user);
         assertUser(user, uri);
 
-        user.responsibilitySetRefs = Arrays.asList(TestConstantsOrganisation.RESPONSIBILITY_SET_ID_2);
+        user.responsibilitySetRefs = Collections.singletonList(TestConstantsOrganisation.RESPONSIBILITY_SET_ID_2);
         restTemplate.put(uri, user);
         assertUser(user, uri);
 
@@ -188,7 +189,7 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void createInvalidUser() throws Exception {
+    public void createInvalidUser() {
         UserDTO inUser = createUser("user name", "privateCode", null);
         ResponseEntity<String> rsp = restTemplate.postForEntity(PATH, inUser, String.class);
 

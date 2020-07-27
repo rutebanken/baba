@@ -24,6 +24,7 @@ import no.rutebanken.baba.organisation.rest.dto.organisation.OrganisationDTO;
 import no.rutebanken.baba.organisation.rest.dto.responsibility.EntityClassificationDTO;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @ApiModel(description = "Filter describing events of interest")
@@ -77,14 +78,14 @@ public class EventFilterDTO {
         EventFilterDTO that = (EventFilterDTO) o;
 
         if (type != that.type) return false;
-        if (organisationRef != null ? !organisationRef.equals(that.organisationRef) : that.organisationRef != null)
+        if (!Objects.equals(organisationRef, that.organisationRef))
             return false;
         if (jobDomain != that.jobDomain) return false;
-        if (actions != null ? !actions.equals(that.actions) : that.actions != null) return false;
-        if (states != null ? !states.equals(that.states) : that.states != null) return false;
-        if (administrativeZoneRefs != null ? !administrativeZoneRefs.equals(that.administrativeZoneRefs) : that.administrativeZoneRefs != null)
+        if (!Objects.equals(actions, that.actions)) return false;
+        if (!Objects.equals(states, that.states)) return false;
+        if (!Objects.equals(administrativeZoneRefs, that.administrativeZoneRefs))
             return false;
-        return entityClassificationRefs != null ? entityClassificationRefs.equals(that.entityClassificationRefs) : that.entityClassificationRefs == null;
+        return Objects.equals(entityClassificationRefs, that.entityClassificationRefs);
     }
 
     @Override
