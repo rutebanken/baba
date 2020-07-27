@@ -18,8 +18,6 @@ package no.rutebanken.baba.provider.repository;
 
 
 import no.rutebanken.baba.provider.domain.Provider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
