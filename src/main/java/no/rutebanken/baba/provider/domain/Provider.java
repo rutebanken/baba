@@ -60,15 +60,24 @@ public class Provider {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Provider provider = (Provider) o;
 
-        if (!Objects.equals(id, provider.id)) return false;
-        if (!Objects.equals(name, provider.name)) return false;
-        if (!Objects.equals(sftpAccount, provider.sftpAccount))
+        if (!Objects.equals(id, provider.id)) {
             return false;
+        }
+        if (!Objects.equals(name, provider.name)) {
+            return false;
+        }
+        if (!Objects.equals(sftpAccount, provider.sftpAccount)) {
+            return false;
+        }
         return Objects.equals(chouetteInfo, provider.chouetteInfo);
 
     }

@@ -69,7 +69,7 @@ public class RoleResourceIntegrationTest extends BaseIntegrationTest {
     @Test
     public void testDeleteRoleInUse() {
         ResponseEntity<String> response = restTemplate.exchange(PATH + "/" + TestConstantsOrganisation.ROLE_ID, HttpMethod.DELETE, null, String.class);
-        Assert.assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+        Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     private void assertRoleInArray(TypeDTO role, TypeDTO[] array) {

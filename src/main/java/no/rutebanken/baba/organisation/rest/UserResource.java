@@ -89,7 +89,7 @@ public class UserResource extends BaseResource<User, UserDTO> {
         try {
             password = iamService.createUser(user);
         } catch (RuntimeException e) {
-            logger.warn("Creation of new user in IAM failed. Removing user from local storage. Exception: " + e.getMessage());
+            logger.warn("Creation of new user in IAM failed. Removing user from local storage. Exception: {}", e.getMessage(), e);
             deleteEntity(user.getId());
             throw e;
         }

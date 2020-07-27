@@ -85,8 +85,8 @@ public class RoleResource extends BaseResource<Role, TypeDTO> {
 	@DELETE
 	@Path("{id}")
 	public void delete(@PathParam("id") String id) {
-		Role Role = deleteEntity(id);
-		iamService.removeRole(Role);
+		Role role = deleteEntity(id);
+		iamService.removeRole(role);
 	}
 
 	@GET

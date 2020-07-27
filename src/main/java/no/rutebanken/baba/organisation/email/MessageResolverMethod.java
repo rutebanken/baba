@@ -41,7 +41,7 @@ public class MessageResolverMethod implements TemplateMethodModelEx {
 
     @Override
     public Object exec(List arguments) throws TemplateModelException {
-        if (arguments.size() < 1) {
+        if (arguments.isEmpty()) {
             throw new TemplateModelException("Wrong number of arguments");
         }
         SimpleScalar arg = (SimpleScalar) arguments.get(0);

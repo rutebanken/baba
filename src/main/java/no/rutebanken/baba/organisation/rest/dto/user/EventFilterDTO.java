@@ -72,19 +72,33 @@ public class EventFilterDTO {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         EventFilterDTO that = (EventFilterDTO) o;
 
-        if (type != that.type) return false;
-        if (!Objects.equals(organisationRef, that.organisationRef))
+        if (type != that.type) {
             return false;
-        if (jobDomain != that.jobDomain) return false;
-        if (!Objects.equals(actions, that.actions)) return false;
-        if (!Objects.equals(states, that.states)) return false;
-        if (!Objects.equals(administrativeZoneRefs, that.administrativeZoneRefs))
+        }
+        if (!Objects.equals(organisationRef, that.organisationRef)) {
             return false;
+        }
+        if (jobDomain != that.jobDomain) {
+            return false;
+        }
+        if (!Objects.equals(actions, that.actions)) {
+            return false;
+        }
+        if (!Objects.equals(states, that.states)) {
+            return false;
+        }
+        if (!Objects.equals(administrativeZoneRefs, that.administrativeZoneRefs)) {
+            return false;
+        }
         return Objects.equals(entityClassificationRefs, that.entityClassificationRefs);
     }
 

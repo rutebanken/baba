@@ -39,7 +39,7 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @ComponentScan(basePackageClasses = KeycloakSecurityComponents.class)
 public class BabaSecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter {
 
-    private static final Logger logger = LoggerFactory.getLogger(BabaSecurityConfiguration.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BabaSecurityConfiguration.class);
 
     /**
      * Registers the KeycloakAuthenticationProvider with the authentication
@@ -63,7 +63,7 @@ public class BabaSecurityConfiguration extends KeycloakWebSecurityConfigurerAdap
     protected void configure(HttpSecurity http) throws Exception {
         super.configure(http);
 
-        logger.info("Configuring HttpSecurity");
+        LOGGER.info("Configuring HttpSecurity");
 
         http.csrf().disable()
                 .authorizeRequests()

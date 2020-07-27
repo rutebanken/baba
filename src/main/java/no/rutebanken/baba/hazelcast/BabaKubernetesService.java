@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public final class BabaKubernetesService extends KubernetesService {
-    private static final Logger log = LoggerFactory.getLogger(BabaKubernetesService.class);
 
     public BabaKubernetesService(@Value("${rutebanken.kubernetes.url:}") String kubernetesUrl,
                                         @Value("${rutebanken.kubernetes.namespace:default}") String namespace,

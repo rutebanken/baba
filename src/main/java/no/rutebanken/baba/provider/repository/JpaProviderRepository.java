@@ -32,8 +32,6 @@ import java.util.Collection;
 @Transactional
 public class JpaProviderRepository implements ProviderRepository {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     @PersistenceContext
     private EntityManager entityManager;
 

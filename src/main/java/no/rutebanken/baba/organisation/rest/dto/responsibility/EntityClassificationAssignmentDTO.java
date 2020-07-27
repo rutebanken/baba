@@ -39,12 +39,18 @@ public class EntityClassificationAssignmentDTO {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         EntityClassificationAssignmentDTO that = (EntityClassificationAssignmentDTO) o;
 
-        if (allow != that.allow) return false;
+        if (allow != that.allow) {
+            return false;
+        }
         return Objects.equals(entityClassificationRef, that.entityClassificationRef);
     }
 

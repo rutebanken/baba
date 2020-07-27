@@ -110,15 +110,27 @@ public class ChouetteInfo {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         ChouetteInfo that = (ChouetteInfo) o;
 
-        if (!Objects.equals(id, that.id)) return false;
-        if (!Objects.equals(xmlns, that.xmlns)) return false;
-        if (!Objects.equals(referential, that.referential)) return false;
-        if (!Objects.equals(organisation, that.organisation)) return false;
+        if (!Objects.equals(id, that.id)) {
+            return false;
+        }
+        if (!Objects.equals(xmlns, that.xmlns)) {
+            return false;
+        }
+        if (!Objects.equals(referential, that.referential)) {
+            return false;
+        }
+        if (!Objects.equals(organisation, that.organisation)) {
+            return false;
+        }
         return Objects.equals(user, that.user);
 
     }
