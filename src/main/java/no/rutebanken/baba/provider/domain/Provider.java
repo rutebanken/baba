@@ -25,6 +25,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import java.util.Objects;
 
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
@@ -59,16 +60,25 @@ public class Provider {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Provider provider = (Provider) o;
 
-        if (id != null ? !id.equals(provider.id) : provider.id != null) return false;
-        if (name != null ? !name.equals(provider.name) : provider.name != null) return false;
-        if (sftpAccount != null ? !sftpAccount.equals(provider.sftpAccount) : provider.sftpAccount != null)
+        if (!Objects.equals(id, provider.id)) {
             return false;
-        return chouetteInfo != null ? chouetteInfo.equals(provider.chouetteInfo) : provider.chouetteInfo == null;
+        }
+        if (!Objects.equals(name, provider.name)) {
+            return false;
+        }
+        if (!Objects.equals(sftpAccount, provider.sftpAccount)) {
+            return false;
+        }
+        return Objects.equals(chouetteInfo, provider.chouetteInfo);
 
     }
 

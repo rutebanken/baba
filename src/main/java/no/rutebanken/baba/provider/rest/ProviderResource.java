@@ -40,19 +40,19 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 @Api
 public class ProviderResource {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProviderResource.class);
 
     @Autowired
-    ProviderRepository providerRepository;
+    private ProviderRepository providerRepository;
 
     @Autowired
-    ChouetteReferentialService chouetteReferentialService;
+    private ChouetteReferentialService chouetteReferentialService;
 
     @GET
     @Path("/{providerId}")
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#providerId)")
     public Provider getProvider(@PathParam("providerId") Long providerId) {
-        logger.debug("Returning provider with id '" + providerId + "'");
+        LOGGER.debug("Returning provider with id '{}'", providerId);
         Provider provider = providerRepository.getProvider(providerId);
         if (provider == null) {
             throw new NotFoundException("Unable to find provider with id=" + providerId);
@@ -64,7 +64,7 @@ public class ProviderResource {
     @Path("/{providerId}")
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#providerId)")
     public void deleteProvider(@PathParam("providerId") Long providerId) {
-        logger.info("Deleting provider with id '" + providerId + "'");
+        LOGGER.info("Deleting provider with id '{}'", providerId);
         Provider provider = providerRepository.getProvider(providerId);
         if (provider == null) {
             throw new NotFoundException("Unable to find provider with id=" + providerId);
@@ -77,7 +77,7 @@ public class ProviderResource {
     @Path("/{providerId}")
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#provider.id)")
     public void updateProvider(Provider provider) {
-        logger.info("Updating provider " + provider);
+        LOGGER.info("Updating provider " + provider);
         chouetteReferentialService.updateChouetteReferential(provider);
         providerRepository.updateProvider(provider);
     }
@@ -85,7 +85,7 @@ public class ProviderResource {
     @POST
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#provider.id)")
     public Provider createProvider(Provider provider) {
-        logger.info("Creating provider " + provider);
+        LOGGER.info("Creating provider {}", provider);
         chouetteReferentialService.createChouetteReferential(provider);
         return providerRepository.createProvider(provider);
     }
@@ -99,7 +99,7 @@ public class ProviderResource {
 
     @GET
     public Collection<Provider> getProviders() {
-        logger.debug("Returning all providers.");
+        LOGGER.debug("Returning all providers.");
         return providerRepository.getProviders();
     }
 

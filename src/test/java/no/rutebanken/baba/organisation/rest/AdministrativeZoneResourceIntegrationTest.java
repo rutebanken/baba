@@ -42,14 +42,14 @@ public class AdministrativeZoneResourceIntegrationTest extends BaseIntegrationTe
     private static final String PATH = "/services/organisations/administrative_zones";
 
     @Test
-    public void administrativeZoneNotFound() throws Exception {
+    public void administrativeZoneNotFound() {
         ResponseEntity<AdministrativeZoneDTO> entity = restTemplate.getForEntity(PATH + "/unknownAdministrativeZones",
                 AdministrativeZoneDTO.class);
         Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
     }
 
     @Test
-    public void crudAdministrativeZone() throws Exception {
+    public void crudAdministrativeZone() {
         AdministrativeZoneDTO createAdministrativeZone = createAdministrativeZone("administrativeZone name", "privateCode", validPolygon());
         URI uri = restTemplate.postForLocation(PATH, createAdministrativeZone);
         assertAdministrativeZone(createAdministrativeZone, uri);
@@ -88,7 +88,7 @@ public class AdministrativeZoneResourceIntegrationTest extends BaseIntegrationTe
     }
 
     @Test
-    public void createInvalidAdministrativeZone() throws Exception {
+    public void createInvalidAdministrativeZone() {
         AdministrativeZoneDTO inAdministrativeZone = createAdministrativeZone("administrativeZone name", "privateCode", null);
         ResponseEntity<String> rsp = restTemplate.postForEntity(PATH, inAdministrativeZone, String.class);
 

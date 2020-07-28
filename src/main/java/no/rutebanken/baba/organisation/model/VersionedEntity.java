@@ -35,11 +35,11 @@ public abstract class VersionedEntity implements Serializable {
 	@JsonIgnore
 	@NotNull
 	// Version for optimistic locking
-	private Long lockVersion = Long.valueOf(1);
+	private Long lockVersion = 1L;
 
 	@NotNull
 	// Publicly exposed version of entity
-	private Long entityVersion = Long.valueOf(1);
+	private Long entityVersion = 1L;
 
 	@JsonIgnore
 	public String getType() {

@@ -18,7 +18,6 @@ package no.rutebanken.baba.organisation.rest.dto.user;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiParam;
 import no.rutebanken.baba.organisation.rest.dto.BaseDTO;
 import no.rutebanken.baba.organisation.rest.dto.organisation.OrganisationDTO;
 import no.rutebanken.baba.organisation.rest.dto.responsibility.ResponsibilitySetDTO;

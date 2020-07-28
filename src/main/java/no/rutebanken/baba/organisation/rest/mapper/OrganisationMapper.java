@@ -56,7 +56,7 @@ public class OrganisationMapper implements DTOMapper<Organisation, OrganisationD
 		}
 
 		if (!CollectionUtils.isEmpty(entity.getParts())) {
-			dto.parts = entity.getParts().stream().map(p -> toDTO(p)).collect(Collectors.toList());
+			dto.parts = entity.getParts().stream().map(this::toDTO).collect(Collectors.toList());
 		}
 
 		return dto;

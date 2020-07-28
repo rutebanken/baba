@@ -51,7 +51,7 @@ public class UserRepositoryTest extends BaseIntegrationTest {
         User createdUser = userRepository.saveAndFlush(user);
 
         User fetchedUser = userRepository.getOne(createdUser.getPk());
-        Assert.assertTrue(fetchedUser.getId().equals("User:2"));
+        Assert.assertEquals("User:2", fetchedUser.getId());
 
 
     }

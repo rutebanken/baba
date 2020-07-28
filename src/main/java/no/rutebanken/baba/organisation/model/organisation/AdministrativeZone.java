@@ -17,11 +17,19 @@
 package no.rutebanken.baba.organisation.model.organisation;
 
 import com.google.common.base.Joiner;
-import org.locationtech.jts.geom.Polygon;
 import no.rutebanken.baba.organisation.model.CodeSpaceEntity;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.locationtech.jts.geom.Polygon;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

@@ -25,7 +25,7 @@ import javax.persistence.EntityManager;
 
 @Service
 public class DbStatusChecker {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(DbStatusChecker.class);
 
     @Autowired
     private EntityManager entityManager;
@@ -36,7 +36,7 @@ public class DbStatusChecker {
                 return true;
             }
         } catch (RuntimeException e) {
-            logger.warn("Failed while testing DB connection", e);
+            LOGGER.warn("Failed while testing DB connection", e);
         }
         return false;
     }

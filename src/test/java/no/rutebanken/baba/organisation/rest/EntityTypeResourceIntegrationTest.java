@@ -41,14 +41,14 @@ public class EntityTypeResourceIntegrationTest extends BaseIntegrationTest {
 	private static final String PATH = "/services/organisations/entity_types";
 
 	@Test
-	public void entityTypeNotFound() throws Exception {
+	public void entityTypeNotFound() {
 		ResponseEntity<EntityTypeDTO> entity = restTemplate.getForEntity(PATH + "/unknownEntityTypes",
 				EntityTypeDTO.class);
 		Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
 	}
 
 	@Test
-	public void crudEntityType() throws Exception {
+	public void crudEntityType() {
 		EntityTypeDTO createEntityType = createEntityType("entityType name", "privateCode");
 		URI uri = restTemplate.postForLocation(PATH, createEntityType);
 		assertEntityType(createEntityType, uri);
@@ -76,7 +76,7 @@ public class EntityTypeResourceIntegrationTest extends BaseIntegrationTest {
 
 
 	@Test
-	public void updateEntityClassifications() throws Exception {
+	public void updateEntityClassifications() {
 		TypeDTO classification1 = createClassification("c1", "n1");
 		TypeDTO classification2 = createClassification("c2", "n2");
 		EntityTypeDTO entityType = createEntityType("RspSetUpdate", "RspSet name", classification1, classification2);
@@ -142,7 +142,7 @@ public class EntityTypeResourceIntegrationTest extends BaseIntegrationTest {
 
 
 	@Test
-	public void createInvalidEntityType() throws Exception {
+	public void createInvalidEntityType() {
 		EntityTypeDTO inEntityType = createEntityType("entityType name", null);
 		ResponseEntity<String> rsp = restTemplate.postForEntity(PATH, inEntityType, String.class);
 

@@ -37,14 +37,14 @@ public class CodeSpaceResourceIntegrationTest extends BaseIntegrationTest {
     private static final String PATH = "/services/organisations/code_spaces";
 
     @Test
-    public void codeSpaceNotFound() throws Exception {
+    public void codeSpaceNotFound() {
         ResponseEntity<CodeSpaceDTO> entity = restTemplate.getForEntity(PATH + "/unknownCodeSpaces",
                 CodeSpaceDTO.class);
         Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
     }
 
     @Test
-    public void crudCodeSpace() throws Exception {
+    public void crudCodeSpace() {
         CodeSpaceDTO createCodeSpace = createCodeSpace("CodeTest", "xmlnsTest", "xmlnsUrlTest");
         URI uri = restTemplate.postForLocation(PATH, createCodeSpace);
         assertCodeSpace(createCodeSpace, uri);
@@ -89,7 +89,7 @@ public class CodeSpaceResourceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void createInvalidCodeSpace() throws Exception {
+    public void createInvalidCodeSpace() {
         CodeSpaceDTO inCodeSpace = createCodeSpace("Code", "xmlns", null);
         ResponseEntity<String> rsp = restTemplate.postForEntity(PATH, inCodeSpace, String.class);
 

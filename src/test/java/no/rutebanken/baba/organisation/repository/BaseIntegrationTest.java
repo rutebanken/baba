@@ -16,8 +16,6 @@
 
 package no.rutebanken.baba.organisation.repository;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import no.rutebanken.baba.BabaTestApp;
 import no.rutebanken.baba.organisation.model.CodeSpace;
 import no.rutebanken.baba.organisation.model.organisation.Authority;
@@ -32,9 +30,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.IOException;
-import java.io.StringWriter;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,classes = BabaTestApp.class)

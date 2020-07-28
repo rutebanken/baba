@@ -40,14 +40,14 @@ public class OrganisationResourceIntegrationTest extends BaseIntegrationTest {
     private static final String PATH = "/services/organisations";
 
     @Test
-    public void organisationNotFound() throws Exception {
+    public void organisationNotFound() {
         ResponseEntity<OrganisationDTO> entity = restTemplate.getForEntity(PATH + "/unknownOrganisation",
                 OrganisationDTO.class);
         Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
     }
 
     @Test
-    public void crudOrganisation() throws Exception {
+    public void crudOrganisation() {
 
         OrganisationDTO createOrganisation = createOrganisation("TheOrg", "Org name", null);
         URI uri = restTemplate.postForLocation(PATH, createOrganisation);
@@ -56,7 +56,7 @@ public class OrganisationResourceIntegrationTest extends BaseIntegrationTest {
         OrganisationPartDTO orgPart1 = new OrganisationPartDTO();
         orgPart1.name = "part 1";
 
-        OrganisationDTO updateOrganisation = createOrganisation(createOrganisation.privateCode, "newOrg name", 2l, orgPart1);
+        OrganisationDTO updateOrganisation = createOrganisation(createOrganisation.privateCode, "newOrg name", 2L, orgPart1);
         restTemplate.put(uri, updateOrganisation);
         assertOrganisation(updateOrganisation, uri);
 
@@ -73,7 +73,7 @@ public class OrganisationResourceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void updateOrganisationParts() throws Exception {
+    public void updateOrganisationParts() {
         OrganisationPartDTO orgPart1 = new OrganisationPartDTO();
         orgPart1.name = "part 1";
         orgPart1.administrativeZoneRefs = ResourceTestUtils.addAdminZones(restTemplate, "amd1", "adm2");
@@ -160,7 +160,7 @@ public class OrganisationResourceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void createInvalidOrganisation() throws Exception {
+    public void createInvalidOrganisation() {
         OrganisationPartDTO partWithoutName = new OrganisationPartDTO();
         OrganisationDTO inOrganisation = createOrganisation("privateCode", "organisation name", null, partWithoutName);
         ResponseEntity<String> rsp = restTemplate.postForEntity(PATH, inOrganisation, String.class);
@@ -169,7 +169,7 @@ public class OrganisationResourceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void createOrgWithExistingPrivateCode() throws Exception {
+    public void createOrgWithExistingPrivateCode() {
         OrganisationDTO inOrganisation = createOrganisation("OrgPrivateCode", "organisation name", null);
         ResponseEntity<String> firstRsp = restTemplate.postForEntity(PATH, inOrganisation, String.class);
 

@@ -42,7 +42,7 @@ public class OrganisationValidator implements DTOValidator<Organisation, Organis
     private void assertCommon(OrganisationDTO dto) {
         Assert.hasLength(dto.name, "name required");
         if (dto.parts != null) {
-            dto.parts.forEach(p -> validatePart(p));
+            dto.parts.forEach(this::validatePart);
         }
     }
 

@@ -29,7 +29,7 @@ import java.util.Locale;
 
 @Service
 public class NewUserEmailSender {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(NewUserEmailSender.class);
     @Autowired
     private JavaMailSender mailSender;
 
@@ -61,9 +61,9 @@ public class NewUserEmailSender {
                 helper.setTo(to);
                 helper.setFrom(emailFrom);
             });
-            logger.info("Sent email with account information to: " + to);
+            LOGGER.info("Sent email with account information to: {}", to);
         } else {
-            logger.info("Not sending email to new user: " + to + " as this has been disabled");
+            LOGGER.info("Not sending email to new user: {} as this has been disabled", to);
         }
     }
 

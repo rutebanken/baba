@@ -45,7 +45,7 @@ ${message("new.user.email.password.text")} <a href="${forgotPasswordLink}">${mes
 ${message("new.user.email.user.guide.text")} <a href="${userGuideLink}">${message("new.user.email.user.guide.link.text")}</a>
 </p>
 
-<h4>${message("new.user.email.contact.info.text")}: <a href="${contactInfoEmail}">${contactInfoEmail}</a></td></h4>
+<h4>${message("new.user.email.contact.info.text")}: <a href="${contactInfoEmail}">${contactInfoEmail}</a></h4>
 
 
 </body>

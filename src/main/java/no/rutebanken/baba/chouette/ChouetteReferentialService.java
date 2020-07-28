@@ -15,7 +15,7 @@ public class ChouetteReferentialService {
     private static final Pattern SCHEMA_PATTERN = Pattern.compile("^(rb_)?[a-z]{3}$");
 
     @Autowired
-    ChouetteReferentialRestClient chouetteReferentialRestClient;
+    private ChouetteReferentialRestClient chouetteReferentialRestClient;
 
     public void createChouetteReferential(Provider provider) {
         ChouetteReferentialInfo referential = new ChouetteReferentialInfo(provider);

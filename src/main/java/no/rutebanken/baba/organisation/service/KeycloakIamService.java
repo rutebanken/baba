@@ -114,7 +114,6 @@ public class KeycloakIamService implements IamService {
 
     public String createUser(User user) {
         String password = generatePassword();
-        ;
         if (!enabled) {
             logger.info("Keycloak disabled! Ignored createUser: " + user.getUsername());
             return password;
@@ -279,7 +278,7 @@ public class KeycloakIamService implements IamService {
 
         List<UserRepresentation> userRepresentations = matchingUserRepresentations.stream().filter(ur -> username.equals(ur.getUsername())).collect(Collectors.toList());
 
-        if (userRepresentations.size() == 0) {
+        if (userRepresentations.isEmpty()) {
             throw new BadRequestException("Username not found in KeyCloak: " + username);
         } else if (userRepresentations.size() > 1) {
             throw new BadRequestException("Username not unique in KeyCloak: " + username);
@@ -360,12 +359,7 @@ public class KeycloakIamService implements IamService {
 
 
         String entityTypeRef = entityClassificationAssignment.getEntityClassification().getEntityType().getPrivateCode();
-        List<String> entityClassificationsForEntityType = atr.e.get(entityTypeRef);
-        if (entityClassificationsForEntityType == null) {
-            entityClassificationsForEntityType = new ArrayList<>();
-            atr.e.put(entityTypeRef, entityClassificationsForEntityType);
-        }
-
+        List<String> entityClassificationsForEntityType = atr.e.computeIfAbsent(entityTypeRef, k -> new ArrayList<>());
 
         // Represented negated entity classifications with '!' prefix for now. consider more structured representation.
         String classifierCode = entityClassificationAssignment.getEntityClassification().getPrivateCode();

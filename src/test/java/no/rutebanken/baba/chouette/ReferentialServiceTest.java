@@ -6,7 +6,7 @@ import org.junit.Test;
 public class ReferentialServiceTest {
 
     @Test
-    public void testValidateSchemaName() throws Exception {
+    public void testValidateSchemaName() {
 
         ChouetteReferentialService referentialService = new ChouetteReferentialService();
         Assert.assertTrue(referentialService.validateSchemaName("abc"));

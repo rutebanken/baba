@@ -101,7 +101,7 @@ public class ResponsibilitySetMapper implements DTOMapper<ResponsibilitySet, Res
         dto.privateCode = entity.getPrivateCode();
         dto.codeSpace = entity.getCodeSpace().getId();
         dto.name = entity.getName();
-        dto.roles = entity.getRoles().stream().map(ra -> toDTO(ra)).collect(Collectors.toList());
+        dto.roles = entity.getRoles().stream().map(this::toDTO).collect(Collectors.toList());
         return dto;
     }
 

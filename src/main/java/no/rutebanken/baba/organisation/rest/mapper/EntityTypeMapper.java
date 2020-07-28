@@ -40,7 +40,7 @@ public class EntityTypeMapper implements DTOMapper<EntityType, EntityTypeDTO> {
 
 
     @Override
-    public EntityType createFromDTO(EntityTypeDTO dto, Class clazz) {
+    public EntityType createFromDTO(EntityTypeDTO dto, Class<EntityType> clazz) {
         EntityType entity = new EntityType();
         entity.setPrivateCode(dto.privateCode);
         entity.setCodeSpace(codeSpaceRepository.getOneByPublicId(dto.codeSpace));

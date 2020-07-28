@@ -26,12 +26,12 @@ import javax.ws.rs.ext.Provider;
 
 @Provider
 public class SpringExceptionMapper extends ExceptionMapperBase implements ExceptionMapper<NestedRuntimeException> {
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Logger LOGGER = LoggerFactory.getLogger(SpringExceptionMapper.class);
 
 
 	@Override
 	public Response toResponse(NestedRuntimeException e) {
-		logger.debug("Operation failed with exception: " + e.getMessage(), e);
+		LOGGER.debug("Operation failed with exception: {}", e.getMessage(), e);
 		Throwable t = e;
 		if (e.getRootCause() != null) {
 			t = e.getRootCause();

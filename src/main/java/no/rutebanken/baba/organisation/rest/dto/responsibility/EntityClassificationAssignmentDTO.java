@@ -19,6 +19,8 @@ package no.rutebanken.baba.organisation.rest.dto.responsibility;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 
+import java.util.Objects;
+
 @ApiModel(description = "Describes whether a user is explicitly authorized / not authorized to do something to a given entity classification ")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EntityClassificationAssignmentDTO {
@@ -37,13 +39,19 @@ public class EntityClassificationAssignmentDTO {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         EntityClassificationAssignmentDTO that = (EntityClassificationAssignmentDTO) o;
 
-        if (allow != that.allow) return false;
-        return entityClassificationRef != null ? entityClassificationRef.equals(that.entityClassificationRef) : that.entityClassificationRef == null;
+        if (allow != that.allow) {
+            return false;
+        }
+        return Objects.equals(entityClassificationRef, that.entityClassificationRef);
     }
 
     @Override

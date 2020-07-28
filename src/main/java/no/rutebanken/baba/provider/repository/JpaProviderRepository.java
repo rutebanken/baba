@@ -18,8 +18,6 @@ package no.rutebanken.baba.provider.repository;
 
 
 import no.rutebanken.baba.provider.domain.Provider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,14 +30,12 @@ import java.util.Collection;
 @Transactional
 public class JpaProviderRepository implements ProviderRepository {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
     public Collection<Provider> getProviders() {
-        return this.entityManager.createQuery("SELECT p FROM Provider p order by p.id", Provider.class).setHint("org.hibernate.cacheable", Boolean.TRUE).getResultList();
+        return entityManager.createQuery("SELECT p FROM Provider p order by p.id", Provider.class).setHint("org.hibernate.cacheable", Boolean.TRUE).getResultList();
     }
 
     @Override
