@@ -278,7 +278,7 @@ public class KeycloakIamService implements IamService {
 
         List<UserRepresentation> userRepresentations = matchingUserRepresentations.stream().filter(ur -> username.equals(ur.getUsername())).collect(Collectors.toList());
 
-        if (userRepresentations.size() == 0) {
+        if (userRepresentations.isEmpty()) {
             throw new BadRequestException("Username not found in KeyCloak: " + username);
         } else if (userRepresentations.size() > 1) {
             throw new BadRequestException("Username not unique in KeyCloak: " + username);
