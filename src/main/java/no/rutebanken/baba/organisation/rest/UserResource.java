@@ -58,7 +58,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 @PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
 @Api(tags = {"User resource"}, produces = "application/json")
 public class UserResource extends BaseResource<User, UserDTO> {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
     @Autowired
     private UserRepository repository;
     @Autowired
@@ -89,7 +89,7 @@ public class UserResource extends BaseResource<User, UserDTO> {
         try {
             password = iamService.createUser(user);
         } catch (RuntimeException e) {
-            logger.warn("Creation of new user in IAM failed. Removing user from local storage. Exception: {}", e.getMessage(), e);
+            LOGGER.warn("Creation of new user in IAM failed. Removing user from local storage. Exception: {}", e.getMessage(), e);
             deleteEntity(user.getId());
             throw e;
         }

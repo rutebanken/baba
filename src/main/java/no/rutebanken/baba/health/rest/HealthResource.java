@@ -37,7 +37,7 @@ import javax.ws.rs.core.Response;
 @Api(tags = {"Application status resource"}, produces = "text/plain")
 public class HealthResource {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(HealthResource.class);
 
     @Autowired
     private DbStatusChecker dbStatusChecker;
@@ -50,7 +50,7 @@ public class HealthResource {
                                   @ApiResponse(code = 500, message = "application is not ready")
     })
     public Response isReady() {
-        logger.debug("Checking readiness...");
+        LOGGER.debug("Checking readiness...");
         if (dbStatusChecker.isDbUp()) {
             return Response.ok().build();
         } else {

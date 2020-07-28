@@ -34,7 +34,7 @@ import java.util.List;
 @Service
 public class BabaHazelcastService extends HazelCastService {
 
-    private static final Logger logger = LoggerFactory.getLogger(BabaHazelcastService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BabaHazelcastService.class);
 
     private static final String MAP_CONFIG_NAME_SECOND_LEVEL_CACHE = User.class.getPackage().getName() + ".*";
 
@@ -72,7 +72,7 @@ public class BabaHazelcastService extends HazelCastService {
                         .setMaxSizeConfig(
                                 new MaxSizeConfig(MAX_HEAP_PERCENTAGE_SECOND_LEVEL_CACHE, MaxSizeConfig.MaxSizePolicy.USED_HEAP_PERCENTAGE)));
 
-        logger.info("Configured map for hibernate second level cache: {}", mapConfigs.get(0));
+        LOGGER.info("Configured map for hibernate second level cache: {}", mapConfigs.get(0));
         return mapConfigs;
     }
 
