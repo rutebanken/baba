@@ -32,7 +32,7 @@ spec:
             - -instances={{ .Values.gcp.databaseInstance}}
             - -credential_file=/etc/baba-service-account/credentials.json
             - -log_debug_stdout
-          image: gcr.io/cloudsql-docker/gce-proxy:1.17
+          image: gcr.io/cloudsql-docker/gce-proxy:1.17-alpine
           imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
@@ -93,10 +93,10 @@ spec:
               path: /actuator/health
               port: 9001
               scheme: HTTP
-            initialDelaySeconds: 180
+            initialDelaySeconds: 60
             periodSeconds: 10
             successThreshold: 1
-            timeoutSeconds: 30
+            timeoutSeconds: 1
           name: baba
           ports:
             - containerPort: 8080
@@ -108,10 +108,10 @@ spec:
               path: /actuator/health
               port: 9001
               scheme: HTTP
-            initialDelaySeconds: 2
+            initialDelaySeconds: 60
             periodSeconds: 10
             successThreshold: 1
-            timeoutSeconds: 5
+            timeoutSeconds: 1
           resources:
             limits:
               cpu: 600m
