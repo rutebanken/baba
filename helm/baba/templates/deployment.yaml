@@ -27,13 +27,13 @@ spec:
           {{- include "common.labels" . | indent 8 }}
     spec:
       containers:
-        - command:
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.17-alpine
+          command:
             - /cloud_sql_proxy
             - -instances={{ .Values.gcp.databaseInstance}}
             - -credential_file=/etc/baba-service-account/credentials.json
             - -log_debug_stdout
-          image: gcr.io/cloudsql-docker/gce-proxy:1.17-alpine
-          imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
               exec:
@@ -41,20 +41,20 @@ spec:
                 - /bin/sh
                 - -c
                 - sleep 30
-          name: cloudsql-proxy
           resources:
             requests:
               cpu: 50m
               memory: 40Mi
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
           volumeMounts:
             - mountPath: /etc/baba-service-account
               name: baba-service-account
             - mountPath: /etc/application-config
               name: application-config
               readOnly: true
-        - env:
+        - name: baba
+          image: {{ .Values.image.identifier }}
+          imagePullPolicy: Always
+          env:
             - name: JAVA_OPTIONS
               value: -Xmx512m -server -Dspring.config.location=/etc/application-config/application.properties
                 -Dfile.encoding=UTF-8
@@ -85,25 +85,11 @@ spec:
                 secretKeyRef:
                   key: baba-keycloak-secret
                   name: ror-baba-secret
-          image: {{ .Values.image.identifier }}
-          imagePullPolicy: Always
-          livenessProbe:
-            failureThreshold: 3
-            httpGet:
-              path: /actuator/health
-              port: 9001
-              scheme: HTTP
-            initialDelaySeconds: 60
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 1
-          name: baba
           ports:
             - containerPort: 8080
               name: http
               protocol: TCP
-          readinessProbe:
-            failureThreshold: 3
+          livenessProbe:
             httpGet:
               path: /actuator/health
               port: 9001
@@ -111,7 +97,18 @@ spec:
             initialDelaySeconds: 60
             periodSeconds: 10
             successThreshold: 1
-            timeoutSeconds: 1
+            failureThreshold: 3
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 9001
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+            timeoutSeconds: 5
           resources:
             limits:
               cpu: 600m
@@ -119,8 +116,6 @@ spec:
             requests:
               cpu: 100m
               memory: 551Mi
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
           volumeMounts:
             - mountPath: /etc/application-config
               name: application-config
