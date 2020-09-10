@@ -3,7 +3,6 @@ replicas: 2
 
 gcp:
   databaseInstance: entur-ror-prod:europe-west1:baba-db-1=tcp:5432
-  exchangeKeyName: marduk-exchange-neon-storage-key
 
 keycloakUrl: https://auth.entur.org/auth
 
