@@ -20,18 +20,18 @@ import no.rutebanken.baba.BabaTestApp;
 import no.rutebanken.baba.organisation.model.CodeSpace;
 import no.rutebanken.baba.organisation.model.organisation.Authority;
 import no.rutebanken.baba.organisation.model.organisation.Organisation;
-import org.junit.Before;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,classes = BabaTestApp.class)
 @Transactional
 public abstract class BaseIntegrationTest {
@@ -64,8 +64,8 @@ public abstract class BaseIntegrationTest {
 
 	protected CodeSpace defaultCodeSpace;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		CodeSpace codeSpace = new CodeSpace("nsr", "NSR", "http://www.rutebanken.org/ns/nsr");
 		defaultCodeSpace = codeSpaceRepository.saveAndFlush(codeSpace);
 

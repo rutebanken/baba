@@ -20,15 +20,15 @@ import com.google.common.collect.Sets;
 import no.rutebanken.baba.organisation.model.responsibility.ResponsibilityRoleAssignment;
 import no.rutebanken.baba.organisation.model.responsibility.ResponsibilitySet;
 import no.rutebanken.baba.organisation.model.responsibility.Role;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.UUID;
 
-public class ResponsibilitySetRepositoryTest extends BaseIntegrationTest {
+class ResponsibilitySetRepositoryTest extends BaseIntegrationTest {
 
     @Autowired
     private ResponsibilitySetRepository responsibilitySetRepository;
@@ -37,7 +37,7 @@ public class ResponsibilitySetRepositoryTest extends BaseIntegrationTest {
 
 
     @Test
-    public void findResponsibilitySetsReferringToRole() {
+    void findResponsibilitySetsReferringToRole() {
         Role role1 = createRole("r1");
         Role role2 = createRole("r2");
 
@@ -45,8 +45,8 @@ public class ResponsibilitySetRepositoryTest extends BaseIntegrationTest {
         ResponsibilitySet only2 = createSet("setOnly2", createRoleAssignment(role2));
         ResponsibilitySet both = createSet("setBoth", createRoleAssignment(role1), createRoleAssignment(role2));
 
-        Assert.assertEquals(Sets.newHashSet(only1, both), new HashSet<>(responsibilitySetRepository.getResponsibilitySetsReferringTo(role1)));
-        Assert.assertEquals(Sets.newHashSet(only2, both), new HashSet<>(responsibilitySetRepository.getResponsibilitySetsReferringTo(role2)));
+        Assertions.assertEquals(Sets.newHashSet(only1, both), new HashSet<>(responsibilitySetRepository.getResponsibilitySetsReferringTo(role1)));
+        Assertions.assertEquals(Sets.newHashSet(only2, both), new HashSet<>(responsibilitySetRepository.getResponsibilitySetsReferringTo(role2)));
     }
 
     private ResponsibilitySet createSet(String name, ResponsibilityRoleAssignment... roles) {

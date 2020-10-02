@@ -20,8 +20,8 @@ package no.rutebanken.baba.provider.repository;
 import no.rutebanken.baba.organisation.repository.BaseIntegrationTest;
 import no.rutebanken.baba.provider.domain.ChouetteInfo;
 import no.rutebanken.baba.provider.domain.Provider;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
@@ -29,19 +29,19 @@ import java.util.Collection;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-public class JpaProviderRepositoryTest extends BaseIntegrationTest {
+class JpaProviderRepositoryTest extends BaseIntegrationTest {
 
     @Autowired
     ProviderRepository repository;
 
     @Test
-    public void testGetProviders() {
+    void testGetProviders() {
         Collection<Provider> providers = repository.getProviders();
         assertThat(providers).hasSize(3);
     }
 
     @Test
-    public void testGetProviderById() {
+    void testGetProviderById() {
         Provider provider = repository.getProvider(42L);
         assertThat(provider).isEqualTo(new Provider(42L, "Flybussekspressen", "42",
                                                            new ChouetteInfo(1L, "flybussekspressen", "http://www.ns.1", "flybussekspressen", "Rutebanken", "admin@rutebanken.org")));
@@ -49,7 +49,7 @@ public class JpaProviderRepositoryTest extends BaseIntegrationTest {
 
 
     @Test
-    public void testCreateAndUpdateAndDeleteProvider() {
+    void testCreateAndUpdateAndDeleteProvider() {
 
         ChouetteInfo chouetteInfo = new ChouetteInfo(null, "xmlns", "xmlnsurl", "refe", "org", "user");
         Provider newProvider = new Provider(null, "junit provider", "sftpAccount", chouetteInfo);
@@ -61,13 +61,13 @@ public class JpaProviderRepositoryTest extends BaseIntegrationTest {
         repository.updateProvider(providerForUpdate);
         Provider providerForVerification = repository.getProvider(newProvider.id);
 
-        Assert.assertEquals(providerForUpdate.sftpAccount, providerForVerification.sftpAccount);
+        Assertions.assertEquals(providerForUpdate.sftpAccount, providerForVerification.sftpAccount);
 
         repository.deleteProvider(newProvider.id);
 
         Provider noProvider = repository.getProvider(newProvider.id);
 
-        Assert.assertNull(noProvider);
+        Assertions.assertNull(noProvider);
     }
 
 }

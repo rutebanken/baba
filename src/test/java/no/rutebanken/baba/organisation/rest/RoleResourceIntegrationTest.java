@@ -19,8 +19,8 @@ package no.rutebanken.baba.organisation.rest;
 import no.rutebanken.baba.organisation.TestConstantsOrganisation;
 import no.rutebanken.baba.organisation.repository.BaseIntegrationTest;
 import no.rutebanken.baba.organisation.rest.dto.TypeDTO;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpMethod;
@@ -30,7 +30,7 @@ import org.springframework.http.ResponseEntity;
 import java.net.URI;
 import java.util.Arrays;
 
-public class RoleResourceIntegrationTest extends BaseIntegrationTest {
+class RoleResourceIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -38,14 +38,14 @@ public class RoleResourceIntegrationTest extends BaseIntegrationTest {
     private static final String PATH = "/services/organisations/roles";
 
     @Test
-    public void roleNotFound() {
+    void roleNotFound() {
         ResponseEntity<TypeDTO> entity = restTemplate.getForEntity(PATH + "/unknownRoles",
                 TypeDTO.class);
-        Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
     }
 
     @Test
-    public void crudRole() {
+    void crudRole() {
         TypeDTO createRole = createRole("role name", "privateCode");
         URI uri = restTemplate.postForLocation(PATH, createRole);
         ResourceTestUtils.assertType(createRole, uri, restTemplate);
@@ -63,18 +63,18 @@ public class RoleResourceIntegrationTest extends BaseIntegrationTest {
 
         ResponseEntity<TypeDTO> entity = restTemplate.getForEntity(uri,
                 TypeDTO.class);
-        Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
     }
 
     @Test
-    public void testDeleteRoleInUse() {
+    void testDeleteRoleInUse() {
         ResponseEntity<String> response = restTemplate.exchange(PATH + "/" + TestConstantsOrganisation.ROLE_ID, HttpMethod.DELETE, null, String.class);
-        Assert.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     private void assertRoleInArray(TypeDTO role, TypeDTO[] array) {
-        Assert.assertNotNull(array);
-        Assert.assertTrue(Arrays.stream(array).anyMatch(r -> r.privateCode.equals(role.privateCode)));
+        Assertions.assertNotNull(array);
+        Assertions.assertTrue(Arrays.stream(array).anyMatch(r -> r.privateCode.equals(role.privateCode)));
     }
 
     protected TypeDTO createRole(String name, String privateCode) {
@@ -85,11 +85,11 @@ public class RoleResourceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void createInvalidRole() {
+    void createInvalidRole() {
         TypeDTO inRole = createRole("role name", null);
         ResponseEntity<String> rsp = restTemplate.postForEntity(PATH, inRole, String.class);
 
-        Assert.assertEquals(HttpStatus.BAD_REQUEST, rsp.getStatusCode());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, rsp.getStatusCode());
     }
 
 }

@@ -25,19 +25,19 @@ import no.rutebanken.baba.organisation.model.responsibility.EntityClassification
 import no.rutebanken.baba.organisation.model.responsibility.EntityType;
 import no.rutebanken.baba.organisation.model.responsibility.ResponsibilityRoleAssignment;
 import no.rutebanken.baba.organisation.model.responsibility.Role;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.rutebanken.helper.organisation.RoleAssignment;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class KeycloakIamServiceTest {
+class KeycloakIamServiceTest {
 
 
     @Test
-    public void testMapResponsibilityRoleAssignmentToKeycloakRoleAssignment() {
+    void testMapResponsibilityRoleAssignmentToKeycloakRoleAssignment() {
         ResponsibilityRoleAssignment orgRegRoleAssignment = new ResponsibilityRoleAssignment();
         Role role = new Role();
         role.setPrivateCode("testRole");
@@ -70,26 +70,26 @@ public class KeycloakIamServiceTest {
 
         RoleAssignment keycloakRoleAssignment = new KeycloakIamService().toRoleAssignment(orgRegRoleAssignment);
 
-        Assert.assertEquals(role.getPrivateCode(), keycloakRoleAssignment.getRole());
-        Assert.assertEquals(organisation.getPrivateCode(), keycloakRoleAssignment.getOrganisation());
+        Assertions.assertEquals(role.getPrivateCode(), keycloakRoleAssignment.getRole());
+        Assertions.assertEquals(organisation.getPrivateCode(), keycloakRoleAssignment.getOrganisation());
 
 
         Set<String> expectedCodes = Sets.newHashSet(entityClassification.getPrivateCode(), "!" + entityClassificationNegated.getPrivateCode());
         List<String> classificationCodeList = keycloakRoleAssignment.getEntityClassifications().get(entityType.getPrivateCode());
-        Assert.assertEquals(expectedCodes,
+        Assertions.assertEquals(expectedCodes,
                 new HashSet<>(classificationCodeList));
 
-        Assert.assertEquals("KVE:TopographicPlace:05", keycloakRoleAssignment.getAdministrativeZone());
+        Assertions.assertEquals("KVE:TopographicPlace:05", keycloakRoleAssignment.getAdministrativeZone());
     }
 
     @Test
-    public void testGeneratePassword() {
+    void testGeneratePassword() {
         KeycloakIamService iamService = new KeycloakIamService();
 
         String password = iamService.generatePassword();
-        Assert.assertEquals(12, password.length());
-        Assert.assertNotEquals(password.toLowerCase(), password);
-        Assert.assertNotEquals(password.toUpperCase(), password);
+        Assertions.assertEquals(12, password.length());
+        Assertions.assertNotEquals(password.toLowerCase(), password);
+        Assertions.assertNotEquals(password.toUpperCase(), password);
     }
 
 

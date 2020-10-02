@@ -18,8 +18,8 @@ package no.rutebanken.baba.organisation.rest;
 
 import no.rutebanken.baba.organisation.repository.BaseIntegrationTest;
 import no.rutebanken.baba.organisation.rest.dto.CodeSpaceDTO;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
@@ -29,7 +29,7 @@ import java.net.URI;
 import java.util.Arrays;
 
 
-public class CodeSpaceResourceIntegrationTest extends BaseIntegrationTest {
+class CodeSpaceResourceIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -37,14 +37,14 @@ public class CodeSpaceResourceIntegrationTest extends BaseIntegrationTest {
     private static final String PATH = "/services/organisations/code_spaces";
 
     @Test
-    public void codeSpaceNotFound() {
+    void codeSpaceNotFound() {
         ResponseEntity<CodeSpaceDTO> entity = restTemplate.getForEntity(PATH + "/unknownCodeSpaces",
                 CodeSpaceDTO.class);
-        Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
     }
 
     @Test
-    public void crudCodeSpace() {
+    void crudCodeSpace() {
         CodeSpaceDTO createCodeSpace = createCodeSpace("CodeTest", "xmlnsTest", "xmlnsUrlTest");
         URI uri = restTemplate.postForLocation(PATH, createCodeSpace);
         assertCodeSpace(createCodeSpace, uri);
@@ -61,13 +61,13 @@ public class CodeSpaceResourceIntegrationTest extends BaseIntegrationTest {
 
         ResponseEntity<CodeSpaceDTO> entity = restTemplate.getForEntity(uri,
                 CodeSpaceDTO.class);
-        Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
 
     }
 
     private void assertCodeSpaceInArray(CodeSpaceDTO codeSpace, CodeSpaceDTO[] array) {
-        Assert.assertNotNull(array);
-        Assert.assertTrue(Arrays.stream(array).anyMatch(r -> r.privateCode.equals(codeSpace.privateCode)));
+        Assertions.assertNotNull(array);
+        Assertions.assertTrue(Arrays.stream(array).anyMatch(r -> r.privateCode.equals(codeSpace.privateCode)));
     }
 
     protected CodeSpaceDTO createCodeSpace(String privateCode, String xmlns, String xmlnsUrl) {
@@ -80,20 +80,20 @@ public class CodeSpaceResourceIntegrationTest extends BaseIntegrationTest {
 
 
     protected void assertCodeSpace(CodeSpaceDTO inCodeSpace, URI uri) {
-        Assert.assertNotNull(uri);
+        Assertions.assertNotNull(uri);
         ResponseEntity<CodeSpaceDTO> rsp = restTemplate.getForEntity(uri, CodeSpaceDTO.class);
         CodeSpaceDTO outCodeSpace = rsp.getBody();
-        Assert.assertEquals(inCodeSpace.xmlns, outCodeSpace.xmlns);
-        Assert.assertEquals(inCodeSpace.xmlnsUrl, outCodeSpace.xmlnsUrl);
-        Assert.assertEquals(inCodeSpace.privateCode, outCodeSpace.privateCode);
+        Assertions.assertEquals(inCodeSpace.xmlns, outCodeSpace.xmlns);
+        Assertions.assertEquals(inCodeSpace.xmlnsUrl, outCodeSpace.xmlnsUrl);
+        Assertions.assertEquals(inCodeSpace.privateCode, outCodeSpace.privateCode);
     }
 
     @Test
-    public void createInvalidCodeSpace() {
+    void createInvalidCodeSpace() {
         CodeSpaceDTO inCodeSpace = createCodeSpace("Code", "xmlns", null);
         ResponseEntity<String> rsp = restTemplate.postForEntity(PATH, inCodeSpace, String.class);
 
-        Assert.assertEquals(HttpStatus.BAD_REQUEST, rsp.getStatusCode());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, rsp.getStatusCode());
     }
 
 }

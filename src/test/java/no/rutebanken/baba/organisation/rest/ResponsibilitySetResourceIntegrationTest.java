@@ -21,8 +21,8 @@ import no.rutebanken.baba.organisation.repository.BaseIntegrationTest;
 import no.rutebanken.baba.organisation.rest.dto.responsibility.EntityClassificationAssignmentDTO;
 import no.rutebanken.baba.organisation.rest.dto.responsibility.ResponsibilityRoleAssignmentDTO;
 import no.rutebanken.baba.organisation.rest.dto.responsibility.ResponsibilitySetDTO;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
@@ -35,7 +35,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 
-public class ResponsibilitySetResourceIntegrationTest extends BaseIntegrationTest {
+class ResponsibilitySetResourceIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -43,14 +43,14 @@ public class ResponsibilitySetResourceIntegrationTest extends BaseIntegrationTes
     private static final String PATH = "/services/organisations/responsibility_sets";
 
     @Test
-    public void responsibilitySetNotFound() {
+    void responsibilitySetNotFound() {
         ResponseEntity<ResponsibilitySetDTO> entity = restTemplate.getForEntity(PATH + "/unknownResponsibilitySet",
                 ResponsibilitySetDTO.class);
-        Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
     }
 
     @Test
-    public void crudResponsibilitySet() {
+    void crudResponsibilitySet() {
 
         ResponsibilitySetDTO createResponsibilitySet = createResponsibilitySet("RspSet", "RspSet name",
                 new ResponsibilityRoleAssignmentDTO(TestConstantsOrganisation.ROLE_ID, TestConstantsOrganisation.ORGANISATION_ID));
@@ -72,12 +72,12 @@ public class ResponsibilitySetResourceIntegrationTest extends BaseIntegrationTes
 
         ResponseEntity<ResponsibilitySetDTO> entity = restTemplate.getForEntity(uri,
                 ResponsibilitySetDTO.class);
-        Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
 
     }
 
     @Test
-    public void updateResponsibilitySetRoles() {
+    void updateResponsibilitySetRoles() {
         ResponsibilityRoleAssignmentDTO role1 = new ResponsibilityRoleAssignmentDTO(TestConstantsOrganisation.ROLE_ID, TestConstantsOrganisation.ORGANISATION_ID);
         role1.responsibleOrganisationRef = TestConstantsOrganisation.ORGANISATION_ID;
         role1.typeOfResponsibilityRoleRef = TestConstantsOrganisation.ROLE_ID;
@@ -113,8 +113,8 @@ public class ResponsibilitySetResourceIntegrationTest extends BaseIntegrationTes
 
 
     private void assertResponsibilitySetInArray(ResponsibilitySetDTO responsibilitySet, ResponsibilitySetDTO[] array) {
-        Assert.assertNotNull(array);
-        Assert.assertTrue(Arrays.stream(array).anyMatch(r -> r.privateCode.equals(responsibilitySet.privateCode)));
+        Assertions.assertNotNull(array);
+        Assertions.assertTrue(Arrays.stream(array).anyMatch(r -> r.privateCode.equals(responsibilitySet.privateCode)));
     }
 
     protected ResponsibilitySetDTO createResponsibilitySet(String privateCode, String name, ResponsibilityRoleAssignmentDTO... roles) {
@@ -131,19 +131,19 @@ public class ResponsibilitySetResourceIntegrationTest extends BaseIntegrationTes
 
 
     protected void assertResponsibilitySet(ResponsibilitySetDTO inResponsibilitySet, URI uri) {
-        Assert.assertNotNull(uri);
+        Assertions.assertNotNull(uri);
         ResponseEntity<ResponsibilitySetDTO> rsp = restTemplate.getForEntity(uri, ResponsibilitySetDTO.class);
         ResponsibilitySetDTO outResponsibilitySet = rsp.getBody();
-        Assert.assertEquals(inResponsibilitySet.name, outResponsibilitySet.name);
-        Assert.assertEquals(inResponsibilitySet.privateCode, outResponsibilitySet.privateCode);
-        Assert.assertEquals(inResponsibilitySet.codeSpace, outResponsibilitySet.codeSpace);
+        Assertions.assertEquals(inResponsibilitySet.name, outResponsibilitySet.name);
+        Assertions.assertEquals(inResponsibilitySet.privateCode, outResponsibilitySet.privateCode);
+        Assertions.assertEquals(inResponsibilitySet.codeSpace, outResponsibilitySet.codeSpace);
 
         if (CollectionUtils.isEmpty(inResponsibilitySet.roles)) {
-            Assert.assertTrue(CollectionUtils.isEmpty(outResponsibilitySet.roles));
+            Assertions.assertTrue(CollectionUtils.isEmpty(outResponsibilitySet.roles));
         } else {
-            Assert.assertEquals(inResponsibilitySet.roles.size(), outResponsibilitySet.roles.size());
+            Assertions.assertEquals(inResponsibilitySet.roles.size(), outResponsibilitySet.roles.size());
             for (ResponsibilityRoleAssignmentDTO in : inResponsibilitySet.roles) {
-                Assert.assertTrue(outResponsibilitySet.roles.stream().anyMatch(out -> isEqual(in, out)));
+                Assertions.assertTrue(outResponsibilitySet.roles.stream().anyMatch(out -> isEqual(in, out)));
             }
         }
 
@@ -177,24 +177,24 @@ public class ResponsibilitySetResourceIntegrationTest extends BaseIntegrationTes
     }
 
     @Test
-    public void createInvalidResponsibilitySetWithMissingRoles() {
+    void createInvalidResponsibilitySetWithMissingRoles() {
         ResponsibilityRoleAssignmentDTO roleWithoutName = new ResponsibilityRoleAssignmentDTO();
         ResponsibilitySetDTO inResponsibilitySet = createResponsibilitySet("privateCode", "responsibilitySet name", roleWithoutName);
         ResponseEntity<String> rsp = restTemplate.postForEntity(PATH, inResponsibilitySet, String.class);
 
-        Assert.assertEquals(HttpStatus.BAD_REQUEST, rsp.getStatusCode());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, rsp.getStatusCode());
     }
 
     @Test
-    public void createOrgWithExistingPrivateCode() {
+    void createOrgWithExistingPrivateCode() {
         ResponsibilitySetDTO inResponsibilitySet = createResponsibilitySet("OrgPrivateCode", "responsibilitySet name",
                 new ResponsibilityRoleAssignmentDTO(TestConstantsOrganisation.ROLE_ID, TestConstantsOrganisation.ORGANISATION_ID));
 
         ResponseEntity<String> firstRsp = restTemplate.postForEntity(PATH, inResponsibilitySet, String.class);
 
-        Assert.assertEquals(HttpStatus.CREATED, firstRsp.getStatusCode());
+        Assertions.assertEquals(HttpStatus.CREATED, firstRsp.getStatusCode());
 
         ResponseEntity<String> secondRsp = restTemplate.postForEntity(PATH, inResponsibilitySet, String.class);
-        Assert.assertEquals(HttpStatus.CONFLICT, secondRsp.getStatusCode());
+        Assertions.assertEquals(HttpStatus.CONFLICT, secondRsp.getStatusCode());
     }
 }

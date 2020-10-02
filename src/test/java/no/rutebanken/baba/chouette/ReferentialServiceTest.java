@@ -1,21 +1,21 @@
 package no.rutebanken.baba.chouette;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class ReferentialServiceTest {
+class ReferentialServiceTest {
 
     @Test
-    public void testValidateSchemaName() {
+    void testValidateSchemaName() {
 
         ChouetteReferentialService referentialService = new ChouetteReferentialService();
-        Assert.assertTrue(referentialService.validateSchemaName("abc"));
-        Assert.assertTrue(referentialService.validateSchemaName("rb_abc"));
-        Assert.assertFalse(referentialService.validateSchemaName("abcd"));
-        Assert.assertFalse(referentialService.validateSchemaName("rb_abcd"));
-        Assert.assertFalse(referentialService.validateSchemaName("ab"));
-        Assert.assertFalse(referentialService.validateSchemaName("rb_ab"));
-        Assert.assertFalse(referentialService.validateSchemaName(""));
+        Assertions.assertTrue(referentialService.validateSchemaName("abc"));
+        Assertions.assertTrue(referentialService.validateSchemaName("rb_abc"));
+        Assertions.assertFalse(referentialService.validateSchemaName("abcd"));
+        Assertions.assertFalse(referentialService.validateSchemaName("rb_abcd"));
+        Assertions.assertFalse(referentialService.validateSchemaName("ab"));
+        Assertions.assertFalse(referentialService.validateSchemaName("rb_ab"));
+        Assertions.assertFalse(referentialService.validateSchemaName(""));
     }
 
 }

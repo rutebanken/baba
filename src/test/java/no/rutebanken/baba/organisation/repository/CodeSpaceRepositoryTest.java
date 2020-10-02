@@ -16,15 +16,15 @@
 
 package no.rutebanken.baba.organisation.repository;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class CodeSpaceRepositoryTest extends BaseIntegrationTest {
+class CodeSpaceRepositoryTest extends BaseIntegrationTest {
 
 
 	@Test
-	public void testFindByPublicId() {
-		Assert.assertNotNull(codeSpaceRepository.getOneByPublicId(defaultCodeSpace.getId()));
+	void testFindByPublicId() {
+		Assertions.assertNotNull(codeSpaceRepository.getOneByPublicId(defaultCodeSpace.getId()));
 	}
 
 }

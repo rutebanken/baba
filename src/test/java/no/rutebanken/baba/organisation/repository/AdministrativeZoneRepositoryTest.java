@@ -16,24 +16,24 @@
 
 package no.rutebanken.baba.organisation.repository;
 
+import no.rutebanken.baba.organisation.model.organisation.AdministrativeZone;
+import no.rutebanken.baba.organisation.model.organisation.AdministrativeZoneType;
+import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LinearRing;
 import org.locationtech.jts.geom.Polygon;
-import no.rutebanken.baba.organisation.model.organisation.AdministrativeZone;
-import no.rutebanken.baba.organisation.model.organisation.AdministrativeZoneType;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-public class AdministrativeZoneRepositoryTest extends BaseIntegrationTest {
+class AdministrativeZoneRepositoryTest extends BaseIntegrationTest {
 
 	@Autowired
 	private AdministrativeZoneRepository administrativeZoneRepository;
 
 
 	@Test
-	public void testInsertAdministrativeZone() {
+	void testInsertAdministrativeZone() {
 		AdministrativeZone zone = new AdministrativeZone();
 		zone.setPrivateCode("0101");
 		zone.setName("name");

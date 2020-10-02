@@ -23,8 +23,8 @@ import no.rutebanken.baba.organisation.model.user.eventfilter.JobState;
 import no.rutebanken.baba.organisation.repository.BaseIntegrationTest;
 import no.rutebanken.baba.organisation.rest.dto.user.EventFilterDTO;
 import no.rutebanken.baba.organisation.rest.dto.user.NotificationConfigDTO;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
@@ -34,7 +34,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.HashSet;
 import java.util.Set;
 
-public class NotificationConfigurationResourceTest extends BaseIntegrationTest {
+class NotificationConfigurationResourceTest extends BaseIntegrationTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -46,16 +46,16 @@ public class NotificationConfigurationResourceTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void userNotFound() {
+    void userNotFound() {
         ResponseEntity<String> entity = restTemplate.getForEntity(url("unknownUser"),
                 String.class);
-        Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
 
     }
 
 
     @Test
-    public void crudNotificationConfig() {
+    void crudNotificationConfig() {
 
         String url = url(TestConstantsOrganisation.USER_USERNAME);
 
@@ -72,7 +72,7 @@ public class NotificationConfigurationResourceTest extends BaseIntegrationTest {
 
         ResponseEntity<NotificationConfigDTO[]> entity = restTemplate.getForEntity(url,
                 NotificationConfigDTO[].class);
-        Assert.assertEquals(0, entity.getBody().length);
+        Assertions.assertEquals(0, entity.getBody().length);
 
     }
 
@@ -100,11 +100,11 @@ public class NotificationConfigurationResourceTest extends BaseIntegrationTest {
 
 
         if (CollectionUtils.isEmpty(inConfig)) {
-            Assert.assertTrue(CollectionUtils.isEmpty(outConfig));
+            Assertions.assertTrue(CollectionUtils.isEmpty(outConfig));
         } else {
-            Assert.assertEquals(inConfig.size(), outConfig.size());
+            Assertions.assertEquals(inConfig.size(), outConfig.size());
             for (NotificationConfigDTO in : inConfig) {
-                Assert.assertTrue(outConfig.stream().anyMatch(out -> isEqual(in, out)));
+                Assertions.assertTrue(outConfig.stream().anyMatch(out -> isEqual(in, out)));
             }
         }
     }
@@ -119,7 +119,7 @@ public class NotificationConfigurationResourceTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void createInvalidNotificationConfig() {
+    void createInvalidNotificationConfig() {
         Set<NotificationConfigDTO> inConfig = Sets.newHashSet(
                 new NotificationConfigDTO(null, true, jobEventFilter()));
         restTemplate.put(PATH, inConfig);
