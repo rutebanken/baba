@@ -19,28 +19,29 @@ package no.rutebanken.baba.organisation.rest.validation;
 import no.rutebanken.baba.organisation.rest.dto.responsibility.EntityClassificationAssignmentDTO;
 import no.rutebanken.baba.organisation.rest.dto.responsibility.ResponsibilityRoleAssignmentDTO;
 import no.rutebanken.baba.organisation.rest.dto.responsibility.ResponsibilitySetDTO;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class ResponsibilitySetValidatorTest {
+class ResponsibilitySetValidatorTest {
 
 
     private ResponsibilitySetValidator responsibilitySetValidator = new ResponsibilitySetValidator();
 
 
     @Test
-    public void validateCreateMinimalOk() {
+    void validateCreateMinimalOk() {
         responsibilitySetValidator.validateCreate(minimalRespSet());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void validateCreateWithDuplicateEventClassificationRefFails() {
+    @Test
+    void validateCreateWithDuplicateEventClassificationRefFails() {
         ResponsibilitySetDTO respSet = minimalRespSet();
 
         ResponsibilityRoleAssignmentDTO roleAssignment = respSet.roles.get(0);
         String ref = "commonRef";
         roleAssignment.entityClassificationAssignments.add(new EntityClassificationAssignmentDTO(ref, true));
         roleAssignment.entityClassificationAssignments.add(new EntityClassificationAssignmentDTO(ref, false));
-        responsibilitySetValidator.validateCreate(respSet);
+        Assertions.assertThrows(IllegalArgumentException.class, () ->  responsibilitySetValidator.validateCreate(respSet));
     }
 
 

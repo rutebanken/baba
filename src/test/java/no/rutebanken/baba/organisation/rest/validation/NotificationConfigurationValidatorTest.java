@@ -21,75 +21,76 @@ import no.rutebanken.baba.organisation.model.user.NotificationType;
 import no.rutebanken.baba.organisation.model.user.eventfilter.JobState;
 import no.rutebanken.baba.organisation.rest.dto.user.EventFilterDTO;
 import no.rutebanken.baba.organisation.rest.dto.user.NotificationConfigDTO;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class NotificationConfigurationValidatorTest {
+class NotificationConfigurationValidatorTest {
 
     private NotificationConfigurationValidator validator = new NotificationConfigurationValidator();
 
-    @Test(expected = IllegalArgumentException.class)
-    public void validateWithoutUserNameFails() {
+    @Test
+    void validateWithoutUserNameFails() {
         Set<NotificationConfigDTO> config = withCrudFilter();
-        validator.validate(null, config);
+        Assertions.assertThrows(IllegalArgumentException.class, () ->  validator.validate(null, config));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void validateNotificationWithoutEventFilterFails() {
+    @Test
+    void validateNotificationWithoutEventFilterFails() {
         Set<NotificationConfigDTO> config = withCrudFilter();
         config.iterator().next().eventFilter = null;
-        validator.validate("user", config);
+        Assertions.assertThrows(IllegalArgumentException.class, () ->  validator.validate("user", config));
+        
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void validateNotificationWithoutNotificationTypeFails() {
+    @Test
+    void validateNotificationWithoutNotificationTypeFails() {
         Set<NotificationConfigDTO> config = withCrudFilter();
         config.iterator().next().notificationType = null;
-        validator.validate("user", config);
+        Assertions.assertThrows(IllegalArgumentException.class, () ->  validator.validate("user", config));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void validateCrudFilterWithoutEntityClassificationsFails() {
+    @Test
+    void validateCrudFilterWithoutEntityClassificationsFails() {
         Set<NotificationConfigDTO> config = withCrudFilter();
         config.iterator().next().eventFilter.entityClassificationRefs.clear();
-        validator.validate("user", config);
+        Assertions.assertThrows(IllegalArgumentException.class, () ->  validator.validate("user", config));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void validateJobFilterWithoutJobDomainFails() {
+    @Test
+    void validateJobFilterWithoutJobDomainFails() {
         Set<NotificationConfigDTO> config = withJobFilter();
         config.iterator().next().eventFilter.jobDomain = null;
-        validator.validate("user", config);
-    }
+        Assertions.assertThrows(IllegalArgumentException.class, () ->  validator.validate("user", config));    }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void validateJobFilterWithNullActionFails() {
+    @Test
+    void validateJobFilterWithNullActionFails() {
         Set<NotificationConfigDTO> config = withJobFilter();
         config.iterator().next().eventFilter.actions = null;
-        validator.validate("user", config);
+        Assertions.assertThrows(IllegalArgumentException.class, () ->  validator.validate("user", config));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void validateJobFilterWithoutActionFails() {
+    @Test
+    void validateJobFilterWithoutActionFails() {
         Set<NotificationConfigDTO> config = withJobFilter();
         config.iterator().next().eventFilter.actions = new HashSet<>();
-        validator.validate("user", config);
+        Assertions.assertThrows(IllegalArgumentException.class, () ->  validator.validate("user", config));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void validateJobFilterWithNullStatenFails() {
+    @Test
+    void validateJobFilterWithNullStatenFails() {
         Set<NotificationConfigDTO> config = withJobFilter();
         config.iterator().next().eventFilter.states = null;
-        validator.validate("user", config);
+        Assertions.assertThrows(IllegalArgumentException.class, () ->  validator.validate("user", config));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void validateJobFilterWithoutStatenFails() {
+    @Test
+    void validateJobFilterWithoutStatenFails() {
         Set<NotificationConfigDTO> config = withJobFilter();
         config.iterator().next().eventFilter.states = new HashSet<>();
-        validator.validate("user", config);
+        Assertions.assertThrows(IllegalArgumentException.class, () ->  validator.validate("user", config));
     }
 
 

@@ -20,7 +20,7 @@ import no.rutebanken.baba.organisation.model.organisation.AdministrativeZoneType
 import no.rutebanken.baba.organisation.rest.dto.TypeDTO;
 import no.rutebanken.baba.organisation.rest.dto.organisation.AdministrativeZoneDTO;
 import no.rutebanken.baba.organisation.rest.dto.user.NotificationConfigDTO;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
 import org.wololo.geojson.Polygon;
@@ -56,11 +56,11 @@ public class ResourceTestUtils {
     }
 
     public static void assertType(TypeDTO in, URI uri, TestRestTemplate restTemplate) {
-        Assert.assertNotNull(uri);
+        Assertions.assertNotNull(uri);
         ResponseEntity<TypeDTO> rsp = restTemplate.getForEntity(uri, TypeDTO.class);
         TypeDTO out = rsp.getBody();
-        Assert.assertEquals(in.name, out.name);
-        Assert.assertEquals(in.privateCode, out.privateCode);
+        Assertions.assertEquals(in.name, out.name);
+        Assertions.assertEquals(in.privateCode, out.privateCode);
     }
 
     public static AdministrativeZoneDTO createAdministrativeZone(String name, String privateCode, Polygon polygon) {

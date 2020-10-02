@@ -20,8 +20,8 @@ import no.rutebanken.baba.organisation.TestConstantsOrganisation;
 import no.rutebanken.baba.organisation.repository.BaseIntegrationTest;
 import no.rutebanken.baba.organisation.rest.dto.organisation.OrganisationDTO;
 import no.rutebanken.baba.organisation.rest.dto.organisation.OrganisationPartDTO;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
@@ -32,7 +32,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class OrganisationResourceIntegrationTest extends BaseIntegrationTest {
+class OrganisationResourceIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -40,14 +40,14 @@ public class OrganisationResourceIntegrationTest extends BaseIntegrationTest {
     private static final String PATH = "/services/organisations";
 
     @Test
-    public void organisationNotFound() {
+    void organisationNotFound() {
         ResponseEntity<OrganisationDTO> entity = restTemplate.getForEntity(PATH + "/unknownOrganisation",
                 OrganisationDTO.class);
-        Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
     }
 
     @Test
-    public void crudOrganisation() {
+    void crudOrganisation() {
 
         OrganisationDTO createOrganisation = createOrganisation("TheOrg", "Org name", null);
         URI uri = restTemplate.postForLocation(PATH, createOrganisation);
@@ -68,12 +68,12 @@ public class OrganisationResourceIntegrationTest extends BaseIntegrationTest {
 
         ResponseEntity<OrganisationDTO> entity = restTemplate.getForEntity(uri,
                 OrganisationDTO.class);
-        Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
 
     }
 
     @Test
-    public void updateOrganisationParts() {
+    void updateOrganisationParts() {
         OrganisationPartDTO orgPart1 = new OrganisationPartDTO();
         orgPart1.name = "part 1";
         orgPart1.administrativeZoneRefs = ResourceTestUtils.addAdminZones(restTemplate, "amd1", "adm2");
@@ -106,8 +106,8 @@ public class OrganisationResourceIntegrationTest extends BaseIntegrationTest {
 
 
     private void assertOrganisationInArray(OrganisationDTO organisation, OrganisationDTO[] array) {
-        Assert.assertNotNull(array);
-        Assert.assertTrue(Arrays.stream(array).anyMatch(r -> r.privateCode.equals(organisation.privateCode)));
+        Assertions.assertNotNull(array);
+        Assertions.assertTrue(Arrays.stream(array).anyMatch(r -> r.privateCode.equals(organisation.privateCode)));
     }
 
     protected OrganisationDTO createOrganisation(String privateCode, String name, Long companyNumber, OrganisationPartDTO... parts) {
@@ -126,19 +126,19 @@ public class OrganisationResourceIntegrationTest extends BaseIntegrationTest {
 
 
     protected void assertOrganisation(OrganisationDTO inOrganisation, URI uri) {
-        Assert.assertNotNull(uri);
+        Assertions.assertNotNull(uri);
         ResponseEntity<OrganisationDTO> rsp = restTemplate.getForEntity(uri, OrganisationDTO.class);
         OrganisationDTO outOrganisation = rsp.getBody();
-        Assert.assertEquals(inOrganisation.name, outOrganisation.name);
-        Assert.assertEquals(inOrganisation.privateCode, outOrganisation.privateCode);
-        Assert.assertEquals(inOrganisation.companyNumber, outOrganisation.companyNumber);
+        Assertions.assertEquals(inOrganisation.name, outOrganisation.name);
+        Assertions.assertEquals(inOrganisation.privateCode, outOrganisation.privateCode);
+        Assertions.assertEquals(inOrganisation.companyNumber, outOrganisation.companyNumber);
 
         if (CollectionUtils.isEmpty(inOrganisation.parts)) {
-            Assert.assertTrue(CollectionUtils.isEmpty(outOrganisation.parts));
+            Assertions.assertTrue(CollectionUtils.isEmpty(outOrganisation.parts));
         } else {
-            Assert.assertEquals(inOrganisation.parts.size(), outOrganisation.parts.size());
+            Assertions.assertEquals(inOrganisation.parts.size(), outOrganisation.parts.size());
             for (OrganisationPartDTO in : inOrganisation.parts) {
-                Assert.assertTrue(outOrganisation.parts.stream().anyMatch(out -> isEqual(in, out)));
+                Assertions.assertTrue(outOrganisation.parts.stream().anyMatch(out -> isEqual(in, out)));
             }
         }
 
@@ -160,23 +160,23 @@ public class OrganisationResourceIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void createInvalidOrganisation() {
+    void createInvalidOrganisation() {
         OrganisationPartDTO partWithoutName = new OrganisationPartDTO();
         OrganisationDTO inOrganisation = createOrganisation("privateCode", "organisation name", null, partWithoutName);
         ResponseEntity<String> rsp = restTemplate.postForEntity(PATH, inOrganisation, String.class);
 
-        Assert.assertEquals(HttpStatus.BAD_REQUEST, rsp.getStatusCode());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, rsp.getStatusCode());
     }
 
     @Test
-    public void createOrgWithExistingPrivateCode() {
+    void createOrgWithExistingPrivateCode() {
         OrganisationDTO inOrganisation = createOrganisation("OrgPrivateCode", "organisation name", null);
         ResponseEntity<String> firstRsp = restTemplate.postForEntity(PATH, inOrganisation, String.class);
 
-        Assert.assertEquals(HttpStatus.CREATED, firstRsp.getStatusCode());
+        Assertions.assertEquals(HttpStatus.CREATED, firstRsp.getStatusCode());
 
         ResponseEntity<String> secondRsp = restTemplate.postForEntity(PATH, inOrganisation, String.class);
-        Assert.assertEquals(HttpStatus.CONFLICT, secondRsp.getStatusCode());
+        Assertions.assertEquals(HttpStatus.CONFLICT, secondRsp.getStatusCode());
     }
 
 }

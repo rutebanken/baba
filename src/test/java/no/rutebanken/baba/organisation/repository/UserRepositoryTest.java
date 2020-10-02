@@ -22,15 +22,15 @@ import no.rutebanken.baba.organisation.model.responsibility.ResponsibilitySet;
 import no.rutebanken.baba.organisation.model.responsibility.Role;
 import no.rutebanken.baba.organisation.model.user.ContactDetails;
 import no.rutebanken.baba.organisation.model.user.User;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
 
-public class UserRepositoryTest extends BaseIntegrationTest {
+class UserRepositoryTest extends BaseIntegrationTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -45,13 +45,13 @@ public class UserRepositoryTest extends BaseIntegrationTest {
     private EntityManager em;
 
     @Test
-    public void testInsertUser() {
+    void testInsertUser() {
 
         User user = User.builder().withUsername("raffen").withPrivateCode("2").withOrganisation(defaultOrganisation).withContactDetails(minimalContactDetails()).build();
         User createdUser = userRepository.saveAndFlush(user);
 
         User fetchedUser = userRepository.getOne(createdUser.getPk());
-        Assert.assertEquals("User:2", fetchedUser.getId());
+        Assertions.assertEquals("User:2", fetchedUser.getId());
 
 
     }
@@ -64,7 +64,7 @@ public class UserRepositoryTest extends BaseIntegrationTest {
 
 
     @Test
-    public void testFindByResponsibilitySet() {
+    void testFindByResponsibilitySet() {
         Role role = roleRepository.save(new Role("testCode", "testRole"));
         ResponsibilityRoleAssignment responsibilityRoleAssignment =
                 ResponsibilityRoleAssignment.builder().withPrivateCode("pCode").withResponsibleOrganisation(defaultOrganisation)
@@ -83,9 +83,9 @@ public class UserRepositoryTest extends BaseIntegrationTest {
         User userWithoutRespSet = userRepository.saveAndFlush(User.builder().withUsername("userWithoutRespSet").withPrivateCode("userWithoutRespSet").withOrganisation(defaultOrganisation).withContactDetails(minimalContactDetails()).build());
         List<User> usersWithRespSet = userRepository.findUsersWithResponsibilitySet(responsibilitySet);
 
-        Assert.assertEquals(1, usersWithRespSet.size());
-        Assert.assertTrue(usersWithRespSet.contains(userWithRespSet));
-        Assert.assertFalse(usersWithRespSet.contains(userWithoutRespSet));
+        Assertions.assertEquals(1, usersWithRespSet.size());
+        Assertions.assertTrue(usersWithRespSet.contains(userWithRespSet));
+        Assertions.assertFalse(usersWithRespSet.contains(userWithoutRespSet));
 
         userRepository.delete(usersWithRespSet.get(0));
 
