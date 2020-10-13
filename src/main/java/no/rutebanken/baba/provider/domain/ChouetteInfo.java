@@ -55,6 +55,7 @@ public class ChouetteInfo {
     public boolean enableCleanImport;
     public boolean enableAutoImport;
     public boolean enableAutoValidation;
+    public boolean enableBlocksExport;
     public boolean generateDatedServiceJourneyIds;
     public boolean googleUpload;
     @Column(name = "google_qa_upload")
@@ -101,6 +102,7 @@ public class ChouetteInfo {
                        ", enableCleanImport='" + enableCleanImport + '\'' +
                        ", enableAutoImport='" + enableAutoImport + '\'' +
                        ", enableAutoValidation='" + enableAutoImport + '\'' +
+                       ", enableBlocksExport='" + enableBlocksExport + '\'' +
                        ", generateMissingServiceLinksForModes='" + generateMissingServiceLinksForModes + '\'' +
                        ", generateDatedServiceJourneyIds='" + generateDatedServiceJourneyIds + '\'' +
                        ", googleUpload='" + googleUpload + '\'' +
