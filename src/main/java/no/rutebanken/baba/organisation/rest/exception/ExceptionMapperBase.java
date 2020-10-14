@@ -26,15 +26,15 @@ import javax.validation.ValidationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 
 public abstract class ExceptionMapperBase {
 	private Map<Response.Status, Set<Class<?>>> mapping;
 
-	public ExceptionMapperBase() {
-		mapping = new HashMap<>();
+	protected ExceptionMapperBase() {
+		mapping = new EnumMap<>(Response.Status.class);
 		mapping.put(Response.Status.BAD_REQUEST,
 				Sets.newHashSet(ValidationException.class, OptimisticLockException.class, EntityNotFoundException.class, DataIntegrityViolationException.class));
 		mapping.put(Response.Status.CONFLICT, Sets.newHashSet(EntityExistsException.class));

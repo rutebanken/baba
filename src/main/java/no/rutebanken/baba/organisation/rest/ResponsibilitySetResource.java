@@ -59,6 +59,7 @@ public class ResponsibilitySetResource extends AnnotatedBaseResource<Responsibil
 	private IamService iamService;
 
 
+	@Override
 	@PUT
 	@Path("{id}")
 	public void update(@PathParam("id") String id, ResponsibilitySetDTO dto) {
