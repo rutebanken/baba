@@ -92,7 +92,6 @@ public class ProviderResource {
 
     @GET
     @Path("/all")
-
     @Deprecated
     public Collection<Provider> getAllProviders() {
         return getProviders();
