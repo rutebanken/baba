@@ -17,6 +17,7 @@
 package no.rutebanken.baba.organisation.email;
 
 import freemarker.template.Configuration;
+import no.rutebanken.baba.exceptions.BabaException;
 import no.rutebanken.baba.organisation.model.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -71,7 +72,7 @@ public class NewUserEmailFormatter {
             return FreeMarkerTemplateUtils.processTemplateIntoString(
                     freemarkerConfiguration.getTemplate("fm_email_new_user_template.ftl"), model);
         } catch (Exception e) {
-            throw new RuntimeException("Exception occurred while processing email template:" + e.getMessage(), e);
+            throw new BabaException("Exception occurred while processing email template:" + e.getMessage(), e);
         }
 
     }
