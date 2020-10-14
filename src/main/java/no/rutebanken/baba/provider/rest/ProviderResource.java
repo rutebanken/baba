@@ -77,7 +77,7 @@ public class ProviderResource {
     @Path("/{providerId}")
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#provider.id)")
     public void updateProvider(Provider provider) {
-        LOGGER.info("Updating provider " + provider);
+        LOGGER.info("Updating provider {}", provider);
         chouetteReferentialService.updateChouetteReferential(provider);
         providerRepository.updateProvider(provider);
     }
@@ -92,6 +92,7 @@ public class ProviderResource {
 
     @GET
     @Path("/all")
+
     @Deprecated
     public Collection<Provider> getAllProviders() {
         return getProviders();
