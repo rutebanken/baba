@@ -20,8 +20,6 @@ import io.swagger.jaxrs.config.BeanConfig;
 import io.swagger.jaxrs.listing.ApiListingResource;
 import io.swagger.jaxrs.listing.SwaggerSerializers;
 import no.rutebanken.baba.filter.CorsResponseFilter;
-import no.rutebanken.baba.health.rest.HazelcastResource;
-import no.rutebanken.baba.health.rest.HealthResource;
 import no.rutebanken.baba.organisation.rest.AdministrativeZoneResource;
 import no.rutebanken.baba.organisation.rest.CodeSpaceResource;
 import no.rutebanken.baba.organisation.rest.EntityClassificationResource;
@@ -172,8 +170,6 @@ public class JerseyConfig {
     private class HealthConfig extends ResourceConfig {
 
         public HealthConfig() {
-            register(HealthResource.class);
-            register(HazelcastResource.class);
             configureSwagger();
         }
 
