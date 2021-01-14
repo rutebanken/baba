@@ -15,23 +15,30 @@
 
 package no.rutebanken.baba.chouette;
 
-import no.rutebanken.baba.exceptions.BabaException;
+import io.netty.channel.ChannelOption;
+import io.netty.handler.timeout.ReadTimeoutHandler;
+import io.netty.handler.timeout.WriteTimeoutHandler;
 import no.rutebanken.baba.exceptions.ChouetteServiceException;
-import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.netty.http.client.HttpClient;
+import reactor.netty.tcp.TcpClient;
+import reactor.util.retry.Retry;
+
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 /**
  * Client for the Chouette Referentials REST services.
@@ -40,24 +47,37 @@ import org.springframework.web.client.RestTemplate;
 public class ChouetteReferentialRestClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChouetteReferentialRestClient.class);
+    private static final int HTTP_TIMEOUT = 10000;
 
-    @Value("${chouette.rest.referential.base.url:http://chouette/referentials}")
-    private String chouetteRestServiceBaseUrl;
+    private final WebClient webClient;
+    private final int maxRetryAttempts;
 
-    @Autowired
-    RestTemplateBuilder restTemplateBuilder;
+    public ChouetteReferentialRestClient(@Autowired WebClient.Builder webClientBuilder,
+                                         @Value("${chouette.rest.referential.base.url:http://chouette/referentials}") String chouetteRestServiceBaseUrl,
+                                         @Value("${chouette.rest.referential.retry.max:3}") int maxRetryAttempts) {
 
+        TcpClient tcpClient = TcpClient.create().option(ChannelOption.CONNECT_TIMEOUT_MILLIS, HTTP_TIMEOUT).doOnConnected(connection -> {
+            connection.addHandlerLast(new ReadTimeoutHandler(HTTP_TIMEOUT, TimeUnit.MILLISECONDS));
+            connection.addHandlerLast(new WriteTimeoutHandler(HTTP_TIMEOUT, TimeUnit.MILLISECONDS));
+        });
+
+        this.webClient = webClientBuilder.baseUrl(chouetteRestServiceBaseUrl)
+                .clientConnector(new ReactorClientHttpConnector(HttpClient.from(tcpClient)))
+                .build();
+
+        this.maxRetryAttempts = maxRetryAttempts;
+    }
 
     public void createReferential(ChouetteReferentialInfo referential) {
         try {
             exchangeForChouetteReferentialInfo(referential, HttpMethod.POST, "/create");
-        } catch (HttpClientErrorException e) {
-            if (HttpStatus.SC_CONFLICT == e.getStatusCode().value()) {
+        } catch (WebClientResponseException e) {
+            if (e.getStatusCode() == HttpStatus.CONFLICT) {
                 LOGGER.warn("The referential {} already exists in Chouette DB. Ignoring creation request", referential.getSchemaName());
+            } else {
+                throw new ChouetteServiceException("The Chouette referential service returned an error", e);
             }
-        } catch (HttpServerErrorException e) {
-            throw new ChouetteServiceException("The Chouette referential service returned an error", e);
-        } catch (ResourceAccessException e) {
+        } catch (Exception e) {
             throw new ChouetteServiceException("The Chouette referential service is unavailable", e);
         }
     }
@@ -70,16 +90,19 @@ public class ChouetteReferentialRestClient {
         exchangeForChouetteReferentialInfo(referential, HttpMethod.DELETE, "/delete");
     }
 
-    private void exchangeForChouetteReferentialInfo(ChouetteReferentialInfo referential, HttpMethod httpMethod, String service) {
-        RestTemplate restTemplate = restTemplateBuilder.build();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<ChouetteReferentialInfo> entity = new HttpEntity<>(referential, headers);
-        restTemplate.exchange(chouetteRestServiceBaseUrl + service, httpMethod, entity, Void.class);
+    private Void exchangeForChouetteReferentialInfo(ChouetteReferentialInfo referential, HttpMethod httpMethod, String service) {
+        return webClient.method(httpMethod)
+                .uri(service)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(BodyInserters.fromValue(referential))
+                .retrieve()
+                .bodyToMono(Void.class)
+                .retryWhen(Retry.backoff(maxRetryAttempts, Duration.ofSeconds(1)).filter(is5xx))
+                .block(Duration.ofMillis(HTTP_TIMEOUT));
     }
 
+    protected static final Predicate<Throwable> is5xx =
+            (throwable) -> throwable instanceof WebClientResponseException && (((WebClientResponseException) throwable)).getStatusCode().is5xxServerError();
 
 
 }

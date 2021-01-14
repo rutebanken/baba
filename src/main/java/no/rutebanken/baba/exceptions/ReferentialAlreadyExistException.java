@@ -1,7 +1,10 @@
 package no.rutebanken.baba.exceptions;
 
-public class ReferentialAlreadyExistException extends BabaException {
+import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.Response;
+
+public class ReferentialAlreadyExistException extends ClientErrorException {
     public ReferentialAlreadyExistException(String schemaName) {
-        super("The referential already exists: " + schemaName);
+        super("The referential already exists: " + schemaName, Response.Status.CONFLICT);
     }
 }
