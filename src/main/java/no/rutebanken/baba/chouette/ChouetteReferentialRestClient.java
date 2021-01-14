@@ -15,18 +15,30 @@
 
 package no.rutebanken.baba.chouette;
 
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import io.netty.channel.ChannelOption;
+import io.netty.handler.timeout.ReadTimeoutHandler;
+import io.netty.handler.timeout.WriteTimeoutHandler;
+import no.rutebanken.baba.exceptions.ChouetteServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.netty.http.client.HttpClient;
+import reactor.netty.tcp.TcpClient;
+import reactor.util.retry.Retry;
+
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 /**
  * Client for the Chouette Referentials REST services.
@@ -34,15 +46,40 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class ChouetteReferentialRestClient {
 
-    private static final int HTTP_TIMEOUT = 30000;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChouetteReferentialRestClient.class);
+    private static final int HTTP_TIMEOUT = 10000;
 
+    private final WebClient webClient;
+    private final int maxRetryAttempts;
 
-    @Value("${chouette.rest.referential.base.url:http://chouette/referentials}")
-    private String chouetteRestServiceBaseUrl;
+    public ChouetteReferentialRestClient(@Autowired WebClient.Builder webClientBuilder,
+                                         @Value("${chouette.rest.referential.base.url:http://chouette/referentials}") String chouetteRestServiceBaseUrl,
+                                         @Value("${chouette.rest.referential.retry.max:3}") int maxRetryAttempts) {
 
+        TcpClient tcpClient = TcpClient.create().option(ChannelOption.CONNECT_TIMEOUT_MILLIS, HTTP_TIMEOUT).doOnConnected(connection -> {
+            connection.addHandlerLast(new ReadTimeoutHandler(HTTP_TIMEOUT, TimeUnit.MILLISECONDS));
+            connection.addHandlerLast(new WriteTimeoutHandler(HTTP_TIMEOUT, TimeUnit.MILLISECONDS));
+        });
+
+        this.webClient = webClientBuilder.baseUrl(chouetteRestServiceBaseUrl)
+                .clientConnector(new ReactorClientHttpConnector(HttpClient.from(tcpClient)))
+                .build();
+
+        this.maxRetryAttempts = maxRetryAttempts;
+    }
 
     public void createReferential(ChouetteReferentialInfo referential) {
-        exchangeForChouetteReferentialInfo(referential, HttpMethod.POST, "/create");
+        try {
+            exchangeForChouetteReferentialInfo(referential, HttpMethod.POST, "/create");
+        } catch (WebClientResponseException e) {
+            if (e.getStatusCode() == HttpStatus.CONFLICT) {
+                LOGGER.warn("The referential {} already exists in Chouette DB. Ignoring creation request", referential.getSchemaName());
+            } else {
+                throw new ChouetteServiceException("The Chouette referential service returned an error", e);
+            }
+        } catch (Exception e) {
+            throw new ChouetteServiceException("The Chouette referential service is unavailable", e);
+        }
     }
 
     public void updateReferential(ChouetteReferentialInfo referential) {
@@ -53,28 +90,19 @@ public class ChouetteReferentialRestClient {
         exchangeForChouetteReferentialInfo(referential, HttpMethod.DELETE, "/delete");
     }
 
-    private void exchangeForChouetteReferentialInfo(ChouetteReferentialInfo referential, HttpMethod httpMethod, String service) {
-        RestTemplate restTemplate = new RestTemplate(getClientHttpRequestFactory());
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<ChouetteReferentialInfo> entity = new HttpEntity<>(referential, headers);
-        restTemplate.exchange(chouetteRestServiceBaseUrl + service, httpMethod, entity, Void.class);
+    private Void exchangeForChouetteReferentialInfo(ChouetteReferentialInfo referential, HttpMethod httpMethod, String service) {
+        return webClient.method(httpMethod)
+                .uri(service)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(BodyInserters.fromValue(referential))
+                .retrieve()
+                .bodyToMono(Void.class)
+                .retryWhen(Retry.backoff(maxRetryAttempts, Duration.ofSeconds(1)).filter(is5xx))
+                .block(Duration.ofMillis(HTTP_TIMEOUT));
     }
 
-    private ClientHttpRequestFactory getClientHttpRequestFactory() {
-        RequestConfig config = RequestConfig.custom()
-                .setConnectTimeout(HTTP_TIMEOUT)
-                .setConnectionRequestTimeout(HTTP_TIMEOUT)
-                .setSocketTimeout(HTTP_TIMEOUT)
-                .build();
-        CloseableHttpClient client = HttpClientBuilder
-                .create()
-                .setDefaultRequestConfig(config)
-                .build();
-        return new HttpComponentsClientHttpRequestFactory(client);
-    }
+    protected static final Predicate<Throwable> is5xx =
+            throwable -> throwable instanceof WebClientResponseException && ((WebClientResponseException) throwable).getStatusCode().is5xxServerError();
 
 
 }

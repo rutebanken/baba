@@ -18,6 +18,8 @@ package no.rutebanken.baba.provider.rest;
 
 import io.swagger.annotations.Api;
 import no.rutebanken.baba.chouette.ChouetteReferentialService;
+import no.rutebanken.baba.exceptions.ChouetteServiceException;
+import no.rutebanken.baba.exceptions.ReferentialAlreadyExistException;
 import no.rutebanken.baba.provider.domain.Provider;
 import no.rutebanken.baba.provider.domain.TransportMode;
 import no.rutebanken.baba.provider.repository.ProviderRepository;
@@ -78,6 +80,11 @@ public class ProviderResource {
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#provider.id)")
     public void updateProvider(Provider provider) {
         LOGGER.info("Updating provider {}", provider);
+        Long providerId = provider.getId();
+        Provider existingProvider = providerRepository.getProvider(providerId);
+        if (existingProvider == null) {
+            throw new NotFoundException("Unable to find provider with id=" + providerId);
+        }
         chouetteReferentialService.updateChouetteReferential(provider);
         providerRepository.updateProvider(provider);
     }
@@ -86,7 +93,17 @@ public class ProviderResource {
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#provider.id)")
     public Provider createProvider(Provider provider) {
         LOGGER.info("Creating provider {}", provider);
-        chouetteReferentialService.createChouetteReferential(provider);
+        String referential = provider.getChouetteInfo().referential;
+        if(providerRepository.getProvider(referential) != null) {
+            LOGGER.warn("Failed to create provider {}: the provider already exists in the database", provider);
+            throw new ReferentialAlreadyExistException(referential);
+        }
+        try {
+            chouetteReferentialService.createChouetteReferential(provider);
+        } catch (ChouetteServiceException e) {
+            LOGGER.warn("Failed to create provider {}", provider, e);
+            throw new InternalServerErrorException("Chouette Server error while creating the provider with id= " + provider.getId() );
+        }
         return providerRepository.createProvider(provider);
     }
 

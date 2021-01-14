@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Collection;
+import java.util.List;
 
 
 @Repository
@@ -42,6 +43,18 @@ public class JpaProviderRepository implements ProviderRepository {
     public Provider getProvider(Long id) {
         return entityManager.find(Provider.class, id);
     }
+
+	@Override
+	public Provider getProvider(String referential) {
+		List<Provider> resultList = entityManager.createQuery("SELECT p FROM Provider p where p.chouetteInfo.referential = :referentialName", Provider.class).setParameter("referentialName", referential).getResultList();
+		if(resultList.isEmpty()) {
+			return null;
+		} else if (resultList.size() > 1) {
+			throw new IllegalStateException("Found more than one provider with referential name " + referential);
+		} else {
+			return resultList.get(0);
+		}
+	}
 
 	@Override
 	public void updateProvider(Provider provider) {

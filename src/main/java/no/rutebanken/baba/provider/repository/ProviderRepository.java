@@ -25,6 +25,8 @@ public interface ProviderRepository {
     Collection<Provider> getProviders();
 
     Provider getProvider(Long id);
+
+    Provider getProvider(String codespace);
     
     void updateProvider(Provider provider);
 
