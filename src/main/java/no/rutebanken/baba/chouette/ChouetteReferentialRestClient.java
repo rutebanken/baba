@@ -15,17 +15,22 @@
 
 package no.rutebanken.baba.chouette;
 
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import no.rutebanken.baba.exceptions.BabaException;
+import no.rutebanken.baba.exceptions.ChouetteServiceException;
+import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -34,15 +39,27 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class ChouetteReferentialRestClient {
 
-    private static final int HTTP_TIMEOUT = 30000;
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChouetteReferentialRestClient.class);
 
     @Value("${chouette.rest.referential.base.url:http://chouette/referentials}")
     private String chouetteRestServiceBaseUrl;
 
+    @Autowired
+    RestTemplateBuilder restTemplateBuilder;
+
 
     public void createReferential(ChouetteReferentialInfo referential) {
-        exchangeForChouetteReferentialInfo(referential, HttpMethod.POST, "/create");
+        try {
+            exchangeForChouetteReferentialInfo(referential, HttpMethod.POST, "/create");
+        } catch (HttpClientErrorException e) {
+            if (HttpStatus.SC_CONFLICT == e.getStatusCode().value()) {
+                LOGGER.warn("The referential {} already exists in Chouette DB. Ignoring creation request", referential.getSchemaName());
+            }
+        } catch (HttpServerErrorException e) {
+            throw new ChouetteServiceException("The Chouette referential service returned an error", e);
+        } catch (ResourceAccessException e) {
+            throw new ChouetteServiceException("The Chouette referential service is unavailable", e);
+        }
     }
 
     public void updateReferential(ChouetteReferentialInfo referential) {
@@ -54,7 +71,7 @@ public class ChouetteReferentialRestClient {
     }
 
     private void exchangeForChouetteReferentialInfo(ChouetteReferentialInfo referential, HttpMethod httpMethod, String service) {
-        RestTemplate restTemplate = new RestTemplate(getClientHttpRequestFactory());
+        RestTemplate restTemplate = restTemplateBuilder.build();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -63,18 +80,6 @@ public class ChouetteReferentialRestClient {
         restTemplate.exchange(chouetteRestServiceBaseUrl + service, httpMethod, entity, Void.class);
     }
 
-    private ClientHttpRequestFactory getClientHttpRequestFactory() {
-        RequestConfig config = RequestConfig.custom()
-                .setConnectTimeout(HTTP_TIMEOUT)
-                .setConnectionRequestTimeout(HTTP_TIMEOUT)
-                .setSocketTimeout(HTTP_TIMEOUT)
-                .build();
-        CloseableHttpClient client = HttpClientBuilder
-                .create()
-                .setDefaultRequestConfig(config)
-                .build();
-        return new HttpComponentsClientHttpRequestFactory(client);
-    }
 
 
 }
