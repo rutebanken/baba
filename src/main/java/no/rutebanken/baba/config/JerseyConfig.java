@@ -109,7 +109,7 @@ public class JerseyConfig {
             config.setTitle("Organisations API");
             config.setVersion("v1");
             config.setSchemes(new String[]{"http", "https"});
-            config.setResourcePackage("no.rutebanken.baba.organisation");
+            config.setResourcePackage("no.rutebanken.baba.organisation.rest");
             config.setPrettyPrint(true);
             config.setScan(true);
             config.setScannerId("organisations-scanner");
@@ -144,7 +144,7 @@ public class JerseyConfig {
             config.setTitle("Providers API");
             config.setVersion("v1");
             config.setSchemes(new String[]{"http", "https"});
-            config.setResourcePackage("no.rutebanken.baba.provider");
+            config.setResourcePackage("no.rutebanken.baba.provider.rest");
             config.setPrettyPrint(true);
             config.setScan(true);
             config.setScannerId("providers-scanner");
