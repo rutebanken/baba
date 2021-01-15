@@ -73,21 +73,6 @@ public class JerseyConfig {
         return publicJersey;
     }
 
-    @Bean
-    public ServletRegistrationBean privateJersey() {
-        ServletRegistrationBean privateJersey
-                = new ServletRegistrationBean(new ServletContainer(new HealthConfig()));
-        privateJersey.addUrlMappings("/health/*");
-        privateJersey.setName("PrivateJersey");
-        privateJersey.setLoadOnStartup(0);
-        privateJersey.getInitParameters().put("swagger.scanner.id", "health-scanner");
-        privateJersey.getInitParameters().put("swagger.config.id","baba-health-swagger-doc");
-        return privateJersey;
-    }
-
-
-
-
     private class OrganisationsAPIConfig extends ResourceConfig {
 
         public OrganisationsAPIConfig() {
@@ -166,30 +151,4 @@ public class JerseyConfig {
         }
     }
 
-
-    private class HealthConfig extends ResourceConfig {
-
-        public HealthConfig() {
-            configureSwagger();
-        }
-
-
-        private void configureSwagger() {
-            // Available at localhost:port/api/swagger.json
-            this.register(ApiListingResource.class);
-            this.register(SwaggerSerializers.class);
-
-            BeanConfig config = new BeanConfig();
-            config.setConfigId("baba-health-swagger-doc");
-            config.setTitle("Baba Health API");
-            config.setVersion("v1");
-            config.setSchemes(new String[]{"http", "https"});
-            config.setBasePath("/health");
-            config.setResourcePackage("no.rutebanken.baba.health");
-            config.setPrettyPrint(true);
-            config.setScan(true);
-            config.setScannerId("health-scanner");
-
-        }
-    }
 }
