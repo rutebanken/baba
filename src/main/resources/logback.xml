@@ -22,7 +22,7 @@
     </then>
     <else>
         <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <encoder class="org.entur.logger.logstash.LogstashEncoder">
                 <providers>
                     <pattern>
                         <pattern>
@@ -31,7 +31,6 @@
                                 "service": "baba"
                             },
                             "message": "%message\n%ex{full}",
-                            "severity": "%level",
                             "reportLocation": {
                                 "filePath": "%logger",
                                 "lineNumber": "%line",
