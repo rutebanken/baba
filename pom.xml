@@ -39,7 +39,7 @@
     </scm>
 
     <properties>
-        <entur.helpers.version>1.0.35</entur.helpers.version>
+        <entur.helpers.version>1.0.36</entur.helpers.version>
         <keycloak.version>4.8.3.Final</keycloak.version>
         <rest-assured.version>4.1.1</rest-assured.version>
         <postgis-jdbc.version>2.3.0</postgis-jdbc.version>
@@ -66,6 +66,12 @@
         <dependency>
             <groupId>org.entur.helpers</groupId>
             <artifactId>hazelcast-helper</artifactId>
+            <version>${entur.helpers.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.entur.helpers</groupId>
+            <artifactId>logging</artifactId>
             <version>${entur.helpers.version}</version>
         </dependency>
 
