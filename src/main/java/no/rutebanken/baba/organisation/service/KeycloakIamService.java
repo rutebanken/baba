@@ -18,7 +18,6 @@ package no.rutebanken.baba.organisation.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.rutebanken.baba.organisation.model.OrganisationException;
-import no.rutebanken.baba.organisation.model.responsibility.EntityClassificationAssignment;
 import no.rutebanken.baba.organisation.model.responsibility.ResponsibilityRoleAssignment;
 import no.rutebanken.baba.organisation.model.responsibility.ResponsibilitySet;
 import no.rutebanken.baba.organisation.model.responsibility.Role;
@@ -30,16 +29,13 @@ import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.passay.CharacterRule;
-import org.passay.EnglishCharacterData;
-import org.passay.PasswordGenerator;
 import org.rutebanken.helper.organisation.RoleAssignment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
@@ -47,7 +43,6 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -55,7 +50,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static no.rutebanken.baba.organisation.service.IamUtils.generatePassword;
+import static no.rutebanken.baba.organisation.service.IamUtils.toRoleAssignment;
+
 @Service
+@Profile("keycloak")
 public class KeycloakIamService implements IamService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -241,16 +240,7 @@ public class KeycloakIamService implements IamService {
         return roleNames;
     }
 
-    String generatePassword() {
-        List<CharacterRule> rules = Arrays.asList(
-                // at least one upper-case character
-                new CharacterRule(EnglishCharacterData.UpperCase, 1),
-                // at least one lower-case character
-                new CharacterRule(EnglishCharacterData.LowerCase, 1),
-                // at least one digit character
-                new CharacterRule(EnglishCharacterData.Digit, 1));
-        return new PasswordGenerator().generatePassword(12, rules);
-    }
+
 
 
     private void updateRoles(User user, List<Role> systemRoles) {
@@ -336,39 +326,10 @@ public class KeycloakIamService implements IamService {
         }
     }
 
-    protected RoleAssignment toRoleAssignment(ResponsibilityRoleAssignment roleAssignment) {
-        RoleAssignment atr = new RoleAssignment();
-        atr.r = roleAssignment.getTypeOfResponsibilityRole().getPrivateCode();
-        atr.o = roleAssignment.getResponsibleOrganisation().getPrivateCode();
-
-        if (roleAssignment.getResponsibleArea() != null) {
-            atr.z = roleAssignment.getResponsibleArea().getRoleAssignmentId();
-        }
-
-        if (!CollectionUtils.isEmpty(roleAssignment.getResponsibleEntityClassifications())) {
-            roleAssignment.getResponsibleEntityClassifications().forEach(ec -> addEntityClassification(atr, ec));
-        }
-        return atr;
-    }
 
 
-    private void addEntityClassification(RoleAssignment atr, EntityClassificationAssignment entityClassificationAssignment) {
-        if (atr.e == null) {
-            atr.e = new HashMap<>();
-        }
 
 
-        String entityTypeRef = entityClassificationAssignment.getEntityClassification().getEntityType().getPrivateCode();
-        List<String> entityClassificationsForEntityType = atr.e.computeIfAbsent(entityTypeRef, k -> new ArrayList<>());
-
-        // Represented negated entity classifications with '!' prefix for now. consider more structured representation.
-        String classifierCode = entityClassificationAssignment.getEntityClassification().getPrivateCode();
-        if (!entityClassificationAssignment.isAllow()) {
-            classifierCode = "!" + classifierCode;
-        }
-
-        entityClassificationsForEntityType.add(classifierCode);
-    }
 
 
 }

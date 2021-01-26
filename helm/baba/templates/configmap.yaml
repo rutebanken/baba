@@ -1,6 +1,7 @@
 apiVersion: v1
 data:
   application.properties: |+
+    spring.profiles.active=auth0
     spring.jpa.database=POSTGRESQL
     spring.jpa.properties.hibernate.dialect=org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
     spring.jpa.properties.hibernate.cache.region.factory_class=com.hazelcast.hibernate.HazelcastCacheRegionFactory
