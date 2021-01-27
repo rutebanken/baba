@@ -58,8 +58,6 @@ import static no.rutebanken.baba.organisation.service.IamUtils.toRoleAssignment;
 public class KeycloakIamService implements IamService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Value("${iam.keycloak.integration.enabled:true}")
-    private boolean enabled;
 
     @Value("#{'${iam.keycloak.default.roles:rutebanken}'.split(',')}")
     private List<String> defaultRoles;
@@ -75,11 +73,6 @@ public class KeycloakIamService implements IamService {
 
     @Override
     public void createRole(Role role) {
-        if (!enabled) {
-            logger.info("Keycloak disabled! Ignored createRole: " + role.getId());
-            return;
-        }
-
         try {
             iamRealm.roles().create(toKeycloakRole(role));
         } catch (Exception e) {
@@ -93,11 +86,6 @@ public class KeycloakIamService implements IamService {
 
     @Override
     public void removeRole(Role role) {
-        if (!enabled) {
-            logger.info("Keycloak disabled! Ignored removeRole: " + role.getId());
-            return;
-        }
-
         try {
             iamRealm.roles().get(role.getId()).remove();
             logger.info("Role successfully removed from Keycloak: " + role.getId());
@@ -113,10 +101,6 @@ public class KeycloakIamService implements IamService {
 
     public String createUser(User user) {
         String password = generatePassword();
-        if (!enabled) {
-            logger.info("Keycloak disabled! Ignored createUser: " + user.getUsername());
-            return password;
-        }
         Response rsp = iamRealm.users().create(toKeycloakUser(user));
         if (rsp.getStatus() >= 300) {
             String msg = "Failed to create user in Keycloak";
@@ -152,10 +136,6 @@ public class KeycloakIamService implements IamService {
     @Override
     public String resetPassword(User user) {
         String password = generatePassword();
-        if (!enabled) {
-            logger.info("Keycloak disabled! Ignored resetPassword: " + user.getUsername());
-            return password;
-        }
         try {
             resetPassword(user.getUsername(), password);
         } catch (Exception e) {
@@ -168,11 +148,6 @@ public class KeycloakIamService implements IamService {
     }
 
     private void updateUser(User user, List<Role> systemRoles) {
-        if (!enabled) {
-            logger.info("Keycloak disabled! Ignored updateUser: " + user.getUsername());
-            return;
-        }
-
         UserResource iamUser = getUserResourceByUsername(user.getUsername());
         iamUser.update(toKeycloakUser(user));
         updateRoles(user, systemRoles);
@@ -181,11 +156,6 @@ public class KeycloakIamService implements IamService {
     }
 
     public void removeUser(User user) {
-        if (!enabled) {
-            logger.info("Keycloak disabled! Ignored removeUser: " + user.getUsername());
-            return;
-        }
-
         try {
             UserResource iamUser = getUserResourceByUsername(user.getUsername());
             iamUser.remove();
@@ -206,11 +176,6 @@ public class KeycloakIamService implements IamService {
 
     @Override
     public void updateResponsibilitySet(ResponsibilitySet responsibilitySet) {
-        if (!enabled) {
-            logger.info("Keycloak disabled! Ignored updateResponsibilitySet: " + responsibilitySet.getName());
-            return;
-        }
-
         List<Role> systemRoles = roleRepository.findAll();
 
         try {
