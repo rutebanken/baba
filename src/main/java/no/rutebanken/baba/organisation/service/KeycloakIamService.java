@@ -51,6 +51,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static no.rutebanken.baba.organisation.service.IamUtils.generatePassword;
+import static no.rutebanken.baba.organisation.service.IamUtils.toAtr;
 import static no.rutebanken.baba.organisation.service.IamUtils.toRoleAssignment;
 
 @Service
@@ -278,18 +279,7 @@ public class KeycloakIamService implements IamService {
         return kcUser;
     }
 
-    private String toAtr(ResponsibilityRoleAssignment roleAssignment) {
-        RoleAssignment atr = toRoleAssignment(roleAssignment);
 
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            StringWriter writer = new StringWriter();
-            mapper.writeValue(writer, atr);
-            return writer.toString();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
 
 

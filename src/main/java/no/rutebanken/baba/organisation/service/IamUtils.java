@@ -1,5 +1,6 @@
 package no.rutebanken.baba.organisation.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import no.rutebanken.baba.organisation.model.responsibility.EntityClassificationAssignment;
 import no.rutebanken.baba.organisation.model.responsibility.ResponsibilityRoleAssignment;
 import org.passay.CharacterRule;
@@ -8,6 +9,8 @@ import org.passay.PasswordGenerator;
 import org.rutebanken.helper.organisation.RoleAssignment;
 import org.springframework.util.CollectionUtils;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -61,5 +64,18 @@ public final class IamUtils {
         }
 
         entityClassificationsForEntityType.add(classifierCode);
+    }
+
+    static String toAtr(ResponsibilityRoleAssignment roleAssignment) {
+        RoleAssignment atr = toRoleAssignment(roleAssignment);
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            StringWriter writer = new StringWriter();
+            mapper.writeValue(writer, atr);
+            return writer.toString();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

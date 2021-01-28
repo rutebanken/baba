@@ -21,10 +21,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static no.rutebanken.baba.organisation.service.IamUtils.generatePassword;
+import static no.rutebanken.baba.organisation.service.IamUtils.toAtr;
 
 @Service
 @Profile("auth0")
@@ -90,7 +94,12 @@ public class Auth0IamService implements IamService {
             logger.error(msg, e);
             throw new OrganisationException(msg);
         }
-        //updateRoles(user, systemRoles);
+        try {
+            updateRoles(user, roleRepository.findAll());
+        } catch (Exception e) {
+            logger.error("Failed to update user roles", e);
+            throw e;
+        }
     }
 
     @Override
@@ -191,9 +200,8 @@ public class Auth0IamService implements IamService {
             auth0User.setName(auth0User.getGivenName() + ' ' + auth0User.getFamilyName());
         }
 
-
-        /*if (user.getResponsibilitySets() != null) {
-            Map<String, List<String>> attributes = new HashMap<>();
+        if (user.getResponsibilitySets() != null) {
+            Map<String, Object> attributes = new HashMap<>();
             List<String> roleAssignments = new ArrayList<>();
 
             for (ResponsibilitySet responsibilitySet : user.getResponsibilitySets()) {
@@ -203,8 +211,8 @@ public class Auth0IamService implements IamService {
             }
 
             attributes.put("roles", roleAssignments);
-            auth0User.set.setAttributes(attributes);
-        }*/
+            auth0User.setAppMetadata(attributes);
+        }
 
         return auth0User;
     }
@@ -220,9 +228,11 @@ public class Auth0IamService implements IamService {
         try {
             List<com.auth0.json.mgmt.users.User> matchingUsers = getManagementAPI().users().list(new UserFilter().withQuery("username:\"" + username + "\"")).execute().getItems();
             if (matchingUsers.isEmpty()) {
+                logger.warn("User not found: {}", username);
                 throw new OrganisationException("User not found: " + username);
             } else if (matchingUsers.size() > 1) {
-                throw new OrganisationException("More than one user found with username: " + username, 0);
+                logger.error("More than one user found with username: {}", username);
+                throw new OrganisationException("More than one user found with username: " + username);
             }
             return matchingUsers.get(0);
         } catch (Auth0Exception e) {
@@ -241,8 +251,10 @@ public class Auth0IamService implements IamService {
                     .getItems()
                     .stream().filter(r -> privateCode.equals(r.getName())).collect(Collectors.toList());
             if (matchingRoles.isEmpty()) {
+                logger.warn("Role not found: {}", privateCode);
                 throw new OrganisationException("Role not found: " + privateCode);
             } else if (matchingRoles.size() > 1) {
+                logger.error("More than one role found with username: {}", privateCode);
                 throw new OrganisationException("More than one role found with private code:" + privateCode);
             }
             return matchingRoles.get(0);
