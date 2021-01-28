@@ -16,9 +16,7 @@
 
 package no.rutebanken.baba.organisation.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import no.rutebanken.baba.organisation.model.OrganisationException;
-import no.rutebanken.baba.organisation.model.responsibility.ResponsibilityRoleAssignment;
 import no.rutebanken.baba.organisation.model.responsibility.ResponsibilitySet;
 import no.rutebanken.baba.organisation.model.responsibility.Role;
 import no.rutebanken.baba.organisation.model.user.User;
@@ -29,7 +27,6 @@ import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.rutebanken.helper.organisation.RoleAssignment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +37,6 @@ import org.springframework.stereotype.Service;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -52,7 +47,6 @@ import java.util.stream.Collectors;
 
 import static no.rutebanken.baba.organisation.service.IamUtils.generatePassword;
 import static no.rutebanken.baba.organisation.service.IamUtils.toAtr;
-import static no.rutebanken.baba.organisation.service.IamUtils.toRoleAssignment;
 
 @Service
 @Profile("keycloak")
