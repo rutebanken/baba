@@ -39,7 +39,7 @@ public abstract class BaseIntegrationTest {
 
 	@TestConfiguration
 	@EnableWebSecurity
-	static class AdminRestMardukRouteBuilderTestContextConfiguration extends WebSecurityConfigurerAdapter {
+	static class TestWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {

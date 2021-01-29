@@ -32,6 +32,7 @@ import org.springframework.stereotype.Component;
 import javax.ws.rs.*;
 import java.util.Collection;
 
+import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_ADMIN;
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_EDIT;
 
@@ -64,7 +65,7 @@ public class ProviderResource {
 
     @DELETE
     @Path("/{providerId}")
-    @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#providerId)")
+    @PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
     public void deleteProvider(@PathParam("providerId") Long providerId) {
         LOGGER.info("Deleting provider with id '{}'", providerId);
         Provider provider = providerRepository.getProvider(providerId);
@@ -77,7 +78,7 @@ public class ProviderResource {
 
     @PUT
     @Path("/{providerId}")
-    @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#provider.id)")
+    @PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
     public void updateProvider(Provider provider) {
         LOGGER.info("Updating provider {}", provider);
         Long providerId = provider.getId();
@@ -90,7 +91,7 @@ public class ProviderResource {
     }
 
     @POST
-    @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#provider.id)")
+    @PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
     public Provider createProvider(Provider provider) {
         LOGGER.info("Creating provider {}", provider);
         String referential = provider.getChouetteInfo().referential;

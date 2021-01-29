@@ -17,7 +17,6 @@
 package no.rutebanken.baba;
 
 
-import no.rutebanken.baba.config.BabaSecurityConfiguration;
 import no.rutebanken.baba.organisation.repository.BaseRepositoryImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,7 +29,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(basePackages = {"no.rutebanken.baba.organisation.repository"},
         repositoryBaseClass = BaseRepositoryImpl.class)
 @ComponentScan(excludeFilters = {
-                                        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = BabaSecurityConfiguration.class),
                                         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = App.class),
 })
 public class BabaTestApp {
