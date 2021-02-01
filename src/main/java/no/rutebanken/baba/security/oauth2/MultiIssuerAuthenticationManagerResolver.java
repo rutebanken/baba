@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
@@ -29,7 +30,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * This is achieved by extracting the issuer from the token and matching it against either the Keycloack
  * issuer URI or the Auth0 issuer URI.
  * The two @{@link AuthenticationManager}s (one for Keycloak, one for Auth0) are instantiated during the first request and then cached.
- *
  */
 @Component
 public class MultiIssuerAuthenticationManagerResolver
@@ -63,6 +63,7 @@ public class MultiIssuerAuthenticationManagerResolver
      * Build a @{@link JwtDecoder} for RoR Auth0 domain.
      * To ensure compatibility with the existing authorization process ({@link JwtRoleAssignmentExtractor}), a "roles"
      * claim is inserted in the token thanks to @{@link RorAuth0RolesClaimAdapter}
+     *
      * @return a @{@link JwtDecoder} for Auth0.
      */
     private JwtDecoder rorAuth0JwtDecoder() {
@@ -80,6 +81,7 @@ public class MultiIssuerAuthenticationManagerResolver
     /**
      * Build a @{@link JwtDecoder} for Keycloak.
      * Keycloak exposes a non-standard JWK-Set URI that must be configured explicitly.
+     *
      * @return a @{@link JwtDecoder} for Keycloak.
      */
     private JwtDecoder keycloakJwtDecoder() {
@@ -118,7 +120,7 @@ public class MultiIssuerAuthenticationManagerResolver
     AuthenticationManager fromIssuer(String issuer) {
         return Optional.ofNullable(issuer)
                 .map(this::jwtDecoder)
-                .map(JwtAuthenticationProvider::new)
+                .map(this::jwtAuthenticationProvider)
                 .orElseThrow(() -> new IllegalArgumentException("Received JWT token with null OAuth2 issuer"))::authenticate;
     }
 
@@ -126,5 +128,19 @@ public class MultiIssuerAuthenticationManagerResolver
     public AuthenticationManager resolve(HttpServletRequest request) {
         return this.authenticationManagers.computeIfAbsent(toIssuer(request), this::fromIssuer);
     }
+
+
+    private JwtAuthenticationProvider jwtAuthenticationProvider(JwtDecoder jwtDecoder) {
+        JwtAuthenticationProvider jwtAuthenticationProvider = new JwtAuthenticationProvider(jwtDecoder);
+        jwtAuthenticationProvider.setJwtAuthenticationConverter(jwtAuthenticationConverter());
+        return jwtAuthenticationProvider;
+    }
+
+    private JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtAuthenticationConverter j = new JwtAuthenticationConverter();
+        j.setJwtGrantedAuthoritiesConverter(new KeycloakJwtGrantedAuthoritiesConverter());
+        return j;
+    }
+
 
 }
