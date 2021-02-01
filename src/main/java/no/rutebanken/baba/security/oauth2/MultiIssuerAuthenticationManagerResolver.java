@@ -60,7 +60,7 @@ public class MultiIssuerAuthenticationManagerResolver
     private final Map<String, AuthenticationManager> authenticationManagers = new ConcurrentHashMap<>();
 
     /**
-     * Build a @{@link JwtDecoder} for Entur Partner Auth0 domain.
+     * Build a @{@link JwtDecoder} for RoR Auth0 domain.
      * To ensure compatibility with the existing authorization process ({@link JwtRoleAssignmentExtractor}), a "roles"
      * claim is inserted in the token thanks to @{@link RorAuth0RolesClaimAdapter}
      * @return a @{@link JwtDecoder} for Auth0.

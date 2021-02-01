@@ -16,16 +16,17 @@
 
 package no.rutebanken.baba.config;
 
+import no.rutebanken.baba.security.oauth2.JwtRoleAssignmentExtractor;
 import org.rutebanken.helper.organisation.KeycloakRoleAssignmentExtractor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class KeycloakRoleAssignmentExctractorConfig {
+public class RoleAssignmentExtractorConfig {
 
     @Bean
-    public KeycloakRoleAssignmentExtractor getKeycloakRoleAssignmentExtractor() {
-        return new KeycloakRoleAssignmentExtractor();
+    public JwtRoleAssignmentExtractor getRoleAssignmentExtractor() {
+        return new JwtRoleAssignmentExtractor();
     }
 
 }

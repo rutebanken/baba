@@ -9,6 +9,7 @@ import com.auth0.json.auth.TokenHolder;
 import com.auth0.net.AuthRequest;
 import com.auth0.net.Request;
 import no.rutebanken.baba.organisation.model.OrganisationException;
+import no.rutebanken.baba.organisation.model.VersionedEntity;
 import no.rutebanken.baba.organisation.model.responsibility.ResponsibilitySet;
 import no.rutebanken.baba.organisation.model.responsibility.Role;
 import no.rutebanken.baba.organisation.model.user.User;
@@ -23,8 +24,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static no.rutebanken.baba.organisation.service.IamUtils.generatePassword;
@@ -163,6 +166,14 @@ public class Auth0IamService implements IamService {
     @Override
     public void updateResponsibilitySet(ResponsibilitySet responsibilitySet) {
         logger.info("Updating responsibility sets in Auth0: {}", responsibilitySet.getId());
+        List<Role> systemRoles = roleRepository.findAll();
+        try {
+            userRepository.findUsersWithResponsibilitySet(responsibilitySet).forEach(u -> updateRoles(u, systemRoles));
+        } catch (Exception e) {
+            String msg = "Keycloak updateResponsibilitySet failed: " + e.getMessage();
+            logger.info(msg, e);
+            throw new OrganisationException(msg);
+        }
     }
 
     private ManagementAPI getManagementAPI() throws Auth0Exception {
@@ -172,20 +183,45 @@ public class Auth0IamService implements IamService {
         return new ManagementAPI(domain, holder.getAccessToken());
     }
 
-    private void updateRoles(User user, List<Role> roles) {
+    /**
+     * Update the user roles.
+     * Only roles that are defined in the organisation repository are added or removed.
+     * Roles that are assigned to the user in Auth0 but that are not defined in the organisation repository are ignored.
+     * @param user the user whose roles should be updated in Auth0.
+     * @param systemRoles all the roles that are defined in the organisation repository.
+     */
+    private void updateRoles(User user, List<Role> systemRoles) {
         try {
-            String auth0UserId = getAuth0UserByUsername(user.getUsername()).getId();
-            List<String> auth0RoleIds = roles.stream()
-                    .map(Role::getPrivateCode)
-                    .map(this::getAuth0RoleByPrivateCode)
-                    .map(com.auth0.json.mgmt.Role::getId)
-                    .collect(Collectors.toList());
-            getManagementAPI().users().addRoles(auth0UserId, auth0RoleIds).execute();
+            // all the role names defined in the organisation repository
+            Set<String> systemRoleNames = systemRoles.stream().map(Role::getId).collect(Collectors.toSet());
+            // the role names assigned to the user in the organisation repository
+            Set<String> newRoleNames = getRoleNames(user);
+            // the Auth0 user corresponding to the organisation repository user.
+            com.auth0.json.mgmt.users.User auth0User = getAuth0UserByUsername(user.getUsername());
+            // the Auth0 roles currently assigned to the Auth0 user
+            List<com.auth0.json.mgmt.Role> existingAuth0UserRoles = getManagementAPI().users()
+                    .listRoles(auth0User.getId(), null)
+                    .execute()
+                    .getItems();
+            // Auth0 role ids that are currently assigned to the Auth0 user and that should be removed
+            List<String> auth0RoleIdsToBeRemoved = existingAuth0UserRoles.stream().filter(r -> systemRoleNames.contains(r.getName()))
+                    .filter(r -> !newRoleNames.remove(r.getName())).map(com.auth0.json.mgmt.Role::getId).collect(Collectors.toList());
+
+            if (!auth0RoleIdsToBeRemoved.isEmpty()) {
+                getManagementAPI().users().removeRoles(auth0User.getId(), auth0RoleIdsToBeRemoved).execute();
+            }
+
+            if (!newRoleNames.isEmpty()) {
+                List<String> rolesToBeAdded = newRoleNames.stream().map(this::getAuth0RoleByPrivateCode).map(com.auth0.json.mgmt.Role::getId).collect(Collectors.toList());
+                getManagementAPI().users().addRoles(auth0User.getId(), rolesToBeAdded).execute();
+            }
+
         } catch (Auth0Exception e) {
             String msg = "Auth0 updateRoles failed: " + e.getMessage();
             logger.error(msg, e);
             throw new OrganisationException(msg);
         }
+
     }
 
     private com.auth0.json.mgmt.users.User toAuth0User(User user) {
@@ -262,5 +298,13 @@ public class Auth0IamService implements IamService {
             logger.error("Exception while retrieving the user details", e);
             throw new OrganisationException("Failed to retrieve user in Auth0");
         }
+    }
+
+    private Set<String> getRoleNames(User user) {
+        Set<String> roleNames = new HashSet<>(defaultRoles);
+        for (ResponsibilitySet responsibilitySet : user.getResponsibilitySets()) {
+            roleNames.addAll(responsibilitySet.getRoles().stream().map(r -> r.getTypeOfResponsibilityRole().getId()).collect(Collectors.toSet()));
+        }
+        return roleNames;
     }
 }
