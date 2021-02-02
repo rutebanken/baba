@@ -19,7 +19,6 @@ package no.rutebanken.baba.security.oauth2;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.rutebanken.helper.organisation.RoleAssignment;
 import org.rutebanken.helper.organisation.RoleAssignmentExtractor;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -48,26 +47,21 @@ public class JwtRoleAssignmentExtractor implements RoleAssignmentExtractor {
 
     @Override
     public List<RoleAssignment> getRoleAssignmentsForUser(Authentication auth) {
-        if (auth instanceof Authentication) {
-            Authentication jwtAuthenticationToken = (Authentication) auth;
-            Jwt jwt = (Jwt) jwtAuthenticationToken.getPrincipal();
-            Object claim = jwt.getClaim(ATTRIBUTE_NAME_ROLE_ASSIGNMENT);
-            if (claim == null) {
-                return Collections.emptyList();
-            }
-            List<Object> roleAssignmentList;
-            if (claim instanceof List) {
-                roleAssignmentList = (List) claim;
-            } else if (claim instanceof String) {
-                roleAssignmentList = Arrays.asList(((String) claim).split("##"));
-            } else {
-                throw new IllegalArgumentException("Unsupported 'roles' claim type: " + claim);
-            }
-
-            return roleAssignmentList.stream().map(JwtRoleAssignmentExtractor::parse).collect(Collectors.toList());
-        } else {
-            throw new AccessDeniedException("Not authenticated with token");
+        Jwt jwt = (Jwt) auth.getPrincipal();
+        Object claim = jwt.getClaim(ATTRIBUTE_NAME_ROLE_ASSIGNMENT);
+        if (claim == null) {
+            return Collections.emptyList();
         }
+        List<Object> roleAssignmentList;
+        if (claim instanceof List) {
+            roleAssignmentList = (List) claim;
+        } else if (claim instanceof String) {
+            roleAssignmentList = Arrays.asList(((String) claim).split("##"));
+        } else {
+            throw new IllegalArgumentException("Unsupported 'roles' claim type: " + claim);
+        }
+
+        return roleAssignmentList.stream().map(JwtRoleAssignmentExtractor::parse).collect(Collectors.toList());
     }
 
     private static RoleAssignment parse(Object roleAssignment) {

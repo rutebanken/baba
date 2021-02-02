@@ -16,8 +16,6 @@
 
 package no.rutebanken.baba.exceptions;
 
-import java.io.IOException;
-
 public class BabaException extends RuntimeException {
 
 

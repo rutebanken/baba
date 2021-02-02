@@ -9,7 +9,6 @@ import com.auth0.json.auth.TokenHolder;
 import com.auth0.net.AuthRequest;
 import com.auth0.net.Request;
 import no.rutebanken.baba.organisation.model.OrganisationException;
-import no.rutebanken.baba.organisation.model.VersionedEntity;
 import no.rutebanken.baba.organisation.model.responsibility.ResponsibilitySet;
 import no.rutebanken.baba.organisation.model.responsibility.Role;
 import no.rutebanken.baba.organisation.model.user.User;
@@ -113,7 +112,7 @@ public class Auth0IamService implements IamService {
             com.auth0.json.mgmt.users.User auth0User = getAuth0UserByUsername(user.getUsername());
             auth0User.setPassword(password.toCharArray());
             getManagementAPI().users().update(user.getUsername(), auth0User).execute();
-            logger.info("Succesfully reset password in Auth0 for user: {}", user.getUsername());
+            logger.info("Successfully reset password in Auth0 for user: {}", user.getUsername());
         } catch (Auth0Exception e) {
             String msg = "Auth0 resetPassword failed: " + e.getMessage();
             logger.error(msg, e);
@@ -170,7 +169,7 @@ public class Auth0IamService implements IamService {
         try {
             userRepository.findUsersWithResponsibilitySet(responsibilitySet).forEach(u -> updateRoles(u, systemRoles));
         } catch (Exception e) {
-            String msg = "Keycloak updateResponsibilitySet failed: " + e.getMessage();
+            String msg = "Auth0 updateResponsibilitySet failed: " + e.getMessage();
             logger.info(msg, e);
             throw new OrganisationException(msg);
         }
@@ -187,7 +186,8 @@ public class Auth0IamService implements IamService {
      * Update the user roles.
      * Only roles that are defined in the organisation repository are added or removed.
      * Roles that are assigned to the user in Auth0 but that are not defined in the organisation repository are ignored.
-     * @param user the user whose roles should be updated in Auth0.
+     *
+     * @param user        the user whose roles should be updated in Auth0.
      * @param systemRoles all the roles that are defined in the organisation repository.
      */
     private void updateRoles(User user, List<Role> systemRoles) {
