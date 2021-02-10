@@ -13,7 +13,7 @@ import java.util.Map;
 
 
 /**
- * Insert a "roles" and "realm_access" claims in the JWT token based on the organisationID claim, for compatibility with the existing
+ * Insert a "roles" and "realm_access" claims in the JWT token based on the namespaced "roles" and "role_assignments" claims, for compatibility with the existing
  * authorization process (@{@link JwtRoleAssignmentExtractor}).
  */
 @Component
@@ -31,14 +31,14 @@ public class RorAuth0RolesClaimAdapter implements Converter<Map<String, Object>,
     public Map<String, Object> convert(Map<String, Object> claims) {
         Map<String, Object> convertedClaims = this.delegate.convert(claims);
 
-        Object permissions = convertedClaims.get("permissions");
-        if(permissions != null) {
-            convertedClaims.put("realm_access", Map.of("roles", permissions));
+        Object roles = convertedClaims.get(rorAuth0ClaimNamespace + "role");
+        if(roles != null) {
+            convertedClaims.put("realm_access", Map.of("roles", roles));
         }
 
-        Object roles = convertedClaims.get(rorAuth0ClaimNamespace + "roles");
-        if(roles != null) {
-            convertedClaims.put("roles", roles);
+        Object roleAssignments = convertedClaims.get(rorAuth0ClaimNamespace + "role_assignments");
+        if(roleAssignments != null) {
+            convertedClaims.put("roles", roleAssignments);
         }
 
         return convertedClaims;
