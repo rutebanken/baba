@@ -55,11 +55,10 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 @Path("users")
 @Produces("application/json")
 @Transactional
-@PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')  or hasAuthority('"  + UserResource.SCOPE_ORGANISATION_EDIT  + "')")
+@PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
 @Api(tags = {"User resource"}, produces = "application/json")
 public class UserResource extends BaseResource<User, UserDTO> {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
-    public static final String SCOPE_ORGANISATION_EDIT = "SCOPE_edit:organisation";
     @Autowired
     private UserRepository repository;
     @Autowired
