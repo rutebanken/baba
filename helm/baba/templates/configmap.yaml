@@ -20,16 +20,26 @@ data:
     spring.mail.host=smtp.postmarkapp.com
     spring.mail.properties.mail.smtp.timeout=3000
     spring.mail.properties.mail.smtp.connecttimeout=5000
-    email.link.password.reset:{{ .Values.keycloakUrl}}/realms/rutebanken/login-actions/reset-credentials
+    email.link.password.reset:{{ .Values.keycloak.url}}/realms/rutebanken/login-actions/reset-credentials
     new.user.email.enabled=true
     new.user.email.from={{ .Values.mail.newUserFrom}}
-    keycloak.auth-server-url={{ .Values.keycloakUrl}}
+    keycloak.auth-server-url={{ .Values.keycloak.url}}
     keycloak.realm=rutebanken
     keycloak.principal-attribute=preferred_username
     keycloak.resource=baba
     iam.keycloak.user.realm=rutebanken
     iam.keycloak.admin.clientID=baba
-    iam.keycloak.admin.path={{ .Values.keycloakUrl}}
+    iam.keycloak.admin.path={{ .Values.keycloak.url}}
+
+    #OAuth2 Resource Server
+    baba.oauth2.resourceserver.keycloak.jwt.issuer-uri={{ .Values.keycloak.url }}/realms/rutebanken
+    baba.oauth2.resourceserver.keycloak.jwt.jwkset-uri={{ .Values.keycloak.url }}/realms/rutebanken/protocol/openid-connect/certs
+    baba.oauth2.resourceserver.keycloak.jwt.audience=account
+
+    baba.oauth2.resourceserver.auth0.ror.jwt.issuer-uri={{ .Values.auth0.ror.url }}
+    baba.oauth2.resourceserver.auth0.ror.jwt.audience={{ .Values.auth0.ror.audience }}
+    baba.oauth2.resourceserver.auth0.ror.claim.namespace=https://ror.entur.io/
+
     server.port={{ .Values.service.http.internalPort }}
     chouette.rest.referential.base.url=http://chouette:8080/chouette_iev/referentials
     management.server.port=9001
@@ -40,8 +50,7 @@ data:
     management.endpoint.prometheus.enabled=true
     management.endpoints.web.exposure.include=info,health,prometheus
     rutebanken.kubernetes.namespace={{ .Release.Namespace }}
-    # Temporary setting until bug in KeycloakWebSecurityConfigurerAdapter is fixed (The bean 'httpSessionManager', defined in class path resource [xx/XXSecurityConfiguration.class], could not be registered. A bean with that name has already been defined in URL)
-    spring.main.allow-bean-definition-overriding=true
+
 kind: ConfigMap
 metadata:
   name: {{ template "baba.name" . }}-config
