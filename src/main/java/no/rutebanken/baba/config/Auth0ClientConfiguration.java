@@ -16,16 +16,20 @@
 
 package no.rutebanken.baba.config;
 
-import org.keycloak.adapters.KeycloakConfigResolver;
-import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
+import com.auth0.client.auth.AuthAPI;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
-public class KeycloakConfigResolverConfiguration {
-    @Bean
-    public KeycloakConfigResolver KeycloakConfigResolver() {
-        return new KeycloakSpringBootConfigResolver();
-    }
+@Profile("auth0")
+public class Auth0ClientConfiguration {
 
+    @Bean
+    public AuthAPI authAPI(@Value("${iam.auth0.admin.domain}") String domain,
+						   @Value("${iam.auth0.admin.client.id:baba}") String clientId,
+						   @Value("${iam.auth0.admin.client.secret}") String clientSecret) {
+        return new AuthAPI(domain, clientId, clientSecret);
+    }
 }

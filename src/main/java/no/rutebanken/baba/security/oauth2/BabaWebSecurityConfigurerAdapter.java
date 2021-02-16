@@ -1,5 +1,6 @@
 package no.rutebanken.baba.security.oauth2;
 
+import org.entur.oauth2.MultiIssuerAuthenticationManagerResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
@@ -18,7 +19,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 /**
  * Authentication and authorization configuration for Baba.
- * All requests must be authenticated except for the Swagger abd Actuator endpoints.
+ * All requests must be authenticated except for the Swagger and Actuator endpoints.
  * The Oauth2 ID-provider (Keycloak or Auth0) is identified thanks to {@link MultiIssuerAuthenticationManagerResolver}.
  */
 @Profile("!test")
@@ -55,6 +56,7 @@ public class BabaWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapt
                 .anyRequest().authenticated()
                 .and()
                 .oauth2ResourceServer().authenticationManagerResolver(this.multiIssuerAuthenticationManagerResolver);
+
     }
 
 }

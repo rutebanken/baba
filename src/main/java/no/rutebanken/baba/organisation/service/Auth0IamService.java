@@ -39,24 +39,20 @@ public class Auth0IamService implements IamService {
     private static final String AUTH0_CONNECTION = "Username-Password-Authentication";
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Value("${iam.auth0.admin.domain}")
-    private String domain;
-
-    @Value("${iam.auth0.admin.client.id:baba}")
-    private String clientId;
-
-    @Value("${iam.auth0.admin.client.secret}")
-    private String clientSecret;
-
-
     @Value("#{'${iam.auth0.default.roles:rutebanken}'.split(',')}")
     private List<String> defaultRoles;
+
+    @Value("${iam.auth0.admin.domain}")
+    private String domain;
 
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private AuthAPI authAPI;
 
     @Override
     public String createUser(User user) {
@@ -176,7 +172,6 @@ public class Auth0IamService implements IamService {
     }
 
     private ManagementAPI getManagementAPI() throws Auth0Exception {
-        AuthAPI authAPI = new AuthAPI(domain, clientId, clientSecret);
         AuthRequest authRequest = authAPI.requestToken("https://" + domain + "/api/v2/");
         TokenHolder holder = authRequest.execute();
         return new ManagementAPI(domain, holder.getAccessToken());
