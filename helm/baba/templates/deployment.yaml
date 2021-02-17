@@ -85,6 +85,11 @@ spec:
                 secretKeyRef:
                   key: baba-keycloak-secret
                   name: ror-baba-secret
+            - name: IAM_AUTHO_ADMIN_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: baba-auth0-secret
+                  name: ror-baba-secret
           ports:
             - containerPort: 8080
               name: http

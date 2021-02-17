@@ -28,7 +28,7 @@ public class Auth0ClientConfiguration {
 
     @Bean
     public AuthAPI authAPI(@Value("${iam.auth0.admin.domain}") String domain,
-						   @Value("${iam.auth0.admin.client.id:baba}") String clientId,
+						   @Value("${iam.auth0.admin.client.id}") String clientId,
 						   @Value("${iam.auth0.admin.client.secret}") String clientSecret) {
         return new AuthAPI(domain, clientId, clientSecret);
     }

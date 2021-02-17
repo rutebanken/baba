@@ -1,7 +1,7 @@
 apiVersion: v1
 data:
   application.properties: |+
-    spring.profiles.active=auth0
+    spring.profiles.active=keycloak
     spring.jpa.database=POSTGRESQL
     spring.jpa.properties.hibernate.dialect=org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
     spring.jpa.properties.hibernate.cache.region.factory_class=com.hazelcast.hibernate.HazelcastCacheRegionFactory
@@ -23,15 +23,21 @@ data:
     email.link.password.reset:{{ .Values.keycloak.url}}/realms/rutebanken/login-actions/reset-credentials
     new.user.email.enabled=true
     new.user.email.from={{ .Values.mail.newUserFrom}}
+
     keycloak.auth-server-url={{ .Values.keycloak.url}}
     keycloak.realm=rutebanken
     keycloak.principal-attribute=preferred_username
     keycloak.resource=baba
+
     iam.keycloak.user.realm=rutebanken
     iam.keycloak.admin.clientID=baba
     iam.keycloak.admin.path={{ .Values.keycloak.url}}
 
-    #OAuth2 Resource Server
+    iam.auth0.admin.domain={{ .Values.auth0.admin.domain }}
+    iam.auth0.admin.client.id={{ .Values.auth0.admin.client.id }}
+
+
+  #OAuth2 Resource Server
     baba.oauth2.resourceserver.keycloak.jwt.issuer-uri={{ .Values.keycloak.url }}/realms/rutebanken
     baba.oauth2.resourceserver.keycloak.jwt.jwkset-uri={{ .Values.keycloak.url }}/realms/rutebanken/protocol/openid-connect/certs
     baba.oauth2.resourceserver.keycloak.jwt.audience=account

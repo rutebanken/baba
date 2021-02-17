@@ -10,6 +10,10 @@ auth0:
   ror:
     url: https://ror-entur.eu.auth0.com/
     audience: https://ror.api.entur.io
+  admin:
+    client:
+      id:
+    domain: ror-entur.eu.auth0.com
 
 mail:
   newUserFrom: noreply@entur.org

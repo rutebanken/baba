@@ -9,7 +9,10 @@ auth0:
   ror:
     url: https://ror-entur-dev.eu.auth0.com/
     audience: https://ror.api.dev.entur.io
-
+  admin:
+    client:
+      id: dXrBh0VYvPEbz3tCTQzSudyde5hK93mL
+    domain: ror-entur-dev.eu.auth0.com
 mail:
   newUserFrom: noreply@entur.org
   link:
