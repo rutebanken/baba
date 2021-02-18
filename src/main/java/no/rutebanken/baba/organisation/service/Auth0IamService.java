@@ -84,9 +84,15 @@ public class Auth0IamService implements IamService {
     public void updateUser(User user) {
         logger.info("Updating user in Auth0: {}", user.getUsername());
         try {
-            com.auth0.json.mgmt.users.User auth0User = getAuth0UserByUsername(user.getUsername());
-            getManagementAPI().users().update(auth0User.getUsername(), toAuth0User(user)).execute();
+            com.auth0.json.mgmt.users.User existingAuth0User = getAuth0UserByUsername(user.getUsername());
+            com.auth0.json.mgmt.users.User updatedAuth0User = toAuth0User(user);
+            // The Auth0 API refuses to update both the username and the email at the same time
+            updatedAuth0User.setUsername(null);
+            getManagementAPI().users().update(existingAuth0User.getId(), updatedAuth0User).execute();
             logger.info("User successfully updated in Auth0: {}", user.getUsername());
+        } catch (OAuth2UserNotFoundException e) {
+            logger.info("User {} not found in Auth0 tenant. Creating a new user", user.getUsername());
+            createUser(user);
         } catch (Auth0Exception e) {
             String msg = "Auth0 updateUser failed: " + e.getMessage();
             logger.error(msg, e);
@@ -105,9 +111,9 @@ public class Auth0IamService implements IamService {
         logger.info("Resetting password in Auth0 for user: {}", user.getUsername());
         String password = generatePassword();
         try {
-            com.auth0.json.mgmt.users.User auth0User = getAuth0UserByUsername(user.getUsername());
+            com.auth0.json.mgmt.users.User auth0User = new com.auth0.json.mgmt.users.User();
             auth0User.setPassword(password.toCharArray());
-            getManagementAPI().users().update(user.getUsername(), auth0User).execute();
+            getManagementAPI().users().update(getAuth0UserByUsername(user.getUsername()).getId(), auth0User).execute();
             logger.info("Successfully reset password in Auth0 for user: {}", user.getUsername());
         } catch (Auth0Exception e) {
             String msg = "Auth0 resetPassword failed: " + e.getMessage();
@@ -260,7 +266,7 @@ public class Auth0IamService implements IamService {
             List<com.auth0.json.mgmt.users.User> matchingUsers = getManagementAPI().users().list(new UserFilter().withQuery("username:\"" + username + "\"")).execute().getItems();
             if (matchingUsers.isEmpty()) {
                 logger.warn("User not found: {}", username);
-                throw new OrganisationException("User not found: " + username);
+                throw new OAuth2UserNotFoundException("User not found: " + username);
             } else if (matchingUsers.size() > 1) {
                 logger.error("More than one user found with username: {}", username);
                 throw new OrganisationException("More than one user found with username: " + username);
