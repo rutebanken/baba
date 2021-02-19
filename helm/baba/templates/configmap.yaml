@@ -37,7 +37,7 @@ data:
     iam.auth0.admin.client.id={{ .Values.auth0.admin.client.id }}
 
 
-  #OAuth2 Resource Server
+    #OAuth2 Resource Server
     baba.oauth2.resourceserver.keycloak.jwt.issuer-uri={{ .Values.keycloak.url }}/realms/rutebanken
     baba.oauth2.resourceserver.keycloak.jwt.jwkset-uri={{ .Values.keycloak.url }}/realms/rutebanken/protocol/openid-connect/certs
     baba.oauth2.resourceserver.keycloak.jwt.audience=account
