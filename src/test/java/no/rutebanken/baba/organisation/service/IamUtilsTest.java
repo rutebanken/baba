@@ -33,11 +33,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-class KeycloakIamServiceTest {
-
+class IamUtilsTest {
 
     @Test
-    void testMapResponsibilityRoleAssignmentToKeycloakRoleAssignment() {
+    void testMapResponsibilityRoleAssignmentToIamRoleAssignment() {
         ResponsibilityRoleAssignment orgRegRoleAssignment = new ResponsibilityRoleAssignment();
         Role role = new Role();
         role.setPrivateCode("testRole");
@@ -68,25 +67,23 @@ class KeycloakIamServiceTest {
         administrativeZone.setPrivateCode("05");
         orgRegRoleAssignment.setResponsibleArea(administrativeZone);
 
-        RoleAssignment keycloakRoleAssignment = new KeycloakIamService().toRoleAssignment(orgRegRoleAssignment);
+        RoleAssignment iamRoleAssignment = IamUtils.toRoleAssignment(orgRegRoleAssignment);
 
-        Assertions.assertEquals(role.getPrivateCode(), keycloakRoleAssignment.getRole());
-        Assertions.assertEquals(organisation.getPrivateCode(), keycloakRoleAssignment.getOrganisation());
+        Assertions.assertEquals(role.getPrivateCode(), iamRoleAssignment.getRole());
+        Assertions.assertEquals(organisation.getPrivateCode(), iamRoleAssignment.getOrganisation());
 
 
         Set<String> expectedCodes = Sets.newHashSet(entityClassification.getPrivateCode(), "!" + entityClassificationNegated.getPrivateCode());
-        List<String> classificationCodeList = keycloakRoleAssignment.getEntityClassifications().get(entityType.getPrivateCode());
+        List<String> classificationCodeList = iamRoleAssignment.getEntityClassifications().get(entityType.getPrivateCode());
         Assertions.assertEquals(expectedCodes,
                 new HashSet<>(classificationCodeList));
 
-        Assertions.assertEquals("KVE:TopographicPlace:05", keycloakRoleAssignment.getAdministrativeZone());
+        Assertions.assertEquals("KVE:TopographicPlace:05", iamRoleAssignment.getAdministrativeZone());
     }
 
     @Test
     void testGeneratePassword() {
-        KeycloakIamService iamService = new KeycloakIamService();
-
-        String password = iamService.generatePassword();
+        String password = IamUtils.generatePassword();
         Assertions.assertEquals(12, password.length());
         Assertions.assertNotEquals(password.toLowerCase(), password);
         Assertions.assertNotEquals(password.toUpperCase(), password);
