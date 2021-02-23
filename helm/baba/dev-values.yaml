@@ -22,3 +22,5 @@ mail:
 
 ingress:
   loadBalancerIP: 35.205.170.68
+
+monitoringEnabled: true
