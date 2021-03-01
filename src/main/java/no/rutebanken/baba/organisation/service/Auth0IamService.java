@@ -73,7 +73,7 @@ public class Auth0IamService implements IamService {
             com.auth0.json.mgmt.users.User createdUser = request.execute();
             logger.info("Created user {} with Auth0 id {}", user.getUsername(), createdUser.getId());
         } catch (Auth0Exception e) {
-            String msg = "Auth0 createUser failed: " + e.getMessage();
+            String msg = "Auth0 createUser failed";
             logger.error(msg, e);
             throw new OrganisationException(msg);
         }
@@ -81,9 +81,9 @@ public class Auth0IamService implements IamService {
         try {
             updateRoles(user, roleRepository.findAll());
         } catch (Exception e) {
-            logger.error("Password or role assignment failed for new Auth0 user. Attempting to remove user");
+            logger.error("Password or role assignment failed for new Auth0 user. Attempting to remove user: ", e);
             removeUser(user);
-            throw e;
+            throw new OrganisationException("Password or role assignment failed for new Auth0 user");
         }
         return password;
     }
@@ -102,15 +102,16 @@ public class Auth0IamService implements IamService {
             logger.info("User {} not found in Auth0 tenant. Creating a new user", user.getUsername());
             createUser(user);
         } catch (Auth0Exception e) {
-            String msg = "Auth0 updateUser failed: " + e.getMessage();
+            String msg = "Auth0 updateUser failed";
             logger.error(msg, e);
             throw new OrganisationException(msg);
         }
         try {
             updateRoles(user, roleRepository.findAll());
         } catch (Exception e) {
-            logger.error("Failed to update user roles", e);
-            throw e;
+            String msg = "Failed to update user roles";
+            logger.error(msg, e);
+            throw new OrganisationException(msg);
         }
     }
 
