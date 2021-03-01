@@ -66,11 +66,12 @@ public class Auth0IamService implements IamService {
     public String createUser(User user) {
         logger.info("Creating user in Auth0: {} ", user.getUsername());
         String password = generatePassword();
+        com.auth0.json.mgmt.users.User createdUser = null;
         try {
             com.auth0.json.mgmt.users.User auth0User = toAuth0User(user);
             auth0User.setPassword(password.toCharArray());
             Request<com.auth0.json.mgmt.users.User> request = getManagementAPI().users().create(auth0User);
-            com.auth0.json.mgmt.users.User createdUser = request.execute();
+            createdUser = request.execute();
             logger.info("Created user {} with Auth0 id {}", user.getUsername(), createdUser.getId());
         } catch (Auth0Exception e) {
             String msg = "Auth0 createUser failed";
@@ -79,7 +80,7 @@ public class Auth0IamService implements IamService {
         }
 
         try {
-            updateRoles(user, roleRepository.findAll());
+            updateRoles(user, createdUser, roleRepository.findAll());
         } catch (Exception e) {
             logger.error("Password or role assignment failed for new Auth0 user. Attempting to remove user: ", e);
             removeUser(user);
@@ -97,19 +98,14 @@ public class Auth0IamService implements IamService {
             // The Auth0 API refuses to update both the username and the email at the same time
             updatedAuth0User.setUsername(null);
             getManagementAPI().users().update(existingAuth0User.getId(), updatedAuth0User).execute();
+            updateRoles(user, existingAuth0User, roleRepository.findAll());
             logger.info("User successfully updated in Auth0: {}", user.getUsername());
         } catch (OAuth2UserNotFoundException e) {
             logger.info("User {} not found in Auth0 tenant. Creating a new user", user.getUsername());
             createUser(user);
+            return;
         } catch (Auth0Exception e) {
             String msg = "Auth0 updateUser failed";
-            logger.error(msg, e);
-            throw new OrganisationException(msg);
-        }
-        try {
-            updateRoles(user, roleRepository.findAll());
-        } catch (Exception e) {
-            String msg = "Failed to update user roles";
             logger.error(msg, e);
             throw new OrganisationException(msg);
         }
@@ -178,7 +174,10 @@ public class Auth0IamService implements IamService {
         logger.info("Updating responsibility sets in Auth0: {}", responsibilitySet.getId());
         List<Role> systemRoles = roleRepository.findAll();
         try {
-            userRepository.findUsersWithResponsibilitySet(responsibilitySet).forEach(u -> updateRoles(u, systemRoles));
+            userRepository.findUsersWithResponsibilitySet(responsibilitySet).forEach(u -> {
+                com.auth0.json.mgmt.users.User auth0User = getAuth0UserByUsername(u.getUsername());
+                updateRoles(u, auth0User, systemRoles);
+            });
         } catch (Exception e) {
             String msg = "Auth0 updateResponsibilitySet failed: " + e.getMessage();
             logger.info(msg, e);
@@ -219,17 +218,16 @@ public class Auth0IamService implements IamService {
      * Only roles that are defined in the organisation repository are added or removed.
      * Roles that are assigned to the user in Auth0 but that are not defined in the organisation repository are ignored.
      *
-     * @param user        the user whose roles should be updated in Auth0.
+     * @param user        the user in the organisation repository whose roles should be updated in Auth0.
+     * @param auth0User   the user in Auth0.
      * @param systemRoles all the roles that are defined in the organisation repository.
      */
-    private void updateRoles(User user, List<Role> systemRoles) {
+    private void updateRoles(User user, com.auth0.json.mgmt.users.User auth0User, List<Role> systemRoles) {
         try {
             // all the role names defined in the organisation repository
             Set<String> systemRoleNames = systemRoles.stream().map(Role::getId).collect(Collectors.toSet());
             // the role names assigned to the user in the organisation repository
             Set<String> newRoleNames = getRoleNames(user);
-            // the Auth0 user corresponding to the organisation repository user.
-            com.auth0.json.mgmt.users.User auth0User = getAuth0UserByUsername(user.getUsername());
             // the Auth0 roles currently assigned to the Auth0 user
             List<com.auth0.json.mgmt.Role> existingAuth0UserRoles = getManagementAPI().users()
                     .listRoles(auth0User.getId(), null)
