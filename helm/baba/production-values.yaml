@@ -12,7 +12,7 @@ auth0:
     audience: https://ror.api.entur.io
   admin:
     client:
-      id:
+      id: GLBqcAUgBKVLby3ur9KTqvqraTUmnXvD
     domain: ror-entur.eu.auth0.com
 
 mail:

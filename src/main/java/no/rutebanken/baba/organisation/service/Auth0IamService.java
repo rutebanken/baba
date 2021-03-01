@@ -21,6 +21,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -53,6 +56,11 @@ public class Auth0IamService implements IamService {
 
     @Autowired
     private AuthAPI authAPI;
+
+    private TokenHolder tokenHolder;
+    private Instant accessTokenRetrievedAt;
+    private ManagementAPI managementAPI;
+    private Clock clock = Clock.systemUTC();
 
     @Override
     public String createUser(User user) {
@@ -177,10 +185,32 @@ public class Auth0IamService implements IamService {
         }
     }
 
-    private ManagementAPI getManagementAPI() throws Auth0Exception {
+    private synchronized ManagementAPI getManagementAPI() throws Auth0Exception {
+        if (managementAPI == null) {
+            refreshToken();
+            managementAPI = new ManagementAPI(domain, tokenHolder.getAccessToken());
+        }
+        if (hasTokenExpired()) {
+            refreshToken();
+            managementAPI.setApiToken(tokenHolder.getAccessToken());
+        }
+        return managementAPI;
+    }
+
+    /**
+     * The token is considered expired 60 seconds before its actual expiration date.
+     *
+     * @return true if the token is about to expire.
+     */
+    private boolean hasTokenExpired() {
+        return clock.instant().isAfter(accessTokenRetrievedAt.plus(tokenHolder.getExpiresIn() - 60, ChronoUnit.SECONDS));
+    }
+
+    private void refreshToken() throws Auth0Exception {
+        logger.debug("Refreshing Admin API token");
         AuthRequest authRequest = authAPI.requestToken("https://" + domain + "/api/v2/");
-        TokenHolder holder = authRequest.execute();
-        return new ManagementAPI(domain, holder.getAccessToken());
+        tokenHolder = authRequest.execute();
+        accessTokenRetrievedAt = clock.instant();
     }
 
     /**

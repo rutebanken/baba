@@ -87,7 +87,7 @@ spec:
                 secretKeyRef:
                   key: baba-keycloak-secret
                   name: ror-baba-secret
-            - name: IAM_AUTHO_ADMIN_CLIENT_SECRET
+            - name: IAM_AUTH0_ADMIN_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
                   key: baba-auth0-secret
