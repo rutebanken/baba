@@ -7,7 +7,6 @@ import com.auth0.client.mgmt.filter.UserFilter;
 import com.auth0.exception.Auth0Exception;
 import com.auth0.json.auth.TokenHolder;
 import com.auth0.net.AuthRequest;
-import com.auth0.net.Request;
 import no.rutebanken.baba.organisation.model.OrganisationException;
 import no.rutebanken.baba.organisation.model.responsibility.ResponsibilitySet;
 import no.rutebanken.baba.organisation.model.responsibility.Role;
@@ -64,114 +63,114 @@ public class Auth0IamService implements IamService {
 
     @Override
     public String createUser(User user) {
-        logger.info("Creating user in Auth0: {} ", user.getUsername());
+        logger.info("Creating user {} in Auth0", user.getUsername());
         String password = generatePassword();
+        com.auth0.json.mgmt.users.User auth0User = toAuth0User(user);
+        auth0User.setPassword(password.toCharArray());
         com.auth0.json.mgmt.users.User createdUser = null;
         try {
-            com.auth0.json.mgmt.users.User auth0User = toAuth0User(user);
-            auth0User.setPassword(password.toCharArray());
-            Request<com.auth0.json.mgmt.users.User> request = getManagementAPI().users().create(auth0User);
-            createdUser = request.execute();
+            createdUser = getManagementAPI().users().create(auth0User).execute();
             logger.info("Created user {} with Auth0 id {}", user.getUsername(), createdUser.getId());
-        } catch (Auth0Exception e) {
-            String msg = "Auth0 createUser failed";
-            logger.error(msg, e);
-            throw new OrganisationException(msg);
-        }
-
-        try {
             updateRoles(user, createdUser, roleRepository.findAll());
         } catch (Exception e) {
-            logger.error("Password or role assignment failed for new Auth0 user. Attempting to remove user: ", e);
-            removeUser(user);
-            throw new OrganisationException("Password or role assignment failed for new Auth0 user");
+            logger.error("User creation failed for user {}", user, e);
+            if (createdUser != null) {
+                logger.info("Attempting to remove user {}", user);
+                removeUser(user);
+            }
+            throw new OrganisationException("User creation failed");
         }
         return password;
     }
 
     @Override
     public void updateUser(User user) {
-        logger.info("Updating user in Auth0: {}", user.getUsername());
+        logger.info("Updating user {} in Auth0", user.getUsername());
+
+        // TODO temporarily allow creation of user when missing in Auth0 to facilitate migration from Keycloak
+        // to be removed after the migration is complete
+        com.auth0.json.mgmt.users.User existingAuth0User;
         try {
-            com.auth0.json.mgmt.users.User existingAuth0User = getAuth0UserByUsername(user.getUsername());
-            com.auth0.json.mgmt.users.User updatedAuth0User = toAuth0User(user);
-            // The Auth0 API refuses to update both the username and the email at the same time
-            updatedAuth0User.setUsername(null);
-            getManagementAPI().users().update(existingAuth0User.getId(), updatedAuth0User).execute();
-            updateRoles(user, existingAuth0User, roleRepository.findAll());
-            logger.info("User successfully updated in Auth0: {}", user.getUsername());
+            existingAuth0User = getAuth0UserByUsername(user.getUsername());
         } catch (OAuth2UserNotFoundException e) {
             logger.info("User {} not found in Auth0 tenant. Creating a new user", user.getUsername());
             createUser(user);
             return;
-        } catch (Auth0Exception e) {
-            String msg = "Auth0 updateUser failed";
-            logger.error(msg, e);
-            throw new OrganisationException(msg);
+        }
+
+        com.auth0.json.mgmt.users.User updatedAuth0User = toAuth0User(user);
+        // The Auth0 API refuses to update both the username and the email at the same time
+        updatedAuth0User.setUsername(null);
+        try {
+            getManagementAPI().users().update(existingAuth0User.getId(), updatedAuth0User).execute();
+            updateRoles(user, existingAuth0User, roleRepository.findAll());
+            logger.info("User {} successfully updated in Auth0", user.getUsername());
+
+        } catch (Exception e) {
+            logger.error("User update in Auth0 failed for user {}", user.getUsername(), e);
+            throw new OrganisationException("User update in Auth0 failed");
         }
     }
 
     @Override
     public String resetPassword(User user) {
-        logger.info("Resetting password in Auth0 for user: {}", user.getUsername());
+        logger.info("Resetting password in Auth0 for user {}", user.getUsername());
         String password = generatePassword();
+        com.auth0.json.mgmt.users.User existingAuth0User = getAuth0UserByUsername(user.getUsername());
+        com.auth0.json.mgmt.users.User updatedAuth0User = new com.auth0.json.mgmt.users.User();
+        updatedAuth0User.setPassword(password.toCharArray());
         try {
-            com.auth0.json.mgmt.users.User auth0User = new com.auth0.json.mgmt.users.User();
-            auth0User.setPassword(password.toCharArray());
-            getManagementAPI().users().update(getAuth0UserByUsername(user.getUsername()).getId(), auth0User).execute();
-            logger.info("Successfully reset password in Auth0 for user: {}", user.getUsername());
+            getManagementAPI().users().update(existingAuth0User.getId(), updatedAuth0User).execute();
+            logger.info("Successfully reset password in Auth0 for user {}", user.getUsername());
         } catch (Auth0Exception e) {
-            String msg = "Auth0 resetPassword failed: " + e.getMessage();
-            logger.error(msg, e);
-            throw new OrganisationException(msg);
+            logger.error("Password reset in Auth0 failed for user {}", user.getUsername(), e);
+            throw new OrganisationException("Password reset in Auth0 failed");
         }
         return password;
     }
 
     @Override
     public void removeUser(User user) {
-        logger.info("Removing user from Auth0: {}", user.getUsername());
+        logger.info("Removing user {} from Auth0", user.getUsername());
+        com.auth0.json.mgmt.users.User existingAuth0User = getAuth0UserByUsername(user.getUsername());
         try {
-            com.auth0.json.mgmt.users.User auth0User = getAuth0UserByUsername(user.getUsername());
-            getManagementAPI().users().delete(auth0User.getId()).execute();
-            logger.info("User successfully removed from Auth0: {}", user.getUsername());
+            getManagementAPI().users().delete(existingAuth0User.getId()).execute();
+            logger.info("User {} successfully removed from Auth0", user.getUsername());
         } catch (Auth0Exception e) {
-            String msg = "Auth0 removeUser failed: " + e.getMessage();
-            logger.error(msg, e);
-            throw new OrganisationException(msg);
+            logger.error("Failed to remove user {} from Auth0", user.getUsername(), e);
+            throw new OrganisationException("Failed to remove user from Auth0");
         }
     }
 
     @Override
     public void createRole(Role role) {
-        logger.info("Creating role in Auth0: {}", role.getId());
+        logger.info("Creating role {} in Auth0: ", role.getId());
+        com.auth0.json.mgmt.Role auth0Role = toAuth0Role(role);
         try {
-            com.auth0.json.mgmt.Role createdRole = getManagementAPI().roles().create(toAuth0Role(role)).execute();
+            com.auth0.json.mgmt.Role createdRole = getManagementAPI().roles().create(auth0Role).execute();
             logger.info("Role successfully created in Auth0: {}", createdRole.getId());
         } catch (Exception e) {
-            String msg = "Auth0 createRole failed: " + e.getMessage();
-            logger.error(msg, e);
-            throw new OrganisationException(msg);
+            logger.error("Failed to create role {}", role.getId(), e);
+            throw new OrganisationException("Failed to create role");
         }
     }
 
     @Override
     public void removeRole(Role role) {
         logger.info("Removing role in Auth0: {}", role.getId());
+        com.auth0.json.mgmt.Role auth0Role = getAuth0RoleByPrivateCode(role.getPrivateCode());
         try {
-            com.auth0.json.mgmt.Role auth0Role = getAuth0RoleByPrivateCode(role.getPrivateCode());
             getManagementAPI().roles().delete(auth0Role.getId()).execute();
-            logger.info("Role successfully removed from Auth0: {}", role.getId());
+            logger.info("Role {} successfully removed from Auth0", role.getId());
         } catch (Exception e) {
-            String msg = "Auth0 removeRole failed: " + e.getMessage();
-            logger.error(msg, e);
-            throw new OrganisationException(msg);
+            logger.error("Failed to remove role {} from Auth0", role.getId(), e);
+            throw new OrganisationException("Failed to remove role from Auth0");
         }
     }
 
     @Override
     public void updateResponsibilitySet(ResponsibilitySet responsibilitySet) {
-        logger.info("Updating responsibility sets in Auth0: {}", responsibilitySet.getId());
+        logger.info("Updating responsibility set {} in Auth0", responsibilitySet.getId());
         List<Role> systemRoles = roleRepository.findAll();
         try {
             userRepository.findUsersWithResponsibilitySet(responsibilitySet).forEach(u -> {
@@ -179,9 +178,8 @@ public class Auth0IamService implements IamService {
                 updateRoles(u, auth0User, systemRoles);
             });
         } catch (Exception e) {
-            String msg = "Auth0 updateResponsibilitySet failed: " + e.getMessage();
-            logger.info(msg, e);
-            throw new OrganisationException(msg);
+            logger.info("Failed to update responsibility set {} in Auth0", responsibilitySet.getId(), e);
+            throw new OrganisationException("Failed to update responsibility set in Auth0");
         }
     }
 
@@ -223,6 +221,7 @@ public class Auth0IamService implements IamService {
      * @param systemRoles all the roles that are defined in the organisation repository.
      */
     private void updateRoles(User user, com.auth0.json.mgmt.users.User auth0User, List<Role> systemRoles) {
+        logger.info("Updating roles for user {}", user.getUsername());
         try {
             // all the role names defined in the organisation repository
             Set<String> systemRoleNames = systemRoles.stream().map(Role::getId).collect(Collectors.toSet());
@@ -247,9 +246,8 @@ public class Auth0IamService implements IamService {
             }
 
         } catch (Auth0Exception e) {
-            String msg = "Auth0 updateRoles failed: " + e.getMessage();
-            logger.error(msg, e);
-            throw new OrganisationException(msg);
+            logger.error("Failed to update roles for user {}", user.getUsername(), e);
+            throw new OrganisationException("Failed to update roles");
         }
 
     }
@@ -302,9 +300,8 @@ public class Auth0IamService implements IamService {
             }
             return matchingUsers.get(0);
         } catch (Auth0Exception e) {
-            String msg = "Auth0 getAuth0UserByUsername failed: " + e.getMessage();
-            logger.error(msg, e);
-            throw new OrganisationException(msg);
+            logger.error("Failed to retrieve the user {} in Auth0", username, e);
+            throw new OrganisationException("Failed to retrieve the user");
         }
     }
 
@@ -320,13 +317,13 @@ public class Auth0IamService implements IamService {
                 logger.warn("Role not found: {}", privateCode);
                 throw new OrganisationException("Role not found: " + privateCode);
             } else if (matchingRoles.size() > 1) {
-                logger.error("More than one role found with username: {}", privateCode);
+                logger.error("More than one role found with private code: {}", privateCode);
                 throw new OrganisationException("More than one role found with private code:" + privateCode);
             }
             return matchingRoles.get(0);
         } catch (Auth0Exception e) {
-            logger.error("Exception while retrieving the user details", e);
-            throw new OrganisationException("Failed to retrieve user in Auth0");
+            logger.error("Failed to retrieve the role {} in Auth0", privateCode, e);
+            throw new OrganisationException("Failed to retrieve role in Auth0");
         }
     }
 
