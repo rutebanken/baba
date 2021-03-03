@@ -132,7 +132,13 @@ public class Auth0IamService implements IamService {
     @Override
     public void removeUser(User user) {
         logger.info("Removing user {} from Auth0", user.getUsername());
-        com.auth0.json.mgmt.users.User existingAuth0User = getAuth0UserByUsername(user.getUsername());
+        com.auth0.json.mgmt.users.User existingAuth0User;
+        try {
+            existingAuth0User = getAuth0UserByUsername(user.getUsername());
+        } catch (OAuth2UserNotFoundException nfe) {
+            logger.warn("Ignoring user removal for user {} that does not exist in the Auth0 tenant", user.getUsername());
+            return;
+        }
         try {
             getManagementAPI().users().delete(existingAuth0User.getId()).execute();
             logger.info("User {} successfully removed from Auth0", user.getUsername());
@@ -292,10 +298,9 @@ public class Auth0IamService implements IamService {
         try {
             List<com.auth0.json.mgmt.users.User> matchingUsers = getManagementAPI().users().list(new UserFilter().withQuery("username:\"" + username + "\"")).execute().getItems();
             if (matchingUsers.isEmpty()) {
-                logger.warn("User not found: {}", username);
                 throw new OAuth2UserNotFoundException("User not found: " + username);
             } else if (matchingUsers.size() > 1) {
-                logger.error("More than one user found with username: {}", username);
+                logger.error("More than one user found in Auth0 tenant with username: {}", username);
                 throw new OrganisationException("More than one user found with username: " + username);
             }
             return matchingUsers.get(0);
