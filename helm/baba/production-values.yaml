@@ -8,12 +8,12 @@ keycloak:
   url:  https://auth.entur.org/auth
 auth0:
   ror:
-    url: https://ror-entur.eu.auth0.com/
+    url: https://auth2.entur.org/
     audience: https://ror.api.entur.io
   admin:
     client:
       id: GLBqcAUgBKVLby3ur9KTqvqraTUmnXvD
-    domain: ror-entur.eu.auth0.com
+    domain: auth2.entur.org
 
 mail:
   newUserFrom: noreply@entur.org
