@@ -107,6 +107,7 @@ public class UserResource extends BaseResource<User, UserDTO> {
         } catch (OAuth2UserNotFoundException e) {
             // TODO temporarily allow creation of user when missing in Auth0 to facilitate migration from Keycloak
             // to be removed after the migration is complete
+            LOGGER.info("User {} not found in Auth0 tenant. Creating a new user", user.getUsername());
             iamService.createUser(user);
             newUserEmailSender.sendEmail(user);
         }
@@ -117,15 +118,20 @@ public class UserResource extends BaseResource<User, UserDTO> {
     // to be removed after the migration is complete
     @POST
     @Path("migrate")
-    public void migrate() {
+    public void migrate() throws InterruptedException {
         for (UserDTO userDTO : listAllEntities()) {
             User user = getExisting(userDTO.id);
+            LOGGER.info("Migrating user {}", user.getUsername());
             try {
                 iamService.updateUser(user);
+                LOGGER.info("The user {} was already migrated", user.getUsername());
             } catch (OAuth2UserNotFoundException e) {
+                LOGGER.info("User {} not found in Auth0 tenant. Creating a new user", user.getUsername());
                 iamService.createUser(user);
                 newUserEmailSender.sendEmail(user);
             }
+            // slow down migration to prevent rate limiting
+            Thread.sleep(10000);
         }
     }
 
