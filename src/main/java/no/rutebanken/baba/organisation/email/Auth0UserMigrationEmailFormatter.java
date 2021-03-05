@@ -31,8 +31,8 @@ import java.util.Locale;
 import java.util.Map;
 
 @Service
-@Profile({"!migration & (auth0 | test)"})
-public class Auth0NewUserEmailFormatter implements NewUserEmailFormatter {
+@Profile({"migration"})
+public class Auth0UserMigrationEmailFormatter implements NewUserEmailFormatter {
 
     @Autowired
     private MessageSource messageSource;
@@ -70,7 +70,7 @@ public class Auth0NewUserEmailFormatter implements NewUserEmailFormatter {
     private String geFreeMarkerTemplateContent(Map<String, Object> model) {
         try {
             return FreeMarkerTemplateUtils.processTemplateIntoString(
-                    freemarkerConfiguration.getTemplate("fm_email_new_user_template_auth0.ftl"), model);
+                    freemarkerConfiguration.getTemplate("fm_email_new_user_template_auth0_migration.ftl"), model);
         } catch (Exception e) {
             throw new BabaException("Exception occurred while processing email template:" + e.getMessage(), e);
         }
