@@ -86,18 +86,7 @@ public class Auth0IamService implements IamService {
     @Override
     public void updateUser(User user) {
         logger.info("Updating user {} in Auth0", user.getUsername());
-
-        // TODO temporarily allow creation of user when missing in Auth0 to facilitate migration from Keycloak
-        // to be removed after the migration is complete
-        com.auth0.json.mgmt.users.User existingAuth0User;
-        try {
-            existingAuth0User = getAuth0UserByUsername(user.getUsername());
-        } catch (OAuth2UserNotFoundException e) {
-            logger.info("User {} not found in Auth0 tenant. Creating a new user", user.getUsername());
-            createUser(user);
-            return;
-        }
-
+        com.auth0.json.mgmt.users.User existingAuth0User = getAuth0UserByUsername(user.getUsername());
         com.auth0.json.mgmt.users.User updatedAuth0User = toAuth0User(user);
         // The Auth0 API refuses to update both the username and the email at the same time
         updatedAuth0User.setUsername(null);
