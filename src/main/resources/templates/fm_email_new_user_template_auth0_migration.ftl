@@ -34,7 +34,7 @@
 
 <p>${message("user.migration.introduction")}</p>
 
-${message("user.migration.username")}: ${user.username}
+${message("user.migration.username")} ${user.username}
 <br>
 
 <p>
