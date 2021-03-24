@@ -48,9 +48,9 @@ public class JerseyConfig {
 
 
     @Bean
-    public ServletRegistrationBean organisationsAPIJerseyConfig() {
-        ServletRegistrationBean publicJersey
-                = new ServletRegistrationBean(new ServletContainer(new OrganisationsAPIConfig()));
+    public ServletRegistrationBean<ServletContainer> organisationsAPIJerseyConfig() {
+        ServletRegistrationBean<ServletContainer> publicJersey
+                = new ServletRegistrationBean<>(new ServletContainer(new OrganisationsAPIConfig()));
         publicJersey.addUrlMappings("/services/organisations/*");
         publicJersey.setName("OrganisationAPI");
         publicJersey.setLoadOnStartup(0);
@@ -62,9 +62,9 @@ public class JerseyConfig {
 
 
     @Bean
-    public ServletRegistrationBean providersAPIJerseyConfig() {
-        ServletRegistrationBean publicJersey
-                = new ServletRegistrationBean(new ServletContainer(new ProvidersAPIConfig()));
+    public ServletRegistrationBean<ServletContainer> providersAPIJerseyConfig() {
+        ServletRegistrationBean<ServletContainer> publicJersey
+                = new ServletRegistrationBean<>(new ServletContainer(new ProvidersAPIConfig()));
         publicJersey.addUrlMappings("/services/providers/*");
         publicJersey.setName("ProvidersAPI");
         publicJersey.setLoadOnStartup(0);
@@ -73,7 +73,7 @@ public class JerseyConfig {
         return publicJersey;
     }
 
-    private class OrganisationsAPIConfig extends ResourceConfig {
+    private static class OrganisationsAPIConfig extends ResourceConfig {
 
         public OrganisationsAPIConfig() {
             register(CorsResponseFilter.class);
@@ -116,7 +116,7 @@ public class JerseyConfig {
         }
     }
 
-    private class ProvidersAPIConfig extends ResourceConfig {
+    private static class ProvidersAPIConfig extends ResourceConfig {
 
         public ProvidersAPIConfig() {
             register(CorsResponseFilter.class);
