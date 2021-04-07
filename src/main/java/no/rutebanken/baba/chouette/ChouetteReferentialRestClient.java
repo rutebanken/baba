@@ -33,7 +33,6 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.netty.http.client.HttpClient;
-import reactor.netty.tcp.TcpClient;
 import reactor.util.retry.Retry;
 
 import java.time.Duration;
@@ -56,14 +55,11 @@ public class ChouetteReferentialRestClient {
                                          @Value("${chouette.rest.referential.base.url:http://chouette/referentials}") String chouetteRestServiceBaseUrl,
                                          @Value("${chouette.rest.referential.retry.max:3}") int maxRetryAttempts) {
 
-        TcpClient tcpClient = TcpClient.create().option(ChannelOption.CONNECT_TIMEOUT_MILLIS, HTTP_TIMEOUT).doOnConnected(connection -> {
-            connection.addHandlerLast(new ReadTimeoutHandler(HTTP_TIMEOUT, TimeUnit.MILLISECONDS));
-            connection.addHandlerLast(new WriteTimeoutHandler(HTTP_TIMEOUT, TimeUnit.MILLISECONDS));
-        });
-
         this.webClient = webClientBuilder.baseUrl(chouetteRestServiceBaseUrl)
-                .clientConnector(new ReactorClientHttpConnector(HttpClient.from(tcpClient)))
-                .build();
+                .clientConnector(new ReactorClientHttpConnector(HttpClient.create().option(ChannelOption.CONNECT_TIMEOUT_MILLIS, HTTP_TIMEOUT).doOnConnected(connection -> {
+                    connection.addHandlerLast(new ReadTimeoutHandler(HTTP_TIMEOUT, TimeUnit.MILLISECONDS));
+                    connection.addHandlerLast(new WriteTimeoutHandler(HTTP_TIMEOUT, TimeUnit.MILLISECONDS));
+                }))).build();
 
         this.maxRetryAttempts = maxRetryAttempts;
     }
