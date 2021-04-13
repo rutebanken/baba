@@ -67,7 +67,7 @@ public class BabaHazelcastService extends HazelCastService {
                         .setEvictionConfig(new EvictionConfig()
                                 .setEvictionPolicy(EvictionPolicy.LFU)
                                 .setMaxSizePolicy(MaxSizePolicy.USED_HEAP_PERCENTAGE)
-                                .setSize(2))
+                                .setSize(MAX_HEAP_PERCENTAGE_SECOND_LEVEL_CACHE))
                         // No sync backup for hibernate cache
                         .setBackupCount(0)
                         .setAsyncBackupCount(2)
