@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.rutebanken.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>1.0.19</version>
+        <version>1.0.21</version>
     </parent>
 
     <groupId>no.rutebanken</groupId>
@@ -39,7 +39,7 @@
     </scm>
 
     <properties>
-        <entur.helpers.version>1.0.40</entur.helpers.version>
+        <entur.helpers.version>1.0.45</entur.helpers.version>
         <keycloak.version>4.8.3.Final</keycloak.version>
         <auth0.version>1.26.0</auth0.version>
         <rest-assured.version>4.1.1</rest-assured.version>
@@ -92,7 +92,7 @@
         </dependency>
         <dependency>
             <groupId>org.entur.helpers</groupId>
-            <artifactId>hazelcast-helper</artifactId>
+            <artifactId>hazelcast4-helper</artifactId>
             <version>${entur.helpers.version}</version>
         </dependency>
 

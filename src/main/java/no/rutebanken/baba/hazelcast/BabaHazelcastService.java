@@ -16,9 +16,10 @@
 
 package no.rutebanken.baba.hazelcast;
 
+import com.hazelcast.config.EvictionConfig;
 import com.hazelcast.config.EvictionPolicy;
 import com.hazelcast.config.MapConfig;
-import com.hazelcast.config.MaxSizeConfig;
+import com.hazelcast.config.MaxSizePolicy;
 import com.hazelcast.core.HazelcastInstance;
 import no.rutebanken.baba.organisation.model.user.User;
 import org.rutebanken.hazelcasthelper.service.HazelCastService;
@@ -26,7 +27,6 @@ import org.rutebanken.hazelcasthelper.service.KubernetesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,8 +47,8 @@ public class BabaHazelcastService extends HazelCastService {
      */
     private static final int MAX_HEAP_PERCENTAGE_SECOND_LEVEL_CACHE = 2;
 
-    public BabaHazelcastService(@Autowired KubernetesService kubernetesService, @Value("${hazelcast.management.url:}") String hazelcastManagementUrl) {
-        super(kubernetesService, hazelcastManagementUrl);
+    public BabaHazelcastService(@Autowired KubernetesService kubernetesService) {
+        super(kubernetesService);
     }
 
     /**
@@ -64,13 +64,14 @@ public class BabaHazelcastService extends HazelCastService {
                 // Configure map for hibernate second level cache
                 new MapConfig()
                         .setName(MAP_CONFIG_NAME_SECOND_LEVEL_CACHE)
+                        .setEvictionConfig(new EvictionConfig()
+                                .setEvictionPolicy(EvictionPolicy.LFU)
+                                .setMaxSizePolicy(MaxSizePolicy.USED_HEAP_PERCENTAGE)
+                                .setSize(MAX_HEAP_PERCENTAGE_SECOND_LEVEL_CACHE))
                         // No sync backup for hibernate cache
                         .setBackupCount(0)
                         .setAsyncBackupCount(2)
-                        .setEvictionPolicy(EvictionPolicy.LFU)
-                        .setTimeToLiveSeconds(604800)
-                        .setMaxSizeConfig(
-                                new MaxSizeConfig(MAX_HEAP_PERCENTAGE_SECOND_LEVEL_CACHE, MaxSizeConfig.MaxSizePolicy.USED_HEAP_PERCENTAGE)));
+                        .setTimeToLiveSeconds(604800));
 
         LOGGER.info("Configured map for hibernate second level cache: {}", mapConfigs.get(0));
         return mapConfigs;

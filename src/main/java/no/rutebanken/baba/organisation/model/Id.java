@@ -51,7 +51,7 @@ public class Id {
 	}
 
 	private static boolean isValid(String publicId) {
-		return !StringUtils.isEmpty(publicId);
+		return StringUtils.hasText(publicId);
 	}
 
 	public String getCodeSpace() {
