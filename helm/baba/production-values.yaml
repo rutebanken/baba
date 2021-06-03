@@ -13,7 +13,7 @@ auth0:
   admin:
     client:
       id: GLBqcAUgBKVLby3ur9KTqvqraTUmnXvD
-    domain: auth2.entur.org
+    domain: ror-entur.eu.auth0.com
 
 mail:
   newUserFrom: noreply@entur.org
