@@ -119,6 +119,7 @@ public class UserResource extends BaseResource<User, UserDTO> {
     @POST
     @Path("migrate")
     public void migrate() throws InterruptedException {
+        LOGGER.info("Migrating user accounts to Auth0");
         for (UserDTO userDTO : listAllEntities()) {
             User user = getExisting(userDTO.id);
             LOGGER.info("Migrating user {}", user.getUsername());
@@ -133,6 +134,7 @@ public class UserResource extends BaseResource<User, UserDTO> {
             // slow down migration to prevent rate limiting
             Thread.sleep(10000);
         }
+        LOGGER.info("Migration to Auth0 complete");
     }
 
     @DELETE
