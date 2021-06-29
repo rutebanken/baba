@@ -53,7 +53,7 @@ class NewUserEmailFormatterTest {
 
     @Test
     void testGetNewUserEmailSubject() {
-        Assertions.assertEquals("Entur - New account details - Production environment", emailFormatter.getSubject(Locale.ENGLISH));
+        Assertions.assertEquals("Entur - New account details", emailFormatter.getSubject(Locale.ENGLISH));
     }
 
 }
