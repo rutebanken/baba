@@ -27,7 +27,6 @@ import no.rutebanken.baba.organisation.rest.mapper.UserMapper;
 import no.rutebanken.baba.organisation.rest.validation.DTOValidator;
 import no.rutebanken.baba.organisation.rest.validation.UserValidator;
 import no.rutebanken.baba.organisation.service.IamService;
-import no.rutebanken.baba.organisation.service.OAuth2UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,39 +101,7 @@ public class UserResource extends BaseResource<User, UserDTO> {
     @Path("{id}")
     public void update(@PathParam("id") String id, UserDTO dto) {
         User user = updateEntity(id, dto);
-        try {
-            iamService.updateUser(user);
-        } catch (OAuth2UserNotFoundException e) {
-            // TODO temporarily allow creation of user when missing in Auth0 to facilitate migration from Keycloak
-            // to be removed after the migration is complete
-            LOGGER.info("User {} not found in Auth0 tenant. Creating a new user", user.getUsername());
-            iamService.createUser(user);
-            newUserEmailSender.sendEmail(user);
-        }
-
-    }
-
-    // TODO temporary service to migrate accounts to Auth0
-    // to be removed after the migration is complete
-    @POST
-    @Path("migrate")
-    public void migrate() throws InterruptedException {
-        LOGGER.info("Migrating user accounts to Auth0");
-        for (UserDTO userDTO : listAllEntities()) {
-            User user = getExisting(userDTO.id);
-            LOGGER.info("Migrating user {}", user.getUsername());
-            try {
-                iamService.updateUser(user);
-                LOGGER.info("The user {} was already migrated", user.getUsername());
-            } catch (OAuth2UserNotFoundException e) {
-                LOGGER.info("User {} not found in Auth0 tenant. Creating a new user", user.getUsername());
-                iamService.createUser(user);
-                newUserEmailSender.sendEmail(user);
-            }
-            // slow down migration to prevent rate limiting
-            Thread.sleep(10000);
-        }
-        LOGGER.info("Migration to Auth0 complete");
+        iamService.updateUser(user);
     }
 
     @DELETE
