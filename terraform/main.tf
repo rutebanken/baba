@@ -1,4 +1,3 @@
-# Contains main description of bulk of terraform?
 terraform {
   required_version = ">= 0.13.2"
 }
@@ -20,7 +19,7 @@ resource "google_service_account" "baba_service_account" {
 
 # add service account as member to the cloudsql client
 resource "google_project_iam_member" "project" {
-  project = var.gcp_cloudsql_project
+  project = var.gcp_resources_project
   role = var.service_account_cloudsql_role
   member = "serviceAccount:${google_service_account.baba_service_account.email}"
 }
@@ -56,4 +55,36 @@ resource "kubernetes_secret" "ror-baba-secret" {
     "baba-auth0-secret" = var.ror-baba-auth0-secret
 
   }
+}
+
+resource "google_sql_database_instance" "db_instance" {
+  name = "baba-db-pg13"
+  project = var.gcp_resources_project
+  region = "europe-west1"
+
+  settings {
+    tier = var.db_tier
+    user_labels = var.labels
+    availability_type = var.db_availability
+    backup_configuration {
+      enabled = true
+    }
+    ip_configuration {
+      require_ssl = true
+    }
+  }
+  database_version = "POSTGRES_13"
+}
+
+resource "google_sql_database" "db" {
+  name = "baba"
+  project = var.gcp_resources_project
+  instance = google_sql_database_instance.db_instance.name
+}
+
+resource "google_sql_user" "db-user" {
+  name = var.ror-baba-db-username
+  project = var.gcp_resources_project
+  instance = google_sql_database_instance.db_instance.name
+  password = var.ror-baba-db-password
 }

@@ -3,17 +3,10 @@ variable "gcp_project" {
   description = "The GCP project hosting the workloads"
 }
 
-variable "gcp_cloudsql_project" {
-  description = "The GCP project hosting the CloudSQL resources"
-}
-
 variable "gcp_resources_project" {
   description = "The GCP project hosting the project resources"
 }
 
-variable "location" {
-  description = "GCP bucket location"
-}
 variable "kube_namespace" {
   description = "The Kubernetes namespace"
 }
@@ -72,4 +65,14 @@ variable ror-baba-keycloak-secret {
 
 variable ror-baba-auth0-secret {
   description = "baba Auth0 secret"
+}
+
+variable "db_tier" {
+  description = "Database instance tier"
+  default = "db-custom-1-3840"
+}
+
+variable "db_availability" {
+  description = "Database availablity"
+  default = "ZONAL"
 }
