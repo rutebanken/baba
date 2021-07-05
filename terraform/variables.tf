@@ -56,6 +56,16 @@ variable ror-baba-auth0-secret {
   description = "baba Auth0 secret"
 }
 
+variable "db_region" {
+  description = "GCP  region"
+  default = "europe-west1"
+}
+
+variable "db_zone_letter" {
+  description = "GCP zone letter"
+  default = "b"
+}
+
 variable "db_tier" {
   description = "Database instance tier"
   default = "db-custom-1-3840"

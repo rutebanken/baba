@@ -59,21 +59,33 @@ resource "kubernetes_secret" "ror-baba-secret" {
 
 resource "google_sql_database_instance" "db_instance" {
   name = "baba-db-pg13"
+  database_version = "POSTGRES_13"
   project = var.gcp_resources_project
-  region = "europe-west1"
+  region = var.db_region
 
   settings {
+    location_preference {
+      zone = var.db_zone_letter
+    }
     tier = var.db_tier
     user_labels = var.labels
     availability_type = var.db_availability
     backup_configuration {
       enabled = true
+      // 01:00 UTC
+      start_time = "01:00"
+    }
+    maintenance_window {
+      // Sunday
+      day = 7
+      // 02:00 UTC
+      hour = 2
     }
     ip_configuration {
       require_ssl = true
     }
   }
-  database_version = "POSTGRES_13"
+
 }
 
 resource "google_sql_database" "db" {
