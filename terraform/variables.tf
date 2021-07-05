@@ -22,17 +22,6 @@ variable "labels" {
   }
 }
 
-variable "force_destroy" {
-  description = "(Optional, Default: false) When deleting a bucket, this boolean option will delete all contained objects. If you try to delete a bucket that contains objects, Terraform will fail that run"
-  default = false
-}
-
-variable "prevent_destroy" {
-  description = "Prevent destruction of bucket"
-  type = bool
-  default = false
-}
-
 variable "load_config_file" {
   description = "Do not load kube config file"
   default = false
