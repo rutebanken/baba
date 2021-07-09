@@ -107,12 +107,6 @@ public class ProviderResource {
         return providerRepository.createProvider(provider);
     }
 
-    @GET
-    @Path("/all")
-    @Deprecated
-    public Collection<Provider> getAllProviders() {
-        return getProviders();
-    }
 
     @GET
     public Collection<Provider> getProviders() {
