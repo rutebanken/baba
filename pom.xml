@@ -49,6 +49,7 @@
         <wololo.version>0.16.1</wololo.version>
         <commons-io.version>2.10.0</commons-io.version>
         <resteasy.version>3.6.1.Final</resteasy.version>
+        <passay.version>1.6.1</passay.version>
 
         <!-- empty argLine property, the value is set up by Jacoco during unit tests execution -->
         <argLine/>
@@ -170,7 +171,7 @@
         <dependency>
             <groupId>org.passay</groupId>
             <artifactId>passay</artifactId>
-            <version>1.6.0</version>
+            <version>${passay.version}</version>
         </dependency>
 
         <!-- Auth0 -->
