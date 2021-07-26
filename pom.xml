@@ -48,7 +48,7 @@
         <javax.jdo.jdo2-api.version>2.3-eb</javax.jdo.jdo2-api.version>
         <wololo.version>0.16.1</wololo.version>
         <commons-io.version>2.11.0</commons-io.version>
-        <resteasy.version>3.6.1.Final</resteasy.version>
+        <resteasy.version>4.5.7.Final</resteasy.version>
         <passay.version>1.6.1</passay.version>
 
         <!-- empty argLine property, the value is set up by Jacoco during unit tests execution -->
