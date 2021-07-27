@@ -40,7 +40,7 @@
 
     <properties>
         <entur.helpers.version>1.0.55</entur.helpers.version>
-        <keycloak.version>4.8.3.Final</keycloak.version>
+        <keycloak.version>14.0.0</keycloak.version>
         <auth0.version>1.31.0</auth0.version>
         <rest-assured.version>4.4.0</rest-assured.version>
         <postgis-jdbc.version>2.5.0</postgis-jdbc.version>
