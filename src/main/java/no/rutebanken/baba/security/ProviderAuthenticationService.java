@@ -26,8 +26,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_ADMIN;
+import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_VIEW_ALL;
+
 @Service
 public class ProviderAuthenticationService {
+
+    private static final String DEFAULT_ROLE_PREFIX = "ROLE_";
 
     @Autowired
     private ProviderRepository providerRepository;
@@ -57,4 +62,8 @@ public class ProviderAuthenticationService {
     }
 
 
+    public boolean canViewAllProviders(Authentication authentication) {
+        return authentication.getAuthorities().stream().anyMatch(grantedAuthority ->
+                grantedAuthority.getAuthority().equals(DEFAULT_ROLE_PREFIX + ROLE_ROUTE_DATA_ADMIN) || grantedAuthority.getAuthority().equals(DEFAULT_ROLE_PREFIX + ROLE_ROUTE_DATA_VIEW_ALL));
+    }
 }

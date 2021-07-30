@@ -39,7 +39,7 @@
     </scm>
 
     <properties>
-        <entur.helpers.version>1.0.57</entur.helpers.version>
+        <entur.helpers.version>1.0.58-SNAPSHOT</entur.helpers.version>
         <keycloak.version>4.8.3.Final</keycloak.version>
         <auth0.version>1.31.0</auth0.version>
         <rest-assured.version>4.4.0</rest-assured.version>

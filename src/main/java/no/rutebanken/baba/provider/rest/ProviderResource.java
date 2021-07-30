@@ -23,24 +23,29 @@ import no.rutebanken.baba.exceptions.ReferentialAlreadyExistException;
 import no.rutebanken.baba.provider.domain.Provider;
 import no.rutebanken.baba.provider.domain.TransportMode;
 import no.rutebanken.baba.provider.repository.ProviderRepository;
+import no.rutebanken.baba.security.ProviderAuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_ADMIN;
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_EDIT;
+import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_VIEW_ALL;
 
 
 @Component
 @Produces("application/json")
 @Path("")
-@PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "')")
 @Api
+@PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "')")
 public class ProviderResource {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProviderResource.class);
@@ -50,6 +55,9 @@ public class ProviderResource {
 
     @Autowired
     private ChouetteReferentialService chouetteReferentialService;
+
+    @Autowired
+    private ProviderAuthenticationService providerAuthenticationService;
 
     @GET
     @Path("/{providerId}")
@@ -106,10 +114,21 @@ public class ProviderResource {
     }
 
 
+    /**
+     * Return the list of providers.
+     * Route data administrators, editors and viewers can access this method, but they will retrieve only the providers they have access to.
+     */
     @GET
+    @PreAuthorize("hasAnyRole('" + ROLE_ROUTE_DATA_ADMIN + "," + ROLE_ROUTE_DATA_EDIT + "," + ROLE_ROUTE_DATA_VIEW_ALL + "')")
     public Collection<Provider> getProviders() {
-        LOGGER.debug("Returning all providers.");
-        return providerRepository.getProviders();
+        Collection<Provider> providers = providerRepository.getProviders();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(providerAuthenticationService.canViewAllProviders(authentication)) {
+            LOGGER.debug("Returning all providers.");
+            return providers;
+        }
+        LOGGER.debug("Returning authorized providers.");
+        return providers.stream().filter(provider ->  providerAuthenticationService.hasRoleForProvider(authentication, ROLE_ROUTE_DATA_EDIT, provider.getId())).collect(Collectors.toList());
     }
 
 
