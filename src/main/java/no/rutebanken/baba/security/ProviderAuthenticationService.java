@@ -39,6 +39,9 @@ public class ProviderAuthenticationService {
      */
     private static final String DEFAULT_ROLE_PREFIX = "ROLE_";
 
+    private static final String PREFIXED_ROLE_ROUTE_DATA_VIEW_ALL = DEFAULT_ROLE_PREFIX + ROLE_ROUTE_DATA_VIEW_ALL;
+    private static final String PREFIXED_ROLE_ROUTE_DATA_ADMIN = DEFAULT_ROLE_PREFIX + ROLE_ROUTE_DATA_ADMIN;
+
     @Autowired
     private ProviderRepository providerRepository;
 
@@ -69,6 +72,6 @@ public class ProviderAuthenticationService {
 
     public boolean canViewAllProviders(Authentication authentication) {
         return authentication.getAuthorities().stream().anyMatch(grantedAuthority ->
-                grantedAuthority.getAuthority().equals(DEFAULT_ROLE_PREFIX + ROLE_ROUTE_DATA_ADMIN) || grantedAuthority.getAuthority().equals(DEFAULT_ROLE_PREFIX + ROLE_ROUTE_DATA_VIEW_ALL));
+                grantedAuthority.getAuthority().equals(PREFIXED_ROLE_ROUTE_DATA_ADMIN) || grantedAuthority.getAuthority().equals(PREFIXED_ROLE_ROUTE_DATA_VIEW_ALL));
     }
 }
