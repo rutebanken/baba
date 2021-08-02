@@ -61,7 +61,7 @@ public class ProviderResource {
 
     @GET
     @Path("/{providerId}")
-    @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#providerId)")
+    @PreAuthorize("hasAnyRole('" + ROLE_ROUTE_DATA_ADMIN + "," + ROLE_ROUTE_DATA_VIEW_ALL + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#providerId)")
     public Provider getProvider(@PathParam("providerId") Long providerId) {
         LOGGER.debug("Returning provider with id '{}'", providerId);
         Provider provider = providerRepository.getProvider(providerId);
