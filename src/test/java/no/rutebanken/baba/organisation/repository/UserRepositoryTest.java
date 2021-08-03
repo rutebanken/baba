@@ -50,7 +50,7 @@ class UserRepositoryTest extends BaseIntegrationTest {
         User user = User.builder().withUsername("raffen").withPrivateCode("2").withOrganisation(defaultOrganisation).withContactDetails(minimalContactDetails()).build();
         User createdUser = userRepository.saveAndFlush(user);
 
-        User fetchedUser = userRepository.getOne(createdUser.getPk());
+        User fetchedUser = userRepository.getById(createdUser.getPk());
         Assertions.assertEquals("User:2", fetchedUser.getId());
 
 
