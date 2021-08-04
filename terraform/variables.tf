@@ -66,10 +66,6 @@ variable ror-baba-smtp-password {
   description = "baba smtp password"
 }
 
-variable ror-baba-keycloak-secret {
-  description = "baba keycloak secret"
-}
-
 variable ror-baba-auth0-secret {
   description = "baba Auth0 secret"
 }

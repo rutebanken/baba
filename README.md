@@ -61,28 +61,6 @@ spring.datasource.initializationFailFast=false
 * Running
 `mvn spring-boot:run -Ph2 -Dspring.config.location=/path/to/application.properties`
 
-
-## Enable baba to admin users in keycloak
-
-In order to mange keycloak users from Baba 
-
-###  Add client to Realm 'Master'
-  * Go to the keycloak admin console 
-  * Select realm=Master
-  * Select 'clients'
-  * Create new client: baba
-  * Set 'Access Type' to "Confidential", toggle 'Service Accounts Enabled' on and provide a valid url (whatever) as a redirect url and 'Save'
-  * Add role 'Admin' on tab 'Service Account roles'
-  * Secret for client is displayed on tab 'Credentials'
-
- 
-### Configure baba with username+password for new user and clientID for new client
-```
-iam.keycloak.admin.client=baba
-iam.keycloak.admin.client.secret=<See 'Credentials' tab for Client.>
-```
-
-
 # Flyway
 To create the database for baba, download and use the flyway command line tool:
 https://flywaydb.org/documentation/commandline/
