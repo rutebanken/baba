@@ -52,7 +52,6 @@ public class BabaWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapt
                 .anyRequest().authenticated()
                 .and()
                 .oauth2ResourceServer().jwt().jwtAuthenticationConverter(new RorAuthenticationConverter());
-        ;
 
     }
 

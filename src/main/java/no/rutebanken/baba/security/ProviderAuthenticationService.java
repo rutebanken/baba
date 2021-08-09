@@ -21,7 +21,6 @@ package no.rutebanken.baba.security;
 import no.rutebanken.baba.provider.domain.Provider;
 import no.rutebanken.baba.provider.repository.ProviderRepository;
 import org.rutebanken.helper.organisation.RoleAssignmentExtractor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -29,15 +28,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProviderAuthenticationService {
 
-    @Autowired
-    private ProviderRepository providerRepository;
+    private final ProviderRepository providerRepository;
+    private final RoleAssignmentExtractor roleAssignmentExtractor;
+    private final boolean authorizationEnabled;
 
-    @Autowired
-    private RoleAssignmentExtractor roleAssignmentExtractor;
-
-
-    @Value("${authorization.enabled:true}")
-    protected boolean authorizationEnabled;
+    public ProviderAuthenticationService(ProviderRepository providerRepository, RoleAssignmentExtractor roleAssignmentExtractor, @Value("${authorization.enabled:true}") boolean authorizationEnabled) {
+        this.providerRepository = providerRepository;
+        this.roleAssignmentExtractor = roleAssignmentExtractor;
+        this.authorizationEnabled = authorizationEnabled;
+    }
 
 
     public boolean hasRoleForProvider(Authentication authentication, String role, Long providerId) {
