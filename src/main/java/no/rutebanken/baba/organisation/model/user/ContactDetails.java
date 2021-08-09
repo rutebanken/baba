@@ -41,7 +41,7 @@ public class ContactDetails {
 
 	private String phone;
 
-	// Email address must be unique in Keycloak
+	// Email address must be unique in Auth0
 	@Unique
 	@NotNull
 	private String email;

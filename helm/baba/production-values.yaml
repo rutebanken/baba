@@ -4,8 +4,6 @@ replicas: 2
 gcp:
   databaseInstance: entur-ror-prod:europe-west1:baba-db-1=tcp:5432
 
-keycloak:
-  url:  https://auth.entur.org/auth
 auth0:
   ror:
     url: https://auth2.entur.org/
