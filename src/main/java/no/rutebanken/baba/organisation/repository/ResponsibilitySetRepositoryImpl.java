@@ -39,8 +39,8 @@ public class ResponsibilitySetRepositoryImpl implements ResponsibilitySetReposit
 
         if (entity instanceof Role) {
             return entityManager.createQuery("select rs from ResponsibilitySet rs inner join rs.roles r" +
-                                                     " where r.typeOfResponsibilityRole=:role", ResponsibilitySet.class)
-                           .setParameter("role", entity).getResultList();
+                    " where r.typeOfResponsibilityRole=:role", ResponsibilitySet.class)
+                    .setParameter("role", entity).getResultList();
         }
 
         // TODO hanle other entity types

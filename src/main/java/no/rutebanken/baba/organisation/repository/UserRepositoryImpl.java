@@ -27,19 +27,19 @@ import java.util.List;
 @Repository
 public class UserRepositoryImpl implements UserRepositoryCustom {
 
-	private final EntityManager entityManager;
+    private final EntityManager entityManager;
 
-	public UserRepositoryImpl(EntityManager entityManager) {
-		this.entityManager = entityManager;
-	}
+    public UserRepositoryImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
-	@Override
-	public List<User> findUsersWithResponsibilitySet(ResponsibilitySet responsibilitySet) {
+    @Override
+    public List<User> findUsersWithResponsibilitySet(ResponsibilitySet responsibilitySet) {
 
-		TypedQuery<User> query = entityManager.createQuery("select u from User u where :respSet member of u.responsibilitySets", User.class);
+        TypedQuery<User> query = entityManager.createQuery("select u from User u where :respSet member of u.responsibilitySets", User.class);
 
-		query.setParameter("respSet", responsibilitySet);
+        query.setParameter("respSet", responsibilitySet);
 
-		return query.getResultList();
-	}
+        return query.getResultList();
+    }
 }
