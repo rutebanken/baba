@@ -18,25 +18,28 @@ package no.rutebanken.baba.organisation.repository;
 
 import no.rutebanken.baba.organisation.model.responsibility.ResponsibilitySet;
 import no.rutebanken.baba.organisation.model.user.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
+@Repository
 public class UserRepositoryImpl implements UserRepositoryCustom {
 
-	@Autowired
-	private EntityManager entityManager;
+    private final EntityManager entityManager;
 
+    public UserRepositoryImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
-	@Override
-	public List<User> findUsersWithResponsibilitySet(ResponsibilitySet responsibilitySet) {
+    @Override
+    public List<User> findUsersWithResponsibilitySet(ResponsibilitySet responsibilitySet) {
 
-		TypedQuery<User> query = entityManager.createQuery("select u from User u where :respSet member of u.responsibilitySets", User.class);
+        TypedQuery<User> query = entityManager.createQuery("select u from User u where :respSet member of u.responsibilitySets", User.class);
 
-		query.setParameter("respSet", responsibilitySet);
+        query.setParameter("respSet", responsibilitySet);
 
-		return query.getResultList();
-	}
+        return query.getResultList();
+    }
 }
