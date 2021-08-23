@@ -18,7 +18,9 @@ package no.rutebanken.baba.config;
 
 import com.hazelcast.core.HazelcastInstance;
 import no.rutebanken.baba.hazelcast.BabaHazelcastService;
+import org.rutebanken.hazelcasthelper.service.KubernetesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,8 +28,16 @@ import org.springframework.context.annotation.Configuration;
 public class BabaHazelcastConfig {
 
     @Bean
-    public HazelcastInstance hazelcastInstance(@Autowired BabaHazelcastService hazelcastService) {
-        return hazelcastService.getHazelcastInstance();
+    public KubernetesService babaKubernetesService(@Value("${rutebanken.kubernetes.url:}") String kubernetesUrl,
+                                                   @Value("${rutebanken.kubernetes.namespace:default}") String namespace,
+                                                   @Value("${rutebanken.kubernetes.enabled:true}") boolean kubernetesEnabled) {
+        return new KubernetesService(kubernetesUrl, namespace, kubernetesEnabled);
     }
+
+    @Bean
+    public HazelcastInstance hazelcastInstance(@Autowired BabaHazelcastService babaHazelcastService) {
+        return babaHazelcastService.getHazelcastInstance();
+    }
+
 
 }

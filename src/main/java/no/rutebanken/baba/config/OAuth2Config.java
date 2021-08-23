@@ -17,13 +17,14 @@
 package no.rutebanken.baba.config;
 
 import org.entur.oauth2.JwtRoleAssignmentExtractor;
-import org.entur.oauth2.MultiIssuerAuthenticationManagerResolver;
-import org.entur.oauth2.RorAuth0RolesClaimAdapter;
+import org.entur.oauth2.RoRJwtDecoderBuilder;
 import org.rutebanken.helper.organisation.RoleAssignmentExtractor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 
 /**
  * Configure Spring Beans for OAuth2 resource server and OAuth2 client security.
@@ -42,46 +43,22 @@ public class OAuth2Config {
     }
 
     /**
-     * Adapt the JWT claims produced by the RoR Auth0 tenant to make them compatible with those produced by Keycloak.
+     * Build a @{@link JwtDecoder} for RoR Auth0 domain.
      *
-     * @param rorAuth0ClaimNamespace
-     * @return
+     * @return a @{@link JwtDecoder} for Auth0.
      */
     @Bean
-    public RorAuth0RolesClaimAdapter rorAuth0RolesClaimAdapter(@Value("${baba.oauth2.resourceserver.auth0.ror.claim.namespace}") String rorAuth0ClaimNamespace) {
-        return new RorAuth0RolesClaimAdapter(rorAuth0ClaimNamespace);
-    }
+    @Profile("!test")
+    public JwtDecoder rorAuth0JwtDecoder(OAuth2ResourceServerProperties properties,
+                                         @Value("${baba.oauth2.resourceserver.auth0.ror.jwt.audience}") String rorAuth0Audience,
+                                         @Value("${baba.oauth2.resourceserver.auth0.ror.claim.namespace}") String rorAuth0ClaimNamespace) {
 
-    /**
-     * Identify the issuer of the JWT token (Auth0 or Keycloak) and forward the JWT token to the corresponding JWT decoder.
-     * Verify that the audience is valid and adapt the JWT claim using the injected claim adapter.
-     *
-     * @param keycloakAudience
-     * @param keycloakIssuer
-     * @param keycloakJwksetUri
-     * @param rorAuth0Audience
-     * @param rorAuth0Issuer
-     * @param rorAuth0RolesClaimAdapter
-     * @return
-     */
-    @Bean
-    public MultiIssuerAuthenticationManagerResolver multiIssuerAuthenticationManagerResolver(@Value("${baba.oauth2.resourceserver.keycloak.jwt.audience}") String keycloakAudience,
-                                                                                             @Value("${baba.oauth2.resourceserver.keycloak.jwt.issuer-uri}") String keycloakIssuer,
-                                                                                             @Value("${baba.oauth2.resourceserver.keycloak.jwt.jwkset-uri}") String keycloakJwksetUri,
-                                                                                             @Value("${baba.oauth2.resourceserver.auth0.ror.jwt.audience}") String rorAuth0Audience,
-                                                                                             @Value("${baba.oauth2.resourceserver.auth0.ror.jwt.issuer-uri}") String rorAuth0Issuer,
-                                                                                             @Autowired RorAuth0RolesClaimAdapter rorAuth0RolesClaimAdapter) {
-        return new MultiIssuerAuthenticationManagerResolver.Builder()
-                .withKeycloakAudience(keycloakAudience)
-                .withKeycloakIssuer(keycloakIssuer)
-                .withKeycloakJwksetUri(keycloakJwksetUri)
-                .withRorAuth0Audience(rorAuth0Audience)
-                .withRorAuth0Issuer(rorAuth0Issuer)
-                .withRorAuth0RolesClaimAdapter(rorAuth0RolesClaimAdapter)
+        String rorAuth0Issuer = properties.getJwt().getIssuerUri();
+        return new RoRJwtDecoderBuilder().withIssuer(rorAuth0Issuer)
+                .withAudience(rorAuth0Audience)
+                .withAuth0ClaimNamespace(rorAuth0ClaimNamespace)
                 .build();
-
     }
-
-
 }
+
 
