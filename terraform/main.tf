@@ -51,7 +51,6 @@ resource "kubernetes_secret" "ror-baba-secret" {
     "baba-db-password" = var.ror-baba-db-password
     "baba-smtp-username" = var.ror-baba-smtp-username
     "baba-smtp-password" = var.ror-baba-smtp-password
-    "baba-keycloak-secret" = var.ror-baba-keycloak-secret
     "baba-auth0-secret" = var.ror-baba-auth0-secret
 
   }

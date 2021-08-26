@@ -1,6 +1,7 @@
 package no.rutebanken.baba.organisation.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import no.rutebanken.baba.exceptions.BabaException;
 import no.rutebanken.baba.organisation.model.responsibility.EntityClassificationAssignment;
 import no.rutebanken.baba.organisation.model.responsibility.ResponsibilityRoleAssignment;
 import org.passay.CharacterRule;
@@ -75,7 +76,7 @@ public final class IamUtils {
             mapper.writeValue(writer, atr);
             return writer.toString();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new BabaException(e);
         }
     }
 }
