@@ -17,16 +17,31 @@
 package no.rutebanken.baba.security;
 
 
-
 import no.rutebanken.baba.provider.domain.Provider;
 import no.rutebanken.baba.provider.repository.ProviderRepository;
 import org.rutebanken.helper.organisation.RoleAssignmentExtractor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.expression.SecurityExpressionRoot;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_ADMIN;
+import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_VIEW_ALL;
+
 @Service
 public class ProviderAuthenticationService {
+
+
+    /**
+     * Default role prefix added by Spring Security.
+     *
+     * @see SecurityExpressionRoot
+     */
+    private static final String DEFAULT_ROLE_PREFIX = "ROLE_";
+
+    private static final String PREFIXED_ROLE_ROUTE_DATA_VIEW_ALL = DEFAULT_ROLE_PREFIX + ROLE_ROUTE_DATA_VIEW_ALL;
+    private static final String PREFIXED_ROLE_ROUTE_DATA_ADMIN = DEFAULT_ROLE_PREFIX + ROLE_ROUTE_DATA_ADMIN;
+
 
     private final ProviderRepository providerRepository;
     private final RoleAssignmentExtractor roleAssignmentExtractor;
@@ -52,8 +67,12 @@ public class ProviderAuthenticationService {
         }
 
         return roleAssignmentExtractor.getRoleAssignmentsForUser(authentication).stream()
-                       .filter(ra -> role.equals(ra.r)).anyMatch(ra -> provider.chouetteInfo.xmlns.equals(ra.o));
+                .filter(ra -> role.equals(ra.r)).anyMatch(ra -> provider.chouetteInfo.referential.toUpperCase().equals(ra.o));
     }
 
 
+    public boolean canViewAllProviders(Authentication authentication) {
+        return authentication.getAuthorities().stream().anyMatch(grantedAuthority ->
+                grantedAuthority.getAuthority().equals(PREFIXED_ROLE_ROUTE_DATA_ADMIN) || grantedAuthority.getAuthority().equals(PREFIXED_ROLE_ROUTE_DATA_VIEW_ALL));
+    }
 }
