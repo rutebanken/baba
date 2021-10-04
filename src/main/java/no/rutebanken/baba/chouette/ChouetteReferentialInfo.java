@@ -34,6 +34,8 @@ public class ChouetteReferentialInfo {
         String regtoppCoordinateProjection = provider.getChouetteInfo().regtoppCoordinateProjection;
         if (regtoppCoordinateProjection != null) {
             this.dataspaceProjection = regtoppCoordinateProjection.replace("EPSG:", "");
+        } else {
+            this.dataspaceProjection = "";
         }
         this.dataspaceName = provider.getName();
         this.organisationName = provider.getChouetteInfo().organisation;
