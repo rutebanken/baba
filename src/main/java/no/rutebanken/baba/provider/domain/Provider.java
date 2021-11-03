@@ -40,7 +40,7 @@ public class Provider {
 
     public Provider(){}
 
-    public Provider(Long id, String name, String sftpAccount, ChouetteInfo chouetteInfo) {
+    public Provider(Long id, String name, ChouetteInfo chouetteInfo) {
         this.id = id;
         this.name = name;
         this.chouetteInfo = chouetteInfo;
