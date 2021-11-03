@@ -45,9 +45,6 @@ public class ChouetteInfo {
     public String organisation;
     @Column(name = "cuser")
     public String user;
-    public String regtoppVersion;
-    public String regtoppCoordinateProjection;
-    public String regtoppCalendarStrategy;
     public String dataFormat;
     public boolean enableValidation;
     public boolean allowCreateMissingStopPlace;
@@ -93,9 +90,6 @@ public class ChouetteInfo {
                        ", referential='" + referential + '\'' +
                        ", organisationDTO='" + organisation + '\'' +
                        ", user='" + user + '\'' +
-                       (regtoppVersion != null ? ", regtoppVersion='" + regtoppVersion + '\'' : "") +
-                       (regtoppCoordinateProjection != null ? ", regtoppCoordinateProjection='" + regtoppCoordinateProjection + '\'' : "") +
-                       (regtoppCalendarStrategy != null ? ", regtoppCalendarStrategy='" + regtoppCalendarStrategy + '\'' : "") +
                        ", enableValidation='" + enableValidation + '\'' +
                        ", allowCreateMissingStopPlace='" + allowCreateMissingStopPlace + '\'' +
                        ", enableStopPlaceIdMapping='" + enableStopPlaceIdMapping + '\'' +

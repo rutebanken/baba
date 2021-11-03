@@ -56,12 +56,9 @@ class JpaProviderRepositoryTest extends BaseIntegrationTest {
         repository.createProvider(newProvider);
 
         Provider providerForUpdate = repository.getProvider(newProvider.id);
-        providerForUpdate.sftpAccount = "modified";
 
         repository.updateProvider(providerForUpdate);
         Provider providerForVerification = repository.getProvider(newProvider.id);
-
-        Assertions.assertEquals(providerForUpdate.sftpAccount, providerForVerification.sftpAccount);
 
         repository.deleteProvider(newProvider.id);
 
