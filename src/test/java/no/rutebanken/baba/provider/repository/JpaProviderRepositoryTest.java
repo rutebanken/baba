@@ -43,7 +43,7 @@ class JpaProviderRepositoryTest extends BaseIntegrationTest {
     @Test
     void testGetProviderById() {
         Provider provider = repository.getProvider(42L);
-        assertThat(provider).isEqualTo(new Provider(42L, "Flybussekspressen", "42",
+        assertThat(provider).isEqualTo(new Provider(42L, "Flybussekspressen",
                                                            new ChouetteInfo(1L, "flybussekspressen", "http://www.ns.1", "flybussekspressen", "Rutebanken", "admin@rutebanken.org")));
     }
 
@@ -52,16 +52,13 @@ class JpaProviderRepositoryTest extends BaseIntegrationTest {
     void testCreateAndUpdateAndDeleteProvider() {
 
         ChouetteInfo chouetteInfo = new ChouetteInfo(null, "xmlns", "xmlnsurl", "refe", "org", "user");
-        Provider newProvider = new Provider(null, "junit provider", "sftpAccount", chouetteInfo);
+        Provider newProvider = new Provider(null, "junit provider", chouetteInfo);
         repository.createProvider(newProvider);
 
         Provider providerForUpdate = repository.getProvider(newProvider.id);
-        providerForUpdate.sftpAccount = "modified";
 
         repository.updateProvider(providerForUpdate);
         Provider providerForVerification = repository.getProvider(newProvider.id);
-
-        Assertions.assertEquals(providerForUpdate.sftpAccount, providerForVerification.sftpAccount);
 
         repository.deleteProvider(newProvider.id);
 

@@ -35,16 +35,14 @@ public class Provider {
     @GeneratedValue(strategy=GenerationType.AUTO)
     public Long id;
     public String name;
-    public String sftpAccount;
     @OneToOne(cascade = {CascadeType.ALL})
     public ChouetteInfo chouetteInfo;
 
     public Provider(){}
 
-    public Provider(Long id, String name, String sftpAccount, ChouetteInfo chouetteInfo) {
+    public Provider(Long id, String name, ChouetteInfo chouetteInfo) {
         this.id = id;
         this.name = name;
-        this.sftpAccount = sftpAccount;
         this.chouetteInfo = chouetteInfo;
     }
 
@@ -53,7 +51,6 @@ public class Provider {
         return "Provider{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", sftpAccount='" + sftpAccount + '\'' +
                 ", chouetteInfo=" + chouetteInfo +
                 '}';
     }
@@ -75,9 +72,6 @@ public class Provider {
         if (!Objects.equals(name, provider.name)) {
             return false;
         }
-        if (!Objects.equals(sftpAccount, provider.sftpAccount)) {
-            return false;
-        }
         return Objects.equals(chouetteInfo, provider.chouetteInfo);
 
     }
@@ -86,7 +80,6 @@ public class Provider {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (sftpAccount != null ? sftpAccount.hashCode() : 0);
         result = 31 * result + (chouetteInfo != null ? chouetteInfo.hashCode() : 0);
         return result;
     }
@@ -105,14 +98,6 @@ public class Provider {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getSftpAccount() {
-        return sftpAccount;
-    }
-
-    public void setSftpAccount(String sftpAccount) {
-        this.sftpAccount = sftpAccount;
     }
 
     public ChouetteInfo getChouetteInfo() {
