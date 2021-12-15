@@ -61,7 +61,7 @@ public class ProviderResource {
 
     @GET
     @Path("/{providerId}")
-    @PreAuthorize("hasAnyRole('" + ROLE_ROUTE_DATA_ADMIN + "," + ROLE_ROUTE_DATA_VIEW_ALL + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#providerId)")
+    @PreAuthorize("hasAnyRole('" + ROLE_ROUTE_DATA_ADMIN + "','" + ROLE_ROUTE_DATA_VIEW_ALL + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#providerId)")
     public Provider getProvider(@PathParam("providerId") Long providerId) {
         LOGGER.debug("Returning provider with id '{}'", providerId);
         Provider provider = providerRepository.getProvider(providerId);
@@ -119,7 +119,7 @@ public class ProviderResource {
      * Route data administrators, editors and viewers can access this method, but they will retrieve only the providers they have access to.
      */
     @GET
-    @PreAuthorize("hasAnyRole('" + ROLE_ROUTE_DATA_ADMIN + "," + ROLE_ROUTE_DATA_EDIT + "," + ROLE_ROUTE_DATA_VIEW_ALL + "')")
+    @PreAuthorize("hasAnyRole('" + ROLE_ROUTE_DATA_ADMIN + "','" + ROLE_ROUTE_DATA_EDIT + "','" + ROLE_ROUTE_DATA_VIEW_ALL + "')")
     public Collection<Provider> getProviders() {
         Collection<Provider> providers = providerRepository.getProviders();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
