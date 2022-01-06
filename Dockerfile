@@ -1,7 +1,7 @@
 FROM adoptopenjdk/openjdk11:alpine-jre
+RUN apk add --no-cache tini
 WORKDIR /deployments
 COPY target/baba-*-SNAPSHOT.jar baba.jar
 RUN addgroup appuser && adduser --disabled-password appuser --ingroup appuser
 USER appuser
-CMD java $JAVA_OPTIONS -jar baba.jar
-
+CMD [ "/sbin/tini", "--", "java", "-jar", "baba.jar" ]
