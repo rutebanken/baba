@@ -20,7 +20,4 @@ mail:
     stopPlace: https://stoppested.entur.org/
     operator:
 
-ingress:
-  loadBalancerIP: 35.205.233.237
-
 monitoringEnabled: false

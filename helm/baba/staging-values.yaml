@@ -20,7 +20,4 @@ mail:
     stopPlace: https://stoppested.staging.entur.org/
     operator: https://operator-stage.rutebanken.org/
 
-ingress:
-  loadBalancerIP: 130.211.80.129
-
 monitoringEnabled: true
