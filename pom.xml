@@ -39,7 +39,7 @@
     </scm>
 
     <properties>
-        <entur.helpers.version>1.0.65</entur.helpers.version>
+        <entur.helpers.version>1.0.64</entur.helpers.version>
         <auth0.version>1.35.0</auth0.version>
         <rest-assured.version>4.4.0</rest-assured.version>
         <postgis-jdbc.version>2.5.1</postgis-jdbc.version>
