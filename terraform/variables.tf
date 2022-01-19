@@ -3,17 +3,10 @@ variable "gcp_project" {
   description = "The GCP project hosting the workloads"
 }
 
-variable "gcp_cloudsql_project" {
-  description = "The GCP project hosting the CloudSQL resources"
-}
-
 variable "gcp_resources_project" {
   description = "The GCP project hosting the project resources"
 }
 
-variable "location" {
-  description = "GCP bucket location"
-}
 variable "kube_namespace" {
   description = "The Kubernetes namespace"
 }
@@ -27,17 +20,6 @@ variable "labels" {
     slack = "talk-ror"
     app = "baba"
   }
-}
-
-variable "force_destroy" {
-  description = "(Optional, Default: false) When deleting a bucket, this boolean option will delete all contained objects. If you try to delete a bucket that contains objects, Terraform will fail that run"
-  default = false
-}
-
-variable "prevent_destroy" {
-  description = "Prevent destruction of bucket"
-  type = bool
-  default = false
 }
 
 variable "load_config_file" {
@@ -68,4 +50,24 @@ variable ror-baba-smtp-password {
 
 variable ror-baba-auth0-secret {
   description = "baba Auth0 secret"
+}
+
+variable "db_region" {
+  description = "GCP  region"
+  default = "europe-west1"
+}
+
+variable "db_zone" {
+  description = "GCP zone letter"
+  default = "europe-west1-b"
+}
+
+variable "db_tier" {
+  description = "Database instance tier"
+  default = "db-custom-1-3840"
+}
+
+variable "db_availability" {
+  description = "Database availability"
+  default = "ZONAL"
 }
