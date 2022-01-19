@@ -156,7 +156,7 @@ class UserResourceIntegrationTest extends BaseIntegrationTest {
         Assertions.assertNull(outUser.responsibilitySets);
 
 
-        ResponseEntity<UserDTO> fullRsp = restTemplate.getForEntity(uri.toString() + "?full=true", UserDTO.class);
+        ResponseEntity<UserDTO> fullRsp = restTemplate.getForEntity(uri + "?full=true", UserDTO.class);
         UserDTO fullOutUser = fullRsp.getBody();
         assertUserBasics(inUser, fullOutUser);
         Assertions.assertNotNull(fullOutUser.organisation.name);
