@@ -2,7 +2,7 @@ env: staging
 replicas: 2
 
 gcp:
-  databaseInstance: entur-ror-test:europe-west1:baba-db-1=tcp:5432
+  databaseInstance: entur-ror-test:europe-west1:baba-db-pg13=tcp:5432
 
 auth0:
   ror:
