@@ -18,9 +18,7 @@ package no.rutebanken.baba.organisation.repository;
 
 import no.rutebanken.baba.organisation.model.VersionedEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.QueryHints;
 
-import javax.persistence.QueryHint;
 import java.util.List;
 
 public interface VersionedEntityRepository<T extends VersionedEntity> extends JpaRepository<T, Long> {
@@ -31,6 +29,5 @@ public interface VersionedEntityRepository<T extends VersionedEntity> extends Jp
 	T getOneByPublicIdIfExists(String id);
 
 	@Override
-	@QueryHints(value = { @QueryHint(name = "org.hibernate.cacheable", value = "true")}, forCounting = false)
 	List<T> findAll();
 }

@@ -18,14 +18,10 @@ package no.rutebanken.baba.organisation.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import no.rutebanken.baba.organisation.model.user.eventfilter.EventFilter;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Cache;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+
 @Entity
 public class NotificationConfiguration {
     @Id

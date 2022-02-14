@@ -17,8 +17,6 @@
 package no.rutebanken.baba.organisation.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.jdo.annotations.Unique;
 import javax.persistence.Entity;
@@ -27,7 +25,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 public class ContactDetails {
 	@Id

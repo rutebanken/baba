@@ -19,7 +19,6 @@ package no.rutebanken.baba.organisation.repository;
 import no.rutebanken.baba.organisation.model.CodeSpaceEntity;
 import no.rutebanken.baba.organisation.model.Id;
 import no.rutebanken.baba.organisation.model.VersionedEntity;
-import org.hibernate.annotations.QueryHints;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
@@ -56,7 +55,7 @@ public class BaseRepositoryImpl<T extends VersionedEntity> extends SimpleJpaRepo
         if (CodeSpaceEntity.class.isAssignableFrom(getDomainClass())) {
             query.setParameter("codeSpace", id.getCodeSpace());
         }
-        query.setHint(QueryHints.CACHEABLE, Boolean.TRUE);
+
         List<T> results = query.getResultList().stream().filter(r -> id.getType() == null || r.getType().equals(id.getType())).collect(Collectors.toList());
 
         if (results.size() == 1) {
