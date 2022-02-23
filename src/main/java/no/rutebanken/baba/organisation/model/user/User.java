@@ -20,8 +20,6 @@ import com.google.common.base.Joiner;
 import no.rutebanken.baba.organisation.model.VersionedEntity;
 import no.rutebanken.baba.organisation.model.organisation.Organisation;
 import no.rutebanken.baba.organisation.model.responsibility.ResponsibilitySet;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.jdo.annotations.Unique;
 import javax.persistence.CascadeType;
@@ -38,7 +36,6 @@ import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Table(name = "user_account", uniqueConstraints = {
                                                           @UniqueConstraint(name = "user_unique_username", columnNames = {"privateCode", "entityVersion"})

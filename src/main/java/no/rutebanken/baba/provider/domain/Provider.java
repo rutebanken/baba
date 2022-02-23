@@ -16,9 +16,6 @@
 
 package no.rutebanken.baba.provider.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,7 +24,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import java.util.Objects;
 
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 public class Provider {
 
