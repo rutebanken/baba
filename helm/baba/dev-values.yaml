@@ -3,6 +3,9 @@ replicas: 2
 gcp:
   databaseInstance: entur-ror-dev:europe-west1:baba-db-pg13=tcp:5432
 
+chouette:
+  service: http://chouette.dev.entur.internal
+
 auth0:
   ror:
     url: https://ror-entur-dev.eu.auth0.com/

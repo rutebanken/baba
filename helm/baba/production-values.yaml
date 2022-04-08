@@ -4,6 +4,9 @@ replicas: 2
 gcp:
   databaseInstance: entur-ror-prod:europe-west1:baba-db-pg13=tcp:5432
 
+chouette:
+  service: http://chouette.prd.entur.internal
+
 auth0:
   ror:
     url: https://auth2.entur.org/

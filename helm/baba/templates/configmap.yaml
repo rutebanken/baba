@@ -32,7 +32,7 @@ data:
     baba.oauth2.resourceserver.auth0.ror.claim.namespace=https://ror.entur.io/
 
     server.port={{ .Values.service.http.internalPort }}
-    chouette.rest.referential.base.url=http://chouette:8080/chouette_iev/referentials
+    chouette.rest.referential.base.url={{ .Values.chouette.service }}/chouette_iev/referentials
     management.server.port=9001
     management.endpoints.enabled-by-default=false
     management.endpoint.info.enabled=true
