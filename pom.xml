@@ -40,7 +40,7 @@
 
     <properties>
         <entur.helpers.version>1.0.70</entur.helpers.version>
-        <auth0.version>1.38.0</auth0.version>
+        <auth0.version>1.41.0</auth0.version>
         <postgis-jdbc.version>2.5.1</postgis-jdbc.version>
         <swagger-jersey2.version>1.6.5</swagger-jersey2.version>
         <javax.jdo.jdo-api.version>3.1</javax.jdo.jdo-api.version>
