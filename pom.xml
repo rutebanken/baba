@@ -48,7 +48,7 @@
         <commons-io.version>2.11.0</commons-io.version>
         <passay.version>1.6.1</passay.version>
 
-        <rest-assured.version>5.0.1</rest-assured.version>
+        <rest-assured.version>5.1.0</rest-assured.version>
 
         <!-- empty argLine property, the value is set up by Jacoco during unit tests execution -->
         <argLine/>
