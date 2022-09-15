@@ -35,6 +35,7 @@ spec:
             - -credential_file=/etc/baba-service-account/credentials.json
             - -term_timeout=30s
             - -log_debug_stdout
+            - -verbose=false
           resources:
             requests:
               cpu: 50m
