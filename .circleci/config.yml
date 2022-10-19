@@ -6,6 +6,10 @@ aliases:
         auth:
           username: $DOCKERHUB_LOGIN
           password: $DOCKERHUB_PASSWORD
+  - &jfrog-settings
+    name: Write artifactory settings to file
+    command: |
+      echo "$ARTIFACTORY_SETTINGS" | base64 --decode > .circleci/settings.xml
 
   - &GCP-auth-docker
     name: GCP authentication with docker
@@ -62,9 +66,7 @@ jobs:
       - checkout
       - restore_cache:
           key: dep-cache-{{ checksum "pom.xml" }}
-      - run:
-          name: Download Maven settings
-          command: wget https://raw.githubusercontent.com/entur/circleci-toolbox-image-java11/master/tools/m2/settings.xml -O .circleci/settings.xml
+      - run: *jfrog-settings
       - run:
           name: Refresh cache
           command: mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.0:go-offline -s .circleci/settings.xml
@@ -113,7 +115,7 @@ workflows:
   build_test_deploy:
     jobs:
       - build:
-          context: org-carbon
+          context: global
       - deploy-docker:
           context: global
           requires:
