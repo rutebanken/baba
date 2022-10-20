@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk11:alpine-jre
+FROM eclipse-temurin:17.0.4_8-jre-alpine
 RUN apk add --no-cache tini
 WORKDIR /deployments
 COPY target/baba-*-SNAPSHOT.jar baba.jar

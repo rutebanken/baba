@@ -18,7 +18,6 @@ package no.rutebanken.baba.organisation.model.user.eventfilter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import no.rutebanken.baba.organisation.model.organisation.Organisation;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,7 +29,8 @@ import javax.persistence.ManyToOne;
  * User defined filter for events.
  */
 @Entity
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+
+
 public abstract class EventFilter {
 
     @Id

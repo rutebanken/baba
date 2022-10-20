@@ -16,8 +16,6 @@
 
 package no.rutebanken.baba.provider.domain;
 
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -32,7 +30,6 @@ import javax.persistence.JoinColumn;
 import java.util.Objects;
 import java.util.Set;
 
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 public class ChouetteInfo {
 

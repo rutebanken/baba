@@ -25,55 +25,54 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,classes = BabaTestApp.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = BabaTestApp.class)
 @Transactional
 public abstract class BaseIntegrationTest {
 
 
-	@TestConfiguration
-	@EnableWebSecurity
-	static class TestWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+    @TestConfiguration
+    @EnableWebSecurity
+    static class TestWebSecurityConfiguration {
 
-		@Override
-		protected void configure(HttpSecurity http) throws Exception {
-			http.csrf().disable()
-					.authorizeRequests(authorizeRequests ->
-							authorizeRequests
-									.anyRequest().permitAll()
-					);
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+            http.csrf().disable()
+                    .authorizeHttpRequests(authz -> authz
+                            .anyRequest().permitAll()
+                    );
+            return http.build();
+        }
+    }
 
-		}
+    @Autowired
+    protected CodeSpaceRepository codeSpaceRepository;
 
-	}
-
-	@Autowired
-	protected CodeSpaceRepository codeSpaceRepository;
-
-	@Autowired
-	protected OrganisationRepository organisationRepository;
+    @Autowired
+    protected OrganisationRepository organisationRepository;
 
 
-	protected Organisation defaultOrganisation;
+    protected Organisation defaultOrganisation;
 
-	protected CodeSpace defaultCodeSpace;
+    protected CodeSpace defaultCodeSpace;
 
-	@BeforeEach
-	void setUp() {
-		CodeSpace codeSpace = new CodeSpace("nsr", "NSR", "http://www.rutebanken.org/ns/nsr");
-		defaultCodeSpace = codeSpaceRepository.saveAndFlush(codeSpace);
+    @BeforeEach
+    void setUp() {
+        CodeSpace codeSpace = new CodeSpace("nsr", "NSR", "http://www.rutebanken.org/ns/nsr");
+        defaultCodeSpace = codeSpaceRepository.saveAndFlush(codeSpace);
 
-		Authority authority = new Authority();
-		authority.setCodeSpace(defaultCodeSpace);
-		authority.setName("Test Org");
-		authority.setPrivateCode("testOrg");
-		defaultOrganisation = organisationRepository.saveAndFlush(authority);
-	}
+        Authority authority = new Authority();
+        authority.setCodeSpace(defaultCodeSpace);
+        authority.setName("Test Org");
+        authority.setPrivateCode("testOrg");
+        defaultOrganisation = organisationRepository.saveAndFlush(authority);
+    }
 
 }

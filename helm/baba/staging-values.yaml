@@ -1,8 +1,11 @@
-env: staging
+env: test
 replicas: 2
 
 gcp:
   databaseInstance: entur-ror-test:europe-west1:baba-db-pg13=tcp:5432
+
+chouette:
+  service: http://chouette.tst.entur.internal
 
 auth0:
   ror:
