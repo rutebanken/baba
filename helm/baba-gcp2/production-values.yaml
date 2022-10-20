@@ -1,0 +1,27 @@
+replicas: 2
+
+gcp:
+  databaseInstance: ent-baba-prd:europe-west1:baba-db-pg13=tcp:5432
+ingress:
+  domain: .entur.io
+  organizations:
+    name: timetable-admin-v1-organisations-gcp2
+  providers:
+    name: timetable-admin-v1-providers-gcp2
+auth0:
+  ror:
+    url: https://auth2.entur.org/
+    audience: https://ror.api.entur.io
+  admin:
+    client:
+      id: GLBqcAUgBKVLby3ur9KTqvqraTUmnXvD
+    domain: ror-entur.eu.auth0.com
+
+mail:
+  newUserFrom: noreply@entur.org
+  link:
+    routeDB: https://rutedb.entur.org/
+    stopPlace: https://stoppested.entur.org/
+    operator:
+
+monitoringEnabled: false
