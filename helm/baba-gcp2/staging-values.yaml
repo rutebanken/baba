@@ -3,6 +3,9 @@ replicas: 2
 gcp:
   databaseInstance: ent-baba-tst:europe-west1:baba-db-pg13=tcp:5432
 
+chouette:
+  service: http://chouette.tst.entur.internal
+
 ingress:
   domain: .staging.entur.io
   organizations:

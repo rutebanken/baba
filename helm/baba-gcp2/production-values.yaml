@@ -2,6 +2,10 @@ replicas: 2
 
 gcp:
   databaseInstance: ent-baba-prd:europe-west1:baba-db-pg13=tcp:5432
+
+chouette:
+  service: http://chouette.prd.entur.internal
+
 ingress:
   domain: .entur.io
   organizations:

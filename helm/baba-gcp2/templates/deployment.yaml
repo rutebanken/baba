@@ -60,7 +60,7 @@ spec:
           imagePullPolicy: Always
           env:
             - name: JDK_JAVA_OPTIONS
-              value: -server -Xmx200m -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90
+              value: -server -Xmx500m -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90
                 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -Dspring.config.location=/etc/application-config/application.properties
                 -Dfile.encoding=UTF-8  {{- if .Values.monitoringEnabled}} -Dcom.sun.management.jmxremote.port=9999  -Dcom.sun.management.jmxremote.rmi.port=9998 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1
             {{- end}}
@@ -117,11 +117,11 @@ spec:
             timeoutSeconds: 5
           resources:
             limits:
-              cpu: 600m
+              cpu: 1000m
               memory: 800Mi
             requests:
               cpu: 100m
-              memory: 551Mi
+              memory: 700Mi
           volumeMounts:
             - mountPath: /etc/application-config
               name: application-config

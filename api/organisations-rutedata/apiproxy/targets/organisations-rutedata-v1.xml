@@ -24,6 +24,6 @@
     </PreFlow>
     <HTTPTargetConnection>
         <Properties/>
-        <URL>https://timetable-admin-v1-organisations-NAMESPACE.INGRESS_ENVIRONMENT/services/organisations</URL>
+        <URL>https://timetable-admin-v1-organisations-gcp2.INGRESS_ENVIRONMENT/services/organisations</URL>
     </HTTPTargetConnection>
 </TargetEndpoint>
