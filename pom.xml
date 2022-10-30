@@ -45,7 +45,7 @@
         <postgis-jdbc.version>2021.1.0</postgis-jdbc.version>
         <swagger-jersey2.version>1.6.8</swagger-jersey2.version>
         <javax.jdo.jdo-api.version>3.2.1</javax.jdo.jdo-api.version>
-        <wololo.version>0.17.0</wololo.version>
+        <wololo.version>0.18.1</wololo.version>
         <commons-io.version>2.11.0</commons-io.version>
         <passay.version>1.6.2</passay.version>
 
