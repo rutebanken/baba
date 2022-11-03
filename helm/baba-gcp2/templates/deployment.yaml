@@ -126,6 +126,13 @@ spec:
             - mountPath: /etc/application-config
               name: application-config
               readOnly: true
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop: ["ALL"]
+            seccompProfile:
+              type: RuntimeDefault
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
