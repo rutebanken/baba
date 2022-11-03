@@ -111,7 +111,7 @@ public class EntityClassificationResource {
         if (CollectionUtils.isEmpty(entityType.getClassifications())) {
             return new ArrayList<>();
         }
-        return entityType.getClassifications().stream().map(r -> mapper.toDTO(r, false)).collect(Collectors.toList());
+        return entityType.getClassifications().stream().map(r -> mapper.toDTO(r, false)).toList();
     }
 
 

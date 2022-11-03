@@ -126,7 +126,7 @@ public class User extends VersionedEntity {
 
 
     public static class Builder {
-        private User user = new User();
+        private final User user = new User();
 
         public Builder withPrivateCode(String privateCode) {
             user.setPrivateCode(privateCode);

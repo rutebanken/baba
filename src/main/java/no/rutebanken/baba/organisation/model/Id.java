@@ -21,11 +21,11 @@ import org.springframework.util.StringUtils;
 
 public class Id {
 
-	private String codeSpace;
+	private final String codeSpace;
 
-	private String type;
+	private final String type;
 
-	private String privateCode;
+	private final String privateCode;
 
 	public static final String SEPARATOR_CHAR = ":";
 

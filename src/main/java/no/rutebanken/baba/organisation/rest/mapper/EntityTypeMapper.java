@@ -69,7 +69,7 @@ public class EntityTypeMapper implements DTOMapper<EntityType, EntityTypeDTO> {
         dto.privateCode = entity.getPrivateCode();
         dto.codeSpace = entity.getCodeSpace().getId();
 
-        dto.classifications = entity.getClassifications().stream().map(ec -> classificationTypeMapper.toDTO(ec, false)).collect(Collectors.toList());
+        dto.classifications = entity.getClassifications().stream().map(ec -> classificationTypeMapper.toDTO(ec, false)).toList();
         return dto;
     }
 

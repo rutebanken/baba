@@ -59,7 +59,7 @@ public class Auth0IamService implements IamService {
     private TokenHolder tokenHolder;
     private Instant accessTokenRetrievedAt;
     private ManagementAPI managementAPI;
-    private Clock clock = Clock.systemUTC();
+    private final Clock clock = Clock.systemUTC();
 
     @Override
     public String createUser(User user) {
@@ -229,14 +229,14 @@ public class Auth0IamService implements IamService {
                     .getItems();
             // Auth0 role ids that are currently assigned to the Auth0 user and that should be removed
             List<String> auth0RoleIdsToBeRemoved = existingAuth0UserRoles.stream().filter(r -> systemRoleNames.contains(r.getName()))
-                    .filter(r -> !newRoleNames.remove(r.getName())).map(com.auth0.json.mgmt.Role::getId).collect(Collectors.toList());
+                    .filter(r -> !newRoleNames.remove(r.getName())).map(com.auth0.json.mgmt.Role::getId).toList();
 
             if (!auth0RoleIdsToBeRemoved.isEmpty()) {
                 getManagementAPI().users().removeRoles(auth0User.getId(), auth0RoleIdsToBeRemoved).execute();
             }
 
             if (!newRoleNames.isEmpty()) {
-                List<String> rolesToBeAdded = newRoleNames.stream().map(this::getAuth0RoleByPrivateCode).map(com.auth0.json.mgmt.Role::getId).collect(Collectors.toList());
+                List<String> rolesToBeAdded = newRoleNames.stream().map(this::getAuth0RoleByPrivateCode).map(com.auth0.json.mgmt.Role::getId).toList();
                 getManagementAPI().users().addRoles(auth0User.getId(), rolesToBeAdded).execute();
             }
 
@@ -306,7 +306,7 @@ public class Auth0IamService implements IamService {
                     .list(new RolesFilter().withName(privateCode))
                     .execute()
                     .getItems()
-                    .stream().filter(r -> privateCode.equals(r.getName())).collect(Collectors.toList());
+                    .stream().filter(r -> privateCode.equals(r.getName())).toList();
             if (matchingRoles.isEmpty()) {
                 logger.warn("Role not found: {}", privateCode);
                 throw new OrganisationException("Role not found: " + privateCode);

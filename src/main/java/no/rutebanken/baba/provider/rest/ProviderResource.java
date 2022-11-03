@@ -128,7 +128,7 @@ public class ProviderResource {
             return providers;
         }
         LOGGER.debug("Returning authorized providers.");
-        return providers.stream().filter(provider ->  providerAuthenticationService.hasRoleForProvider(authentication, ROLE_ROUTE_DATA_EDIT, provider.getId())).collect(Collectors.toList());
+        return providers.stream().filter(provider ->  providerAuthenticationService.hasRoleForProvider(authentication, ROLE_ROUTE_DATA_EDIT, provider.getId())).toList();
     }
 
 

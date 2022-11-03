@@ -107,7 +107,7 @@ public class ResponsibilityRoleAssignment extends CodeSpaceEntity {
 
 
     public static class Builder {
-        private ResponsibilityRoleAssignment target = new ResponsibilityRoleAssignment();
+        private final ResponsibilityRoleAssignment target = new ResponsibilityRoleAssignment();
 
         public Builder withPrivateCode(String privateCode) {
             target.setPrivateCode(privateCode);

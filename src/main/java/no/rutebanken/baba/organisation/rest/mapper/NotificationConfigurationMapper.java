@@ -75,14 +75,12 @@ public class NotificationConfigurationMapper {
     private EventFilterDTO toDTO(EventFilter eventFilter, boolean fullDetails) {
         EventFilterDTO dto = new EventFilterDTO();
 
-        if (eventFilter instanceof JobEventFilter) {
-            JobEventFilter jobEventFilter = (JobEventFilter) eventFilter;
+        if (eventFilter instanceof JobEventFilter jobEventFilter) {
             dto.type = EventFilterDTO.EventFilterType.JOB;
             dto.states = jobEventFilter.getStates();
             dto.actions = jobEventFilter.getActions();
             dto.jobDomain = EventFilterDTO.JobDomain.valueOf(jobEventFilter.getJobDomain());
-        } else if (eventFilter instanceof CrudEventFilter) {
-            CrudEventFilter crudEventFilter = (CrudEventFilter) eventFilter;
+        } else if (eventFilter instanceof CrudEventFilter crudEventFilter) {
             dto.type = EventFilterDTO.EventFilterType.CRUD;
             dto.entityClassificationRefs = crudEventFilter.getEntityClassifications().stream().map(ec -> ec.getId()).collect(Collectors.toSet());
             if (fullDetails) {

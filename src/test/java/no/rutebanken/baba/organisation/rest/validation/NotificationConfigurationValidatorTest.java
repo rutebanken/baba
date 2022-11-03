@@ -29,7 +29,7 @@ import java.util.Set;
 
 class NotificationConfigurationValidatorTest {
 
-    private NotificationConfigurationValidator validator = new NotificationConfigurationValidator();
+    private final NotificationConfigurationValidator validator = new NotificationConfigurationValidator();
 
     @Test
     void validateWithoutUserNameFails() {

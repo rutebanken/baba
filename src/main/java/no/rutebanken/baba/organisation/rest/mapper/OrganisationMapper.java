@@ -106,7 +106,7 @@ public class OrganisationMapper implements DTOMapper<Organisation, OrganisationD
 		dto.name = part.getName();
 		dto.id = part.getId();
 		if (!CollectionUtils.isEmpty(part.getAdministrativeZones())) {
-			dto.administrativeZoneRefs = part.getAdministrativeZones().stream().map(az -> az.getId()).collect(Collectors.toList());
+			dto.administrativeZoneRefs = part.getAdministrativeZones().stream().map(az -> az.getId()).toList();
 		}
 
 		return dto;
