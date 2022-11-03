@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class ExceptionMapperBase {
-	private Map<Response.Status, Set<Class<?>>> mapping;
+	private final Map<Response.Status, Set<Class<?>>> mapping;
 
 	protected ExceptionMapperBase() {
 		mapping = new EnumMap<>(Response.Status.class);

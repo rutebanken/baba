@@ -47,7 +47,6 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
 
@@ -111,7 +110,7 @@ public class EntityClassificationResource {
         if (CollectionUtils.isEmpty(entityType.getClassifications())) {
             return new ArrayList<>();
         }
-        return entityType.getClassifications().stream().map(r -> mapper.toDTO(r, false)).collect(Collectors.toList());
+        return entityType.getClassifications().stream().map(r -> mapper.toDTO(r, false)).toList();
     }
 
 

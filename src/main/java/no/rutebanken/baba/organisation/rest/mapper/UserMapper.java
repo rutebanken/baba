@@ -65,7 +65,7 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
         if (fullDetails) {
             dto.notifications = notificationConfigurationMapper.toDTO(org.getNotificationConfigurations(), fullDetails);
             dto.organisation = organisationMapper.toDTO(org.getOrganisation(), false);
-            dto.responsibilitySets = org.getResponsibilitySets().stream().map(rs -> responsibilitySetMapper.toDTO(rs, false)).collect(Collectors.toList());
+            dto.responsibilitySets = org.getResponsibilitySets().stream().map(rs -> responsibilitySetMapper.toDTO(rs, false)).toList();
         }
 
         return dto;
@@ -123,7 +123,7 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
         if (responsibilitySetSet == null) {
             return null;
         }
-        return responsibilitySetSet.stream().map(rs -> rs.getId()).collect(Collectors.toList());
+        return responsibilitySetSet.stream().map(rs -> rs.getId()).toList();
     }
 
 

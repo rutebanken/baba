@@ -34,7 +34,6 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_ADMIN;
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_EDIT;
@@ -128,7 +127,7 @@ public class ProviderResource {
             return providers;
         }
         LOGGER.debug("Returning authorized providers.");
-        return providers.stream().filter(provider ->  providerAuthenticationService.hasRoleForProvider(authentication, ROLE_ROUTE_DATA_EDIT, provider.getId())).collect(Collectors.toList());
+        return providers.stream().filter(provider ->  providerAuthenticationService.hasRoleForProvider(authentication, ROLE_ROUTE_DATA_EDIT, provider.getId())).toList();
     }
 
 

@@ -26,13 +26,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.TypedQuery;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 public class BaseRepositoryImpl<T extends VersionedEntity> extends SimpleJpaRepository<T, Long> implements VersionedEntityRepository<T> {
 
-    private EntityManager entityManager;
-    private JpaEntityInformation<T, Long> entityInformation;
+    private final EntityManager entityManager;
+    private final JpaEntityInformation<T, Long> entityInformation;
 
     public BaseRepositoryImpl(JpaEntityInformation<T, Long> entityInformation, EntityManager entityManager) {
         super(entityInformation, entityManager);
@@ -56,7 +55,7 @@ public class BaseRepositoryImpl<T extends VersionedEntity> extends SimpleJpaRepo
             query.setParameter("codeSpace", id.getCodeSpace());
         }
 
-        List<T> results = query.getResultList().stream().filter(r -> id.getType() == null || r.getType().equals(id.getType())).collect(Collectors.toList());
+        List<T> results = query.getResultList().stream().filter(r -> id.getType() == null || r.getType().equals(id.getType())).toList();
 
         if (results.size() == 1) {
             return results.get(0);

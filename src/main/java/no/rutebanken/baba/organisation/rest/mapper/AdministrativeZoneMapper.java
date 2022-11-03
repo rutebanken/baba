@@ -32,8 +32,8 @@ import javax.ws.rs.BadRequestException;
 @Service
 public class AdministrativeZoneMapper implements DTOMapper<AdministrativeZone, AdministrativeZoneDTO> {
 
-    private GeoJSONWriter writer = new GeoJSONWriter();
-    private GeoJSONReader reader = new GeoJSONReader();
+    private final GeoJSONWriter writer = new GeoJSONWriter();
+    private final GeoJSONReader reader = new GeoJSONReader();
 
 
     @Autowired

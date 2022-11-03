@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 
 class UserValidatorTest {
 
-    private UserValidator userValidator = new UserValidator();
+    private final UserValidator userValidator = new UserValidator();
 
 
     @Test

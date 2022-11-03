@@ -32,7 +32,7 @@ public class UserValidator implements DTOValidator<User, UserDTO> {
     private static final String DEFAULT_PATTERN = "^[a-zA-Z0-9_-[.]]{3,30}$";
 
     @Value("${username.pattern:" + DEFAULT_PATTERN + "}")
-    private String usernamePattern = DEFAULT_PATTERN;
+    private final String usernamePattern = DEFAULT_PATTERN;
 
     @Override
     public void validateCreate(UserDTO dto) {

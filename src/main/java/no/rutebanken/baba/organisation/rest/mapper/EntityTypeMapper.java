@@ -27,7 +27,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class EntityTypeMapper implements DTOMapper<EntityType, EntityTypeDTO> {
@@ -69,7 +68,7 @@ public class EntityTypeMapper implements DTOMapper<EntityType, EntityTypeDTO> {
         dto.privateCode = entity.getPrivateCode();
         dto.codeSpace = entity.getCodeSpace().getId();
 
-        dto.classifications = entity.getClassifications().stream().map(ec -> classificationTypeMapper.toDTO(ec, false)).collect(Collectors.toList());
+        dto.classifications = entity.getClassifications().stream().map(ec -> classificationTypeMapper.toDTO(ec, false)).toList();
         return dto;
     }
 

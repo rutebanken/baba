@@ -30,7 +30,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Transactional
 public abstract class BaseResource<E extends VersionedEntity, D extends BaseDTO> {
@@ -82,7 +81,7 @@ public abstract class BaseResource<E extends VersionedEntity, D extends BaseDTO>
     }
 
     protected List<D> listAllEntities(boolean fullDetails) {
-        return getRepository().findAll().stream().map(r -> getMapper().toDTO(r, fullDetails)).collect(Collectors.toList());
+        return getRepository().findAll().stream().map(r -> getMapper().toDTO(r, fullDetails)).toList();
     }
 
     protected Response buildCreatedResponse(UriInfo uriInfo, E entity) {
