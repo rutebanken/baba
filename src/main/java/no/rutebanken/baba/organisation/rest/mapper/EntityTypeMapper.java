@@ -27,7 +27,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class EntityTypeMapper implements DTOMapper<EntityType, EntityTypeDTO> {

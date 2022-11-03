@@ -30,7 +30,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Transactional
 public abstract class BaseResource<E extends VersionedEntity, D extends BaseDTO> {

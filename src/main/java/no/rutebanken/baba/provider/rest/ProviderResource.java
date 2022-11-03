@@ -34,7 +34,6 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_ADMIN;
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_EDIT;
