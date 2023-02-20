@@ -7,8 +7,9 @@ data:
     spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults=false
     spring.jpa.hibernate.use-new-id-generator-mappings=true
     spring.jpa.open-in-view=false
-    spring.datasource.url=jdbc:postgresql://localhost:5432/baba
     spring.datasource.platform=postgres
+    spring.cloud.gcp.sql.database-name=baba
+    spring.cloud.gcp.sql.instance-connection-name={{ .Values.gcp.databaseInstance }}
     spring.database.driverClassName=org.postgresql.Driver
     spring.flyway.table=schema_version
     spring.mail.properties.mail.smtp.starttls.enable=true
