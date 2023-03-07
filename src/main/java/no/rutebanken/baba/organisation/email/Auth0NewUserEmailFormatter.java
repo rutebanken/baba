@@ -31,7 +31,7 @@ import java.util.Locale;
 import java.util.Map;
 
 @Service
-@Profile({"!migration & (auth0 | test)"})
+@Profile({"auth0 | test"})
 public class Auth0NewUserEmailFormatter implements NewUserEmailFormatter {
 
     @Autowired
