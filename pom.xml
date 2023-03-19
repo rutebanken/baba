@@ -47,7 +47,7 @@
         <javax.jdo.jdo-api.version>3.2.1</javax.jdo.jdo-api.version>
         <wololo.version>0.18.1</wololo.version>
         <commons-io.version>2.11.0</commons-io.version>
-        <passay.version>1.6.2</passay.version>
+        <passay.version>1.6.3</passay.version>
         <spring-cloud-gcp-dependencies.version>3.4.6</spring-cloud-gcp-dependencies.version>
 
 
