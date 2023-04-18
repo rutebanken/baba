@@ -1,5 +1,6 @@
 package no.rutebanken.baba.organisation.service;
 
+import com.auth0.client.HttpOptions;
 import com.auth0.client.auth.AuthAPI;
 import com.auth0.client.mgmt.ManagementAPI;
 import com.auth0.client.mgmt.filter.RolesFilter;
@@ -181,7 +182,9 @@ public class Auth0IamService implements IamService {
     private synchronized ManagementAPI getManagementAPI() throws Auth0Exception {
         if (managementAPI == null) {
             refreshToken();
-            managementAPI = new ManagementAPI(domain, tokenHolder.getAccessToken());
+            HttpOptions options = new HttpOptions();
+            options.setManagementAPIMaxRetries(10);
+            managementAPI = new ManagementAPI(domain, tokenHolder.getAccessToken(), options);
         }
         if (hasTokenExpired()) {
             refreshToken();
