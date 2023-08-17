@@ -19,11 +19,11 @@ package no.rutebanken.baba.organisation.model.user.eventfilter;
 import no.rutebanken.baba.organisation.model.organisation.AdministrativeZone;
 import no.rutebanken.baba.organisation.model.responsibility.EntityClassification;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
-import javax.persistence.PreRemove;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.PreRemove;
+import jakarta.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 

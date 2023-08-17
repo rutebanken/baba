@@ -17,11 +17,11 @@
 package no.rutebanken.baba.organisation.rest.dto.responsibility;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Objects;
 
-@ApiModel(description = "Describes whether a user is explicitly authorized / not authorized to do something to a given entity classification ")
+@Schema(description = "Describes whether a user is explicitly authorized / not authorized to do something to a given entity classification ")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EntityClassificationAssignmentDTO {
 
