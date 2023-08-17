@@ -17,8 +17,14 @@
 package no.rutebanken.baba.organisation.rest;
 
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriInfo;
 import no.rutebanken.baba.organisation.model.responsibility.EntityClassification;
 import no.rutebanken.baba.organisation.model.responsibility.EntityType;
 import no.rutebanken.baba.organisation.repository.EntityClassificationRepository;
@@ -33,18 +39,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +49,9 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 @Produces("application/json")
 @Transactional
 @PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
-@Api(tags = {"Entity classification resource"}, produces = "application/json")
+@Tags(value = {
+        @Tag(name = "EntityClassificationResource", description = "Entity classification resource")
+})
 public class EntityClassificationResource {
 
     @Autowired
@@ -70,7 +66,7 @@ public class EntityClassificationResource {
     private TypeValidator<EntityClassification> validator;
 
     @POST
-    @ApiOperation(value = "Create a new entity classification")
+    @Operation(summary = "Create a new entity classification")
     public Response create(@PathParam("entityTypeId") String entityTypeId, TypeDTO dto, @Context UriInfo uriInfo) {
         EntityType entityType = getEntityType(entityTypeId);
         dto.codeSpace = entityType.getCodeSpace().getId();

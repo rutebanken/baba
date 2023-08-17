@@ -19,8 +19,8 @@ package no.rutebanken.baba.organisation.model.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import no.rutebanken.baba.organisation.model.user.eventfilter.EventFilter;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class NotificationConfiguration {

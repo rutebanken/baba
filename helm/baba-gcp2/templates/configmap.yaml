@@ -3,7 +3,7 @@ data:
   application.properties: |+
     spring.profiles.active=auth0
     spring.jpa.database=POSTGRESQL
-    spring.jpa.properties.hibernate.dialect=org.hibernate.spatial.dialect.postgis.PostgisPG10Dialect
+    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
     spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults=false
     spring.jpa.open-in-view=false
     spring.datasource.platform=postgres

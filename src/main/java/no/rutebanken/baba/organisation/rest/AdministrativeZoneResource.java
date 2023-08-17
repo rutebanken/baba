@@ -16,7 +16,8 @@
 
 package no.rutebanken.baba.organisation.rest;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import no.rutebanken.baba.organisation.model.organisation.AdministrativeZone;
 import no.rutebanken.baba.organisation.model.organisation.AdministrativeZoneType;
 import no.rutebanken.baba.organisation.repository.AdministrativeZoneRepository;
@@ -31,9 +32,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
 
@@ -42,7 +43,9 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 @Produces("application/json")
 @Transactional
 @PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
-@Api(tags = {"Administrative zone resource"}, produces = "application/json")
+@Tags(value = {
+        @Tag(name = "AdministrativeZoneResource", description ="Administrative zone resource")
+})
 public class AdministrativeZoneResource extends AnnotatedBaseResource<AdministrativeZone, AdministrativeZoneDTO> {
 
 

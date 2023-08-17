@@ -16,7 +16,9 @@
 
 package no.rutebanken.baba.provider.rest;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
+import jakarta.ws.rs.*;
 import no.rutebanken.baba.chouette.ChouetteReferentialService;
 import no.rutebanken.baba.exceptions.ChouetteServiceException;
 import no.rutebanken.baba.exceptions.ReferentialAlreadyExistException;
@@ -32,18 +34,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.*;
 import java.util.Collection;
 
-import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_ADMIN;
-import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_EDIT;
-import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_VIEW_ALL;
+import static org.rutebanken.helper.organisation.AuthorizationConstants.*;
 
 
 @Component
 @Produces("application/json")
 @Path("")
-@Api
+@Tags(value = {
+        @Tag(name = "ProviderResource", description = "Provider resource")
+})
 @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "')")
 public class ProviderResource {
 
@@ -99,7 +100,7 @@ public class ProviderResource {
     public Provider createProvider(Provider provider) {
         LOGGER.info("Creating provider {}", provider);
         String referential = provider.getChouetteInfo().referential;
-        if(providerRepository.getProvider(referential) != null) {
+        if (providerRepository.getProvider(referential) != null) {
             LOGGER.warn("Failed to create provider {}: the provider already exists in the database", provider);
             throw new ReferentialAlreadyExistException(referential);
         }
@@ -107,7 +108,7 @@ public class ProviderResource {
             chouetteReferentialService.createChouetteReferential(provider);
         } catch (ChouetteServiceException e) {
             LOGGER.warn("Failed to create provider {}", provider, e);
-            throw new InternalServerErrorException("Chouette Server error while creating the provider with id= " + provider.getId() );
+            throw new InternalServerErrorException("Chouette Server error while creating the provider with id= " + provider.getId());
         }
         return providerRepository.createProvider(provider);
     }
@@ -122,12 +123,12 @@ public class ProviderResource {
     public Collection<Provider> getProviders() {
         Collection<Provider> providers = providerRepository.getProviders();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(providerAuthenticationService.canViewAllProviders(authentication)) {
+        if (providerAuthenticationService.canViewAllProviders(authentication)) {
             LOGGER.debug("Returning all providers.");
             return providers;
         }
         LOGGER.debug("Returning authorized providers.");
-        return providers.stream().filter(provider ->  providerAuthenticationService.hasRoleForProvider(authentication, ROLE_ROUTE_DATA_EDIT, provider.getId())).toList();
+        return providers.stream().filter(provider -> providerAuthenticationService.hasRoleForProvider(authentication, ROLE_ROUTE_DATA_EDIT, provider.getId())).toList();
     }
 
 

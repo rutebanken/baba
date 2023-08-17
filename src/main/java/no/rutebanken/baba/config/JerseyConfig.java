@@ -16,25 +16,10 @@
 
 package no.rutebanken.baba.config;
 
-import io.swagger.jaxrs.config.BeanConfig;
-import io.swagger.jaxrs.listing.ApiListingResource;
-import io.swagger.jaxrs.listing.SwaggerSerializers;
+import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 import no.rutebanken.baba.filter.CorsResponseFilter;
-import no.rutebanken.baba.organisation.rest.AdministrativeZoneResource;
-import no.rutebanken.baba.organisation.rest.CodeSpaceResource;
-import no.rutebanken.baba.organisation.rest.EntityClassificationResource;
-import no.rutebanken.baba.organisation.rest.EntityTypeResource;
-import no.rutebanken.baba.organisation.rest.NotificationConfigurationResource;
-import no.rutebanken.baba.organisation.rest.OrganisationResource;
-import no.rutebanken.baba.organisation.rest.ResponsibilitySetResource;
-import no.rutebanken.baba.organisation.rest.RoleResource;
-import no.rutebanken.baba.organisation.rest.UserResource;
-import no.rutebanken.baba.organisation.rest.exception.AccessDeniedExceptionMapper;
-import no.rutebanken.baba.organisation.rest.exception.IllegalArgumentExceptionMapper;
-import no.rutebanken.baba.organisation.rest.exception.NotAuthenticatedExceptionMapper;
-import no.rutebanken.baba.organisation.rest.exception.OrganisationExceptionMapper;
-import no.rutebanken.baba.organisation.rest.exception.PersistenceExceptionMapper;
-import no.rutebanken.baba.organisation.rest.exception.SpringExceptionMapper;
+import no.rutebanken.baba.organisation.rest.*;
+import no.rutebanken.baba.organisation.rest.exception.*;
 import no.rutebanken.baba.provider.rest.ProviderResource;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
@@ -46,7 +31,6 @@ import org.springframework.context.annotation.Configuration;
 public class JerseyConfig {
 
 
-
     @Bean
     public ServletRegistrationBean<ServletContainer> organisationsAPIJerseyConfig() {
         ServletRegistrationBean<ServletContainer> publicJersey
@@ -55,10 +39,9 @@ public class JerseyConfig {
         publicJersey.setName("OrganisationAPI");
         publicJersey.setLoadOnStartup(0);
         publicJersey.getInitParameters().put("swagger.scanner.id", "organisations-scanner");
-        publicJersey.getInitParameters().put("swagger.config.id","organisations-swagger-doc" );
+        publicJersey.getInitParameters().put("swagger.config.id", "organisations-swagger-doc");
         return publicJersey;
     }
-
 
 
     @Bean
@@ -100,19 +83,8 @@ public class JerseyConfig {
 
 
         private void configureSwagger() {
-            // Available at localhost:port/api/swagger.json
-            this.register(ApiListingResource.class);
-            this.register(SwaggerSerializers.class);
-
-            BeanConfig config = new BeanConfig();
-            config.setConfigId("organisations-swagger-doc");
-            config.setTitle("Organisations API");
-            config.setVersion("v1");
-            config.setSchemes(new String[]{"http", "https"});
-            config.setResourcePackage("no.rutebanken.baba.organisation.rest");
-            config.setPrettyPrint(true);
-            config.setScan(true);
-            config.setScannerId("organisations-scanner");
+            packages("no.rutebanken.baba.organisation.rest");
+            register(OpenApiResource.class);
         }
     }
 
@@ -133,21 +105,9 @@ public class JerseyConfig {
             configureSwagger();
         }
 
-
         private void configureSwagger() {
-            // Available at localhost:port/api/swagger.json
-            this.register(ApiListingResource.class);
-            this.register(SwaggerSerializers.class);
-
-            BeanConfig config = new BeanConfig();
-            config.setConfigId("providers-swagger-doc");
-            config.setTitle("Providers API");
-            config.setVersion("v1");
-            config.setSchemes(new String[]{"http", "https"});
-            config.setResourcePackage("no.rutebanken.baba.provider.rest");
-            config.setPrettyPrint(true);
-            config.setScan(true);
-            config.setScannerId("providers-scanner");
+            packages("no.rutebanken.baba.provider.rest");
+            register(OpenApiResource.class);
         }
     }
 
