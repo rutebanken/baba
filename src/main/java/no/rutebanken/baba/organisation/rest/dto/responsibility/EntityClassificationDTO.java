@@ -16,9 +16,9 @@
 
 package no.rutebanken.baba.organisation.rest.dto.responsibility;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import no.rutebanken.baba.organisation.rest.dto.TypeDTO;
-@ApiModel(description = "Sub classification of an entity type")
+@Schema(description = "Sub classification of an entity type")
 public class EntityClassificationDTO extends TypeDTO {
 
     public EntityTypeDTO entityType;

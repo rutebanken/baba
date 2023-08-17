@@ -16,9 +16,9 @@
 
 package no.rutebanken.baba.organisation.rest.dto;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "Common type for simple entities/code values")
+@Schema(description = "Common type for simple entities/code values")
 public class TypeDTO extends BaseDTO {
 
 	public String name;

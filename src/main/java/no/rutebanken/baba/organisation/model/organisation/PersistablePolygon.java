@@ -16,10 +16,10 @@
 
 package no.rutebanken.baba.organisation.model.organisation;
 
+import jakarta.persistence.*;
 import org.locationtech.jts.geom.Polygon;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**

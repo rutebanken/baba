@@ -19,8 +19,9 @@ package no.rutebanken.baba.organisation.model.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.jdo.annotations.Unique;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class ContactDetails {

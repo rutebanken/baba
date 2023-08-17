@@ -17,9 +17,8 @@
 package no.rutebanken.baba.organisation.model.user.eventfilter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import no.rutebanken.baba.organisation.model.organisation.Organisation;
-
-import javax.persistence.*;
 
 /**
  * User defined filter for events.
