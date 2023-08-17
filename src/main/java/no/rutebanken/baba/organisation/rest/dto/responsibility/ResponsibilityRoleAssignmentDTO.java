@@ -16,12 +16,12 @@
 
 package no.rutebanken.baba.organisation.rest.dto.responsibility;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import no.rutebanken.baba.organisation.rest.dto.BaseDTO;
 
 import java.util.ArrayList;
 import java.util.List;
-@ApiModel(description = "Reusable authorization grant. Combination of a role with one or more of: organisations, admin zone and list of entity classification assignments. ")
+@Schema(description = "Reusable authorization grant. Combination of a role with one or more of: organisations, admin zone and list of entity classification assignments. ")
 public class ResponsibilityRoleAssignmentDTO extends BaseDTO {
 
 	public String typeOfResponsibilityRoleRef;

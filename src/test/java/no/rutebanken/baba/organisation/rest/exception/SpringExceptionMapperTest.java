@@ -20,8 +20,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.transaction.TransactionSystemException;
 
-import javax.validation.ValidationException;
-import javax.ws.rs.core.Response;
+import jakarta.validation.ValidationException;
+import jakarta.ws.rs.core.Response;
 
 class SpringExceptionMapperTest {
 
