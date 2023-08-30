@@ -1,13 +1,14 @@
 package no.rutebanken.baba.organisation.service;
 
-import com.auth0.client.HttpOptions;
 import com.auth0.client.auth.AuthAPI;
 import com.auth0.client.mgmt.ManagementAPI;
 import com.auth0.client.mgmt.filter.RolesFilter;
 import com.auth0.client.mgmt.filter.UserFilter;
 import com.auth0.exception.Auth0Exception;
 import com.auth0.json.auth.TokenHolder;
-import com.auth0.net.AuthRequest;
+import com.auth0.net.TokenRequest;
+import com.auth0.net.client.Auth0HttpClient;
+import com.auth0.net.client.DefaultHttpClient;
 import no.rutebanken.baba.organisation.model.OrganisationException;
 import no.rutebanken.baba.organisation.model.responsibility.ResponsibilitySet;
 import no.rutebanken.baba.organisation.model.responsibility.Role;
@@ -24,12 +25,7 @@ import org.springframework.stereotype.Service;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static no.rutebanken.baba.organisation.service.IamUtils.generatePassword;
@@ -70,7 +66,7 @@ public class Auth0IamService implements IamService {
         auth0User.setPassword(password.toCharArray());
         com.auth0.json.mgmt.users.User createdUser = null;
         try {
-            createdUser = getManagementAPI().users().create(auth0User).execute();
+            createdUser = getManagementAPI().users().create(auth0User).execute().getBody();
             logger.info("Created user {} with Auth0 id {}", user.getUsername(), createdUser.getId());
             updateRoles(user, createdUser, roleRepository.findAll());
         } catch (Exception e) {
@@ -141,9 +137,9 @@ public class Auth0IamService implements IamService {
     @Override
     public void createRole(Role role) {
         logger.info("Creating role {} in Auth0: ", role.getId());
-        com.auth0.json.mgmt.Role auth0Role = toAuth0Role(role);
+        com.auth0.json.mgmt.roles.Role auth0Role = toAuth0Role(role);
         try {
-            com.auth0.json.mgmt.Role createdRole = getManagementAPI().roles().create(auth0Role).execute();
+            com.auth0.json.mgmt.roles.Role createdRole = getManagementAPI().roles().create(auth0Role).execute().getBody();
             logger.info("Role successfully created in Auth0: {}", createdRole.getId());
         } catch (Exception e) {
             logger.error("Failed to create role {}", role.getId(), e);
@@ -154,7 +150,7 @@ public class Auth0IamService implements IamService {
     @Override
     public void removeRole(Role role) {
         logger.info("Removing role in Auth0: {}", role.getId());
-        com.auth0.json.mgmt.Role auth0Role = getAuth0RoleByPrivateCode(role.getPrivateCode());
+        com.auth0.json.mgmt.roles.Role auth0Role = getAuth0RoleByPrivateCode(role.getPrivateCode());
         try {
             getManagementAPI().roles().delete(auth0Role.getId()).execute();
             logger.info("Role {} successfully removed from Auth0", role.getId());
@@ -182,9 +178,16 @@ public class Auth0IamService implements IamService {
     private synchronized ManagementAPI getManagementAPI() throws Auth0Exception {
         if (managementAPI == null) {
             refreshToken();
-            HttpOptions options = new HttpOptions();
-            options.setManagementAPIMaxRetries(10);
-            managementAPI = new ManagementAPI(domain, tokenHolder.getAccessToken(), options);
+
+            Auth0HttpClient auth0HttpClient = DefaultHttpClient.newBuilder()
+                    .withConnectTimeout(10)
+                    .withReadTimeout(10)
+                    .withMaxRetries(10)
+                    .build();
+
+            managementAPI = ManagementAPI.newBuilder(domain, tokenHolder.getAccessToken())
+                    .withHttpClient(auth0HttpClient)
+                    .build();
         }
         if (hasTokenExpired()) {
             refreshToken();
@@ -204,8 +207,8 @@ public class Auth0IamService implements IamService {
 
     private void refreshToken() throws Auth0Exception {
         logger.debug("Refreshing Admin API token");
-        AuthRequest authRequest = authAPI.requestToken("https://" + domain + "/api/v2/");
-        tokenHolder = authRequest.execute();
+        TokenRequest tokenRequest = authAPI.requestToken("https://" + domain + "/api/v2/");
+        tokenHolder = tokenRequest.execute().getBody();
         accessTokenRetrievedAt = clock.instant();
     }
 
@@ -226,20 +229,21 @@ public class Auth0IamService implements IamService {
             // the role names assigned to the user in the organisation repository
             Set<String> newRoleNames = getRoleNames(user);
             // the Auth0 roles currently assigned to the Auth0 user
-            List<com.auth0.json.mgmt.Role> existingAuth0UserRoles = getManagementAPI().users()
+            List<com.auth0.json.mgmt.roles.Role> existingAuth0UserRoles = getManagementAPI().users()
                     .listRoles(auth0User.getId(), null)
                     .execute()
+                    .getBody()
                     .getItems();
             // Auth0 role ids that are currently assigned to the Auth0 user and that should be removed
             List<String> auth0RoleIdsToBeRemoved = existingAuth0UserRoles.stream().filter(r -> systemRoleNames.contains(r.getName()))
-                    .filter(r -> !newRoleNames.remove(r.getName())).map(com.auth0.json.mgmt.Role::getId).toList();
+                    .filter(r -> !newRoleNames.remove(r.getName())).map(com.auth0.json.mgmt.roles.Role::getId).toList();
 
             if (!auth0RoleIdsToBeRemoved.isEmpty()) {
                 getManagementAPI().users().removeRoles(auth0User.getId(), auth0RoleIdsToBeRemoved).execute();
             }
 
             if (!newRoleNames.isEmpty()) {
-                List<String> rolesToBeAdded = newRoleNames.stream().map(this::getAuth0RoleByPrivateCode).map(com.auth0.json.mgmt.Role::getId).toList();
+                List<String> rolesToBeAdded = newRoleNames.stream().map(this::getAuth0RoleByPrivateCode).map(com.auth0.json.mgmt.roles.Role::getId).toList();
                 getManagementAPI().users().addRoles(auth0User.getId(), rolesToBeAdded).execute();
             }
 
@@ -279,8 +283,8 @@ public class Auth0IamService implements IamService {
         return auth0User;
     }
 
-    private com.auth0.json.mgmt.Role toAuth0Role(Role role) {
-        com.auth0.json.mgmt.Role auth0Role = new com.auth0.json.mgmt.Role();
+    private com.auth0.json.mgmt.roles.Role toAuth0Role(Role role) {
+        com.auth0.json.mgmt.roles.Role auth0Role = new com.auth0.json.mgmt.roles.Role();
         auth0Role.setName(role.getId());
         auth0Role.setDescription(role.getName());
         return auth0Role;
@@ -288,7 +292,7 @@ public class Auth0IamService implements IamService {
 
     private com.auth0.json.mgmt.users.User getAuth0UserByUsername(String username) {
         try {
-            List<com.auth0.json.mgmt.users.User> matchingUsers = getManagementAPI().users().list(new UserFilter().withQuery("username:\"" + username + "\"")).execute().getItems();
+            List<com.auth0.json.mgmt.users.User> matchingUsers = getManagementAPI().users().list(new UserFilter().withQuery("username:\"" + username + "\"")).execute().getBody().getItems();
             if (matchingUsers.isEmpty()) {
                 throw new OAuth2UserNotFoundException("User not found: " + username);
             } else if (matchingUsers.size() > 1) {
@@ -302,12 +306,12 @@ public class Auth0IamService implements IamService {
         }
     }
 
-    private com.auth0.json.mgmt.Role getAuth0RoleByPrivateCode(String privateCode) {
+    private com.auth0.json.mgmt.roles.Role getAuth0RoleByPrivateCode(String privateCode) {
         try {
             // filtering twice by private code since the Auth0 filter accept all names that contain the filter.
-            List<com.auth0.json.mgmt.Role> matchingRoles = getManagementAPI().roles()
+            List<com.auth0.json.mgmt.roles.Role> matchingRoles = getManagementAPI().roles()
                     .list(new RolesFilter().withName(privateCode))
-                    .execute()
+                    .execute().getBody()
                     .getItems()
                     .stream().filter(r -> privateCode.equals(r.getName())).toList();
             if (matchingRoles.isEmpty()) {
