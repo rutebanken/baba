@@ -19,16 +19,14 @@ package no.rutebanken.baba.organisation.model.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.jdo.annotations.Unique;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 public class ContactDetails {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "contact_details_seq")
+	@SequenceGenerator(name = "contact_details_seq", sequenceName = "contact_details_seq", allocationSize = 1)
 	@JsonIgnore
 	private Long pk;
 

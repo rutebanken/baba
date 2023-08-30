@@ -18,13 +18,7 @@ package no.rutebanken.baba.organisation.model.organisation;
 
 import org.locationtech.jts.geom.Polygon;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -35,7 +29,8 @@ import java.io.Serializable;
 public class PersistablePolygon implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "persistable_polygon_seq")
+    @SequenceGenerator(name = "persistable_polygon_seq", sequenceName = "persistable_polygon_seq", allocationSize = 1)
     protected Long id;
 
     @Basic(fetch = FetchType.LAZY)
