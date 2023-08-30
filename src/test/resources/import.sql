@@ -21,7 +21,7 @@ insert into entity_classification (pk, entity_version,lock_version,entity_type_p
 insert into entity_classification (pk, entity_version,lock_version,entity_type_pk,code_space_pk,private_code,name) VALUES (2,1,1,1,1,'tramStop','Tram stop');
 insert into entity_classification (pk, entity_version,lock_version,entity_type_pk,code_space_pk,private_code,name) VALUES (3,1,1,2,1,'*','All entity types');
 
-insert into organisation(pk, dtype,entity_version,lock_version,code_space_pk,private_code,name) values (nextval('hibernate_sequence'),'Authority',1,1,1,'OrgTest','Test Org');
+insert into organisation(pk, dtype,entity_version,lock_version,code_space_pk,private_code,name) values (nextval('versioned_entity_seq'),'Authority',1,1,1,'OrgTest','Test Org');
 
 insert into responsibility_role_assignment (pk,entity_version,lock_version,private_code,code_space_pk,responsible_organisation_pk,type_of_responsibility_role_pk) VALUES (1,1,1,'1',1,1,1);
 insert into responsibility_role_assignment (pk,entity_version,lock_version,private_code,code_space_pk,responsible_organisation_pk,type_of_responsibility_role_pk) VALUES (2,1,1,'2',1,1,2);
@@ -43,4 +43,11 @@ insert into responsibility_set_roles (responsibility_Set_pk,roles_pk) values (2,
 insert into contact_details (pk, email,first_name, last_name, phone) values (1,'test@test.org','First','Last','0047 23232323');
 insert into user_account (pk,entity_version,lock_version,private_code,username,contact_details_pk,organisation_pk) values (1,1,1,'testUserCode','testuser',1,1);
 
-alter sequence hibernate_sequence restart with 20000;
+alter sequence entity_classification_assignment_seq restart with 20000;
+alter sequence persistable_polygon_seq restart with 20000;
+alter sequence contact_details_seq restart with 20000;
+alter sequence notification_configuration_seq restart with 20000;
+alter sequence chouette_info_seq restart with 20000;
+alter sequence provider_seq restart with 20000;
+alter sequence event_filter_seq restart with 20000;
+alter sequence versioned_entity_seq restart with 20000;

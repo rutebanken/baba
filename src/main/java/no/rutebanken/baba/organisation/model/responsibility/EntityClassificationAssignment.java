@@ -18,18 +18,15 @@ package no.rutebanken.baba.organisation.model.responsibility;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 public class EntityClassificationAssignment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "entity_classification_assignment_seq")
+    @SequenceGenerator(name = "entity_classification_assignment_seq", sequenceName = "entity_classification_assignment_seq", allocationSize = 1)
     @JsonIgnore
     private Long pk;
 

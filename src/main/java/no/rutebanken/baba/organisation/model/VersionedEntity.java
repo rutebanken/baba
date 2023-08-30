@@ -27,7 +27,8 @@ import java.io.Serializable;
 public abstract class VersionedEntity implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "versioned_entity_seq")
+	@SequenceGenerator(name = "versioned_entity_seq", sequenceName = "versioned_entity_seq", allocationSize = 1)
 	@JsonIgnore
 	private Long pk;
 

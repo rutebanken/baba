@@ -19,11 +19,7 @@ package no.rutebanken.baba.organisation.model.user.eventfilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import no.rutebanken.baba.organisation.model.organisation.Organisation;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * User defined filter for events.
@@ -34,7 +30,8 @@ import javax.persistence.ManyToOne;
 public abstract class EventFilter {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_filter_seq")
+    @SequenceGenerator(name = "event_filter_seq", sequenceName = "event_filter_seq", allocationSize = 1)
     @JsonIgnore
     private Long pk;
 

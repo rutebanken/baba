@@ -16,17 +16,7 @@
 
 package no.rutebanken.baba.provider.domain;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
@@ -34,7 +24,8 @@ import java.util.Set;
 public class ChouetteInfo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "chouette_info_seq")
+    @SequenceGenerator(name = "chouette_info_seq", sequenceName = "chouette_info_seq", allocationSize = 1)
     public Long id;
     public String xmlns;
     public String xmlnsurl;
