@@ -25,7 +25,8 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class NotificationConfiguration {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "notification_configuration_seq")
+    @SequenceGenerator(name = "notification_configuration_seq", sequenceName = "notification_configuration_seq", allocationSize = 1)
     @JsonIgnore
     private Long pk;
 

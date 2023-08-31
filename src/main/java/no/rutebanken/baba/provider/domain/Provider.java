@@ -16,19 +16,15 @@
 
 package no.rutebanken.baba.provider.domain;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 public class Provider {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "provider_seq")
+    @SequenceGenerator(name = "provider_seq", sequenceName = "provider_seq", allocationSize = 1)
     public Long id;
     public String name;
     @OneToOne(cascade = {CascadeType.ALL})
