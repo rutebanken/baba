@@ -16,9 +16,9 @@
 
 package no.rutebanken.baba.organisation.rest.dto.user;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "Contact details for a user")
+@Schema(description = "Contact details for a user")
 public class ContactDetailsDTO {
 
 	public String firstName;

@@ -41,3 +41,4 @@ gradlew.bat
 
 # Terraform
 /terraform/.terraform
+/terraform-gcp2/.terraform

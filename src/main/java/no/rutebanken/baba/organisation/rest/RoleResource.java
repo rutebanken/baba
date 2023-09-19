@@ -17,7 +17,12 @@
 package no.rutebanken.baba.organisation.rest;
 
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 import no.rutebanken.baba.organisation.model.responsibility.Role;
 import no.rutebanken.baba.organisation.repository.RoleRepository;
 import no.rutebanken.baba.organisation.repository.VersionedEntityRepository;
@@ -32,16 +37,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import java.util.List;
 
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
@@ -52,7 +47,9 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 @Produces("application/json")
 @Transactional
 @PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
-@Api(tags = {"Role resource"}, produces = "application/json")
+@Tags(value = {
+		@Tag(name = "RoleResource", description = "Role resource")
+})
 public class RoleResource extends BaseResource<Role, TypeDTO> {
 
 	@Autowired
