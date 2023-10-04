@@ -3,7 +3,7 @@ terraform {
 }
 
 provider "google" {
-  version = ">= 4.26"
+  version = "~> 4.84.0"
 }
 provider "kubernetes" {
   version = ">= 2.13.1"
