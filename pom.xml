@@ -46,7 +46,7 @@
         <swagger-jersey2.version>2.2.18</swagger-jersey2.version>
         <javax.jdo.jdo-api.version>3.2.1</javax.jdo.jdo-api.version>
         <wololo.version>0.18.1</wololo.version>
-        <commons-io.version>2.14.0</commons-io.version>
+        <commons-io.version>2.15.0</commons-io.version>
         <passay.version>1.6.4</passay.version>
         <spring-cloud-gcp-dependencies.version>4.8.2</spring-cloud-gcp-dependencies.version>
 
