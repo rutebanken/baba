@@ -16,6 +16,7 @@
 
 package no.rutebanken.baba.organisation.rest.mapper;
 
+import no.rutebanken.baba.organisation.model.CodeSpaceEntity;
 import no.rutebanken.baba.organisation.model.responsibility.EntityClassification;
 import no.rutebanken.baba.organisation.model.user.NotificationConfiguration;
 import no.rutebanken.baba.organisation.model.user.NotificationType;
@@ -82,12 +83,12 @@ public class NotificationConfigurationMapper {
             dto.jobDomain = EventFilterDTO.JobDomain.valueOf(jobEventFilter.getJobDomain());
         } else if (eventFilter instanceof CrudEventFilter crudEventFilter) {
             dto.type = EventFilterDTO.EventFilterType.CRUD;
-            dto.entityClassificationRefs = crudEventFilter.getEntityClassifications().stream().map(ec -> ec.getId()).collect(Collectors.toSet());
+            dto.entityClassificationRefs = crudEventFilter.getEntityClassifications().stream().map(CodeSpaceEntity::getId).collect(Collectors.toSet());
             if (fullDetails) {
                 dto.entityClassifications = crudEventFilter.getEntityClassifications().stream().map(this::toDTO).collect(Collectors.toSet());
             }
 
-            dto.administrativeZoneRefs = crudEventFilter.getAdministrativeZones().stream().map(az -> az.getId()).collect(Collectors.toSet());
+            dto.administrativeZoneRefs = crudEventFilter.getAdministrativeZones().stream().map(CodeSpaceEntity::getId).collect(Collectors.toSet());
         }
 
         if (eventFilter.getOrganisation() != null) {

@@ -47,7 +47,8 @@ public class NewUserEmailSender {
     private boolean sendEmailEnabled;
 
     public void sendEmail(User user) {
-        Locale locale = new Locale(emailLanguageDefault); // TODO get users default from user
+        // TODO get users default from user
+        Locale locale = new Locale.Builder().setLanguage(emailLanguageDefault).build();
         sendEmail(user.getContactDetails().getEmail(), newUserEmailFormatter.getSubject(locale), newUserEmailFormatter.formatMessage(user, locale));
     }
 

@@ -19,21 +19,9 @@ package no.rutebanken.baba.organisation.model;
 import com.google.common.base.Joiner;
 import org.springframework.util.StringUtils;
 
-public class Id {
-
-	private final String codeSpace;
-
-	private final String type;
-
-	private final String privateCode;
+public record Id(String codeSpace, String type, String privateCode) {
 
 	public static final String SEPARATOR_CHAR = ":";
-
-	public Id(String codeSpace, String type, String privateCode) {
-		this.codeSpace = codeSpace;
-		this.type = type;
-		this.privateCode = privateCode;
-	}
 
 	public static Id fromString(String publicId) {
 		if (!isValid(publicId)) {
@@ -54,17 +42,6 @@ public class Id {
 		return StringUtils.hasText(publicId);
 	}
 
-	public String getCodeSpace() {
-		return codeSpace;
-	}
-
-	public String getPrivateCode() {
-		return privateCode;
-	}
-
-	public String getType() {
-		return type;
-	}
 
 	public String toString() {
 		return Joiner.on(SEPARATOR_CHAR).join(codeSpace, privateCode);

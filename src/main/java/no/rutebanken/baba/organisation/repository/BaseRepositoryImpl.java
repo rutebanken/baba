@@ -49,13 +49,13 @@ public class BaseRepositoryImpl<T extends VersionedEntity> extends SimpleJpaRepo
         }
 
         TypedQuery<T> query = entityManager.createQuery(jpql, getDomainClass());
-        query.setParameter("privateCode", id.getPrivateCode());
+        query.setParameter("privateCode", id.privateCode());
 
         if (CodeSpaceEntity.class.isAssignableFrom(getDomainClass())) {
-            query.setParameter("codeSpace", id.getCodeSpace());
+            query.setParameter("codeSpace", id.codeSpace());
         }
 
-        List<T> results = query.getResultList().stream().filter(r -> id.getType() == null || r.getType().equals(id.getType())).toList();
+        List<T> results = query.getResultList().stream().filter(r -> id.type() == null || r.getType().equals(id.type())).toList();
 
         if (results.size() == 1) {
             return results.get(0);

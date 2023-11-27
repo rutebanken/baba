@@ -16,6 +16,7 @@
 
 package no.rutebanken.baba.organisation.rest.mapper;
 
+import no.rutebanken.baba.organisation.model.CodeSpaceEntity;
 import no.rutebanken.baba.organisation.model.responsibility.ResponsibilitySet;
 import no.rutebanken.baba.organisation.model.user.ContactDetails;
 import no.rutebanken.baba.organisation.model.user.User;
@@ -123,7 +124,7 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
         if (responsibilitySetSet == null) {
             return null;
         }
-        return responsibilitySetSet.stream().map(rs -> rs.getId()).toList();
+        return responsibilitySetSet.stream().map(CodeSpaceEntity::getId).toList();
     }
 
 

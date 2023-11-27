@@ -42,7 +42,7 @@ class NewUserEmailFormatterTest {
         contactDetails.setLastName("Last");
         User user = User.builder().withContactDetails(contactDetails).withUsername("test-user").build();
 
-        String msg = emailFormatter.formatMessage(user,  new Locale("no"));
+        String msg = emailFormatter.formatMessage(user, new Locale.Builder().setLanguage("no").build());
 
         Assertions.assertTrue(msg.startsWith("<html>"));
         Assertions.assertTrue(msg.contains(contactDetails.getFirstName() + " " + contactDetails.getLastName()));
