@@ -98,7 +98,7 @@ public class ChouetteReferentialRestClient {
     }
 
     protected static final Predicate<Throwable> is5xx =
-            throwable -> throwable instanceof WebClientResponseException && ((WebClientResponseException) throwable).getStatusCode().is5xxServerError();
+            throwable -> throwable instanceof WebClientResponseException webClientResponseException && webClientResponseException.getStatusCode().is5xxServerError();
 
 
 }

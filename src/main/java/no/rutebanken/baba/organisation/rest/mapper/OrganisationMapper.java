@@ -17,6 +17,7 @@
 package no.rutebanken.baba.organisation.rest.mapper;
 
 import no.rutebanken.baba.organisation.model.CodeSpace;
+import no.rutebanken.baba.organisation.model.CodeSpaceEntity;
 import no.rutebanken.baba.organisation.model.organisation.Authority;
 import no.rutebanken.baba.organisation.model.organisation.Organisation;
 import no.rutebanken.baba.organisation.model.organisation.OrganisationPart;
@@ -56,7 +57,7 @@ public class OrganisationMapper implements DTOMapper<Organisation, OrganisationD
 		}
 
 		if (!CollectionUtils.isEmpty(entity.getParts())) {
-			dto.parts = entity.getParts().stream().map(this::toDTO).collect(Collectors.toList());
+			dto.parts = entity.getParts().stream().map(this::toDTO).toList();
 		}
 
 		return dto;
@@ -106,7 +107,7 @@ public class OrganisationMapper implements DTOMapper<Organisation, OrganisationD
 		dto.name = part.getName();
 		dto.id = part.getId();
 		if (!CollectionUtils.isEmpty(part.getAdministrativeZones())) {
-			dto.administrativeZoneRefs = part.getAdministrativeZones().stream().map(az -> az.getId()).toList();
+			dto.administrativeZoneRefs = part.getAdministrativeZones().stream().map(CodeSpaceEntity::getId).toList();
 		}
 
 		return dto;
@@ -132,10 +133,9 @@ public class OrganisationMapper implements DTOMapper<Organisation, OrganisationD
 	}
 
 	private Organisation createByType(OrganisationDTO.OrganisationType type) {
-		switch (type) {
-			case AUTHORITY:
-				return new Authority();
-		}
+        if (type == OrganisationDTO.OrganisationType.AUTHORITY) {
+            return new Authority();
+        }
 		throw new BadRequestException("Unknown organisation type:" + type);
 	}
 }

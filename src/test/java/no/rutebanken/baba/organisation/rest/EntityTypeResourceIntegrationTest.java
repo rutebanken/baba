@@ -32,6 +32,9 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 class EntityTypeResourceIntegrationTest extends BaseIntegrationTest {
 
@@ -44,7 +47,7 @@ class EntityTypeResourceIntegrationTest extends BaseIntegrationTest {
 	void entityTypeNotFound() {
 		ResponseEntity<EntityTypeDTO> entity = restTemplate.getForEntity(PATH + "/unknownEntityTypes",
 				EntityTypeDTO.class);
-		Assertions.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
+		assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
 	}
 
 	@Test
@@ -70,7 +73,7 @@ class EntityTypeResourceIntegrationTest extends BaseIntegrationTest {
 
 		ResponseEntity<EntityTypeDTO> entity = restTemplate.getForEntity(uri,
 				EntityTypeDTO.class);
-		Assertions.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
+		assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
 
 	}
 
@@ -103,12 +106,13 @@ class EntityTypeResourceIntegrationTest extends BaseIntegrationTest {
 		Assertions.assertNotNull(uri);
 		ResponseEntity<EntityTypeDTO> rsp = restTemplate.getForEntity(uri, EntityTypeDTO.class);
 		EntityTypeDTO out = rsp.getBody();
-		Assertions.assertEquals(in.name, out.name);
-		Assertions.assertEquals(in.privateCode, out.privateCode);
+		assertNotNull(out);
+		assertEquals(in.name, out.name);
+		assertEquals(in.privateCode, out.privateCode);
 		if (CollectionUtils.isEmpty(in.classifications)) {
-			Assertions.assertTrue(CollectionUtils.isEmpty(in.classifications));
+			Assertions.assertTrue(CollectionUtils.isEmpty(out.classifications));
 		} else {
-			Assertions.assertEquals(in.classifications.size(), in.classifications.size());
+			assertEquals(in.classifications.size(), out.classifications.size());
 			for (TypeDTO inClassification : in.classifications) {
 				Assertions.assertTrue(out.classifications.stream().anyMatch(outClassification -> outClassification.privateCode.equals(inClassification.privateCode)));
 			}
@@ -146,7 +150,7 @@ class EntityTypeResourceIntegrationTest extends BaseIntegrationTest {
 		EntityTypeDTO inEntityType = createEntityType("entityType name", null);
 		ResponseEntity<String> rsp = restTemplate.postForEntity(PATH, inEntityType, String.class);
 
-		Assertions.assertEquals(HttpStatus.BAD_REQUEST, rsp.getStatusCode());
+		assertEquals(HttpStatus.BAD_REQUEST, rsp.getStatusCode());
 	}
 
 }

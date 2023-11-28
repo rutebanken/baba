@@ -58,15 +58,15 @@ public class ChouetteInfo {
     public ChouetteInfo() {
     }
 
-    public ChouetteInfo(String xmlns, String xmlnsurl, String referential, String organisation, String user) {
+    public ChouetteInfo(String xmlns, String referential, String organisation, String user) {
         this.xmlns = xmlns;
         this.referential = referential;
         this.organisation = organisation;
         this.user = user;
     }
 
-    public ChouetteInfo(Long id, String prefix, String xmlnsurl, String referential, String organisation, String user) {
-        this(prefix, xmlnsurl, referential, organisation, user);
+    public ChouetteInfo(Long id, String prefix, String referential, String organisation, String user) {
+        this(prefix, referential, organisation, user);
         this.id = id;
     }
 
