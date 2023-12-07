@@ -17,14 +17,9 @@
 package no.rutebanken.baba.config;
 
 import org.entur.oauth2.JwtRoleAssignmentExtractor;
-import org.entur.oauth2.RoRJwtDecoderBuilder;
 import org.rutebanken.helper.organisation.RoleAssignmentExtractor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
 
 /**
  * Configure Spring Beans for OAuth2 resource server and OAuth2 client security.
@@ -41,23 +36,7 @@ public class OAuth2Config {
         return new JwtRoleAssignmentExtractor();
     }
 
-    /**
-     * Build a @{@link JwtDecoder} for RoR Auth0 domain.
-     *
-     * @return a @{@link JwtDecoder} for Auth0.
-     */
-    @Bean
-    @Profile("!test")
-    public JwtDecoder rorAuth0JwtDecoder(OAuth2ResourceServerProperties properties,
-                                         @Value("${baba.oauth2.resourceserver.auth0.ror.jwt.audience}") String rorAuth0Audience,
-                                         @Value("${baba.oauth2.resourceserver.auth0.ror.claim.namespace}") String rorAuth0ClaimNamespace) {
 
-        String rorAuth0Issuer = properties.getJwt().getIssuerUri();
-        return new RoRJwtDecoderBuilder().withIssuer(rorAuth0Issuer)
-                .withAudience(rorAuth0Audience)
-                .withAuth0ClaimNamespace(rorAuth0ClaimNamespace)
-                .build();
-    }
 }
 
 
