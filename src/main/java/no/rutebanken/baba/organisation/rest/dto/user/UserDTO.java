@@ -31,6 +31,8 @@ public class UserDTO extends BaseDTO {
 
     public String username;
 
+    public boolean personalAccount;
+
     @Schema(description = "Id of the organisation the user belongs to")
     public String organisationRef;
 
