@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationManagerResolver;
-import org.springframework.security.oauth2.jwt.*;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
@@ -35,6 +35,12 @@ public class MultiIssuerAuthenticationManagerResolver
 
     @Value("${baba.oauth2.resourceserver.auth0.entur.internal.jwt.issuer-uri}")
     private String enturInternalAuth0Issuer;
+
+    @Value("${baba.oauth2.resourceserver.auth0.entur.partner.jwt.audience}")
+    private String enturPartnerAuth0Audience;
+
+    @Value("${baba.oauth2.resourceserver.auth0.entur.partner.jwt.issuer-uri}")
+    private String enturPartnerAuth0Issuer;
 
     @Value("${baba.oauth2.resourceserver.auth0.ror.jwt.audience}")
     private String rorAuth0Audience;
@@ -64,6 +70,18 @@ public class MultiIssuerAuthenticationManagerResolver
     }
 
     /**
+     * Build a @{@link JwtDecoder} for Entur Internal Auth0 tenant.
+     *
+     * @return a @{@link JwtDecoder} for Auth0.
+     */
+    private JwtDecoder enturPartnerAuth0JwtDecoder() {
+        return new RoRJwtDecoderBuilder().withIssuer(enturPartnerAuth0Issuer)
+                .withAudience(enturPartnerAuth0Audience)
+                .withAuth0ClaimNamespace(rorAuth0ClaimNamespace)
+                .build();
+    }
+
+    /**
      * Build a @{@link JwtDecoder} for Ror Auth0 tenant.
      *
      * @return a @{@link JwtDecoder} for Auth0.
@@ -78,6 +96,8 @@ public class MultiIssuerAuthenticationManagerResolver
     private JwtDecoder jwtDecoder(String issuer) {
         if (enturInternalAuth0Issuer.equals(issuer)) {
             return enturInternalAuth0JwtDecoder();
+        } else if (enturPartnerAuth0Issuer.equals(issuer)) {
+            return enturPartnerAuth0JwtDecoder();
         } else if (rorAuth0Issuer.equals(issuer)) {
             return rorAuth0JwtDecoder();
         } else {

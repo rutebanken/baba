@@ -14,25 +14,11 @@
  *
  */
 
-package no.rutebanken.baba.organisation.service;
+package no.rutebanken.baba.permissionstore.service;
 
-import no.rutebanken.baba.organisation.model.responsibility.ResponsibilitySet;
-import no.rutebanken.baba.organisation.model.responsibility.Role;
-import no.rutebanken.baba.organisation.model.user.User;
+public interface PermissionStoreService {
 
-public interface IamService {
+    PermissionStoreUser getUser(String userId);
 
-	void createOrUpdate(User user);
-
-	void removeUser(User user);
-
-
-	void createRole(Role role);
-
-	void removeRole(Role role);
-
-	void updateResponsibilitySet(ResponsibilitySet responsibilitySet);
-
-
-
+    boolean isFederated(String email);
 }

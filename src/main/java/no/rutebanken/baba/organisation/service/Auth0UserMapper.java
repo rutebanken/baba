@@ -1,0 +1,99 @@
+package no.rutebanken.baba.organisation.service;
+
+import no.rutebanken.baba.organisation.model.responsibility.ResponsibilitySet;
+import no.rutebanken.baba.organisation.model.user.User;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+
+import static no.rutebanken.baba.organisation.service.IamUtils.generatePassword;
+import static no.rutebanken.baba.organisation.service.IamUtils.toAtr;
+
+@Service
+public class Auth0UserMapper {
+
+    private static final String ROR_ROLES = "ror_roles";
+    private static final String ROR_CREATED_BY_ROR = "ror_created_by_ror";
+
+    private final String connection;
+    private final String preProvisionedConnection;
+
+    public Auth0UserMapper(@Value("${iam.auth0.admin.connection:Username-Password-Authentication}") String connection,
+                           @Value("${iam.auth0.admin.connection.preprovisioning:preprovisioning}") String preProvisionedConnection) {
+        this.connection = connection;
+        this.preProvisionedConnection = preProvisionedConnection;
+    }
+
+    public com.auth0.json.mgmt.users.User mapToNewPrimaryAuth0User(User user) {
+        return toAuth0User(user, null, false, false);
+
+    }
+
+    public com.auth0.json.mgmt.users.User mapToUpdatedPrimaryAuth0User(User user, com.auth0.json.mgmt.users.User existingAuth0User) {
+        Objects.requireNonNull(existingAuth0User);
+        return toAuth0User(user, existingAuth0User, false, false);
+
+    }
+
+
+    public com.auth0.json.mgmt.users.User mapToUpdatedFederatedAuth0User(User user, com.auth0.json.mgmt.users.User existingAuth0User) {
+        Objects.requireNonNull(existingAuth0User);
+        return toAuth0User(user, existingAuth0User, true, false);
+    }
+
+
+    public com.auth0.json.mgmt.users.User mapToPreProvisionedFederatedAuth0User(User user) {
+        return toAuth0User(user, null, true, true);
+    }
+
+
+    private com.auth0.json.mgmt.users.User toAuth0User(User user, com.auth0.json.mgmt.users.User existingAuth0User, boolean isFederated, boolean isPreProvisioned) {
+
+        com.auth0.json.mgmt.users.User auth0User = new com.auth0.json.mgmt.users.User();
+
+        Map<String, Object> attributes;
+        if (existingAuth0User == null) {
+            attributes = new HashMap<>();
+            attributes.put(ROR_CREATED_BY_ROR, "true");
+            auth0User.setPassword(generatePassword().toCharArray());
+
+        } else {
+            // the Auth0 API will not overwrite the existing metadata, it will merge it,
+            // thus it is not necessary to retrieve the existing metadata.
+            attributes = new HashMap<>();
+        }
+
+        if (!isFederated) {
+            auth0User.setConnection(connection);
+            // The Auth0 API refuses to update both the username and the email at the same time
+            // we set the username only when creating a new primary user.
+            if(existingAuth0User == null) {
+                auth0User.setUsername(user.getUsername());
+            }
+            auth0User.setGivenName(user.getContactDetails().getFirstName());
+            auth0User.setFamilyName(user.getContactDetails().getLastName());
+            auth0User.setEmail(user.getContactDetails().getEmail());
+            auth0User.setName(auth0User.getGivenName() + ' ' + auth0User.getFamilyName());
+        }
+
+        if (isPreProvisioned) {
+            auth0User.setConnection(preProvisionedConnection);
+            auth0User.setEmail(user.getContactDetails().getEmail());
+        }
+
+        if (user.getResponsibilitySets() != null) {
+            List<String> roleAssignments = new ArrayList<>();
+
+            for (ResponsibilitySet responsibilitySet : user.getResponsibilitySets()) {
+                if (responsibilitySet.getRoles() != null) {
+                    responsibilitySet.getRoles().forEach(rra -> roleAssignments.add(toAtr(rra)));
+                }
+            }
+            attributes.put(ROR_ROLES, roleAssignments);
+            auth0User.setAppMetadata(attributes);
+        }
+
+        return auth0User;
+    }
+}
