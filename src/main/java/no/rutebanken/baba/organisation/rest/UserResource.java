@@ -30,7 +30,6 @@ import no.rutebanken.baba.organisation.rest.validation.UserValidator;
 import no.rutebanken.baba.organisation.service.IamService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -61,17 +60,23 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 })
 public class UserResource extends BaseResource<User, UserDTO> {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
-    @Autowired
-    private UserRepository repository;
-    @Autowired
-    private UserMapper mapper;
-    @Autowired
-    private UserValidator validator;
-    @Autowired
-    private IamService iamService;
+    private final UserRepository repository;
+    private final UserMapper mapper;
+    private final UserValidator validator;
+    private final IamService iamService;
+    private final NewUserEmailSender newUserEmailSender;
 
-    @Autowired
-    private NewUserEmailSender newUserEmailSender;
+    public UserResource(UserRepository repository,
+                        UserMapper mapper,
+                        UserValidator validator,
+                        IamService iamService,
+                        NewUserEmailSender newUserEmailSender) {
+        this.repository = repository;
+        this.mapper = mapper;
+        this.validator = validator;
+        this.iamService = iamService;
+        this.newUserEmailSender = newUserEmailSender;
+    }
 
     @GET
     @Path("{id}")
@@ -87,14 +92,17 @@ public class UserResource extends BaseResource<User, UserDTO> {
     @POST
     public Response create(UserDTO dto, @Context UriInfo uriInfo) {
         User user = createEntity(dto);
-        try {
-            iamService.createUser(user);
-        } catch (RuntimeException e) {
-            LOGGER.warn("Creation of new user in IAM failed. Removing user from local storage. Exception: {}", e.getMessage(), e);
-            deleteEntity(user.getId());
-            throw e;
+        if(user.isPersonalAccount()) {
+            try {
+                iamService.createUser(user);
+            } catch (RuntimeException e) {
+                LOGGER.warn("Creation of new user in IAM failed. Removing user from local storage. Exception: {}", e.getMessage(), e);
+                deleteEntity(user.getId());
+                throw e;
+            }
+            newUserEmailSender.sendEmail(user);
         }
-        newUserEmailSender.sendEmail(user);
+
         return buildCreatedResponse(uriInfo, user);
     }
 
@@ -102,14 +110,18 @@ public class UserResource extends BaseResource<User, UserDTO> {
     @Path("{id}")
     public void update(@PathParam("id") String id, UserDTO dto) {
         User user = updateEntity(id, dto);
-        iamService.updateUser(user);
+        if(user.isPersonalAccount()) {
+            iamService.updateUser(user);
+        }
     }
 
     @DELETE
     @Path("{id}")
     public void delete(@PathParam("id") String id) {
         User user = deleteEntity(id);
-        iamService.removeUser(user);
+        if(user.isPersonalAccount()) {
+            iamService.removeUser(user);
+        }
     }
 
 
@@ -117,8 +129,10 @@ public class UserResource extends BaseResource<User, UserDTO> {
     @Path("{id}/resetPassword")
     public void resetPassword(@PathParam("id") String id) {
         User user = getExisting(id);
-        iamService.resetPassword(user);
-        newUserEmailSender.sendEmail(user);
+        if(user.isPersonalAccount()) {
+            iamService.resetPassword(user);
+            newUserEmailSender.sendEmail(user);
+        }
     }
 
     @GET

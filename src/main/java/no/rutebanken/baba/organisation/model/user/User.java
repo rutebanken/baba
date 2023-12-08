@@ -46,6 +46,8 @@ public class User extends VersionedEntity {
     @Unique
     private String username;
 
+    private boolean personalAccount = true;
+
     @OneToOne(cascade = CascadeType.ALL)
     private ContactDetails contactDetails;
 
@@ -122,6 +124,19 @@ public class User extends VersionedEntity {
 
     public static User.Builder builder() {
         return new User.Builder();
+    }
+
+    /**
+     *
+     * @return true if the user/password account, false if the account is used only for sending notifications
+     */
+    public boolean isPersonalAccount() {
+        return personalAccount;
+    }
+
+    public User setPersonalAccount(boolean userAccount) {
+        this.personalAccount = userAccount;
+        return this;
     }
 
 

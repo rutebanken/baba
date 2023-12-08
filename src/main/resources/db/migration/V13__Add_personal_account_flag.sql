@@ -1,0 +1,1 @@
+ALTER TABLE USER_ACCOUNT ADD COLUMN  personal_account boolean default 'true' NOT NULL;
