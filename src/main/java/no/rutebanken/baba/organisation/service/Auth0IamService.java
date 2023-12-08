@@ -28,6 +28,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
 import static no.rutebanken.baba.organisation.service.IamUtils.generatePassword;
 import static no.rutebanken.baba.organisation.service.IamUtils.toAtr;
 
@@ -59,7 +60,7 @@ public class Auth0IamService implements IamService {
     private final Clock clock = Clock.systemUTC();
 
     @Override
-    public String createUser(User user) {
+    public void createUser(User user) {
         logger.info("Creating user {} in Auth0", user.getUsername());
         String password = generatePassword();
         com.auth0.json.mgmt.users.User auth0User = toAuth0User(user);
@@ -77,7 +78,6 @@ public class Auth0IamService implements IamService {
             }
             throw new OrganisationException("User creation failed");
         }
-        return password;
     }
 
     @Override
@@ -99,7 +99,7 @@ public class Auth0IamService implements IamService {
     }
 
     @Override
-    public String resetPassword(User user) {
+    public void resetPassword(User user) {
         logger.info("Resetting password in Auth0 for user {}", user.getUsername());
         String password = generatePassword();
         com.auth0.json.mgmt.users.User existingAuth0User = getAuth0UserByUsername(user.getUsername());
@@ -112,7 +112,6 @@ public class Auth0IamService implements IamService {
             logger.error("Password reset in Auth0 failed for user {}", user.getUsername(), e);
             throw new OrganisationException("Password reset in Auth0 failed");
         }
-        return password;
     }
 
     @Override
