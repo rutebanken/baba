@@ -65,10 +65,13 @@ public class UserResource extends BaseResource<User, UserDTO> {
     private final UserMapper mapper;
     private final UserValidator validator;
     private final IamService iamService;
-
     private final NewUserEmailSender newUserEmailSender;
 
-    public UserResource(UserRepository repository, UserMapper mapper, UserValidator validator, IamService iamService, NewUserEmailSender newUserEmailSender) {
+    public UserResource(UserRepository repository,
+                        UserMapper mapper,
+                        UserValidator validator,
+                        IamService iamService,
+                        NewUserEmailSender newUserEmailSender) {
         this.repository = repository;
         this.mapper = mapper;
         this.validator = validator;
@@ -90,14 +93,17 @@ public class UserResource extends BaseResource<User, UserDTO> {
     @POST
     public Response create(UserDTO dto, @Context UriInfo uriInfo) {
         User user = createEntity(dto);
-        try {
-            iamService.createUser(user);
-        } catch (RuntimeException e) {
-            LOGGER.warn("Creation of new user in IAM failed. Removing user from local storage. Exception: {}", e.getMessage(), e);
-            deleteEntity(user.getId());
-            throw new OrganisationException("Creation of new user in IAM failed", e);
+        if(user.isPersonalAccount()) {
+            try {
+                iamService.createUser(user);
+            } catch (RuntimeException e) {
+                LOGGER.warn("Creation of new user in IAM failed. Removing user from local storage. Exception: {}", e.getMessage(), e);
+                deleteEntity(user.getId());
+                throw new OrganisationException("Creation of new user in IAM failed", e);
+            }
+            newUserEmailSender.sendEmail(user);
         }
-        newUserEmailSender.sendEmail(user);
+
         return buildCreatedResponse(uriInfo, user);
     }
 
@@ -105,14 +111,18 @@ public class UserResource extends BaseResource<User, UserDTO> {
     @Path("{id}")
     public void update(@PathParam("id") String id, UserDTO dto) {
         User user = updateEntity(id, dto);
-        iamService.updateUser(user);
+        if(user.isPersonalAccount()) {
+            iamService.updateUser(user);
+        }
     }
 
     @DELETE
     @Path("{id}")
     public void delete(@PathParam("id") String id) {
         User user = deleteEntity(id);
-        iamService.removeUser(user);
+        if(user.isPersonalAccount()) {
+            iamService.removeUser(user);
+        }
     }
 
 
@@ -120,8 +130,10 @@ public class UserResource extends BaseResource<User, UserDTO> {
     @Path("{id}/resetPassword")
     public void resetPassword(@PathParam("id") String id) {
         User user = getExisting(id);
-        iamService.resetPassword(user);
-        newUserEmailSender.sendEmail(user);
+        if(user.isPersonalAccount()) {
+            iamService.resetPassword(user);
+            newUserEmailSender.sendEmail(user);
+        }
     }
 
     @GET
