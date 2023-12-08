@@ -83,7 +83,10 @@ public class Auth0IamService implements IamService {
     @Override
     public void updateUser(User user) {
         logger.info("Updating user {} in Auth0", user.getUsername());
-        com.auth0.json.mgmt.users.User existingAuth0User = getAuth0UserByUsername(user.getUsername());
+
+        com.auth0.json.mgmt.users.User existingAuth0User = getAuth0UserByEmail(user.getContactDetails().getEmail());
+
+
         com.auth0.json.mgmt.users.User updatedAuth0User = toAuth0User(user);
         // The Auth0 API refuses to update both the username and the email at the same time
         updatedAuth0User.setUsername(null);
@@ -102,7 +105,7 @@ public class Auth0IamService implements IamService {
     public void resetPassword(User user) {
         logger.info("Resetting password in Auth0 for user {}", user.getUsername());
         String password = generatePassword();
-        com.auth0.json.mgmt.users.User existingAuth0User = getAuth0UserByUsername(user.getUsername());
+        com.auth0.json.mgmt.users.User existingAuth0User = getAuth0UserByEmail(user.getContactDetails().getEmail());
         com.auth0.json.mgmt.users.User updatedAuth0User = new com.auth0.json.mgmt.users.User();
         updatedAuth0User.setPassword(password.toCharArray());
         try {
@@ -119,7 +122,7 @@ public class Auth0IamService implements IamService {
         logger.info("Removing user {} from Auth0", user.getUsername());
         com.auth0.json.mgmt.users.User existingAuth0User;
         try {
-            existingAuth0User = getAuth0UserByUsername(user.getUsername());
+            existingAuth0User = getAuth0UserByEmail(user.getContactDetails().getEmail());
         } catch (OAuth2UserNotFoundException nfe) {
             logger.warn("Ignoring user removal for user {} that does not exist in the Auth0 tenant", user.getUsername());
             return;
@@ -165,7 +168,7 @@ public class Auth0IamService implements IamService {
         List<Role> systemRoles = roleRepository.findAll();
         try {
             userRepository.findUsersWithResponsibilitySet(responsibilitySet).forEach(u -> {
-                com.auth0.json.mgmt.users.User auth0User = getAuth0UserByUsername(u.getUsername());
+                com.auth0.json.mgmt.users.User auth0User = getAuth0UserByEmail(u.getContactDetails().getEmail());
                 updateRoles(u, auth0User, systemRoles);
             });
         } catch (Exception e) {
@@ -289,18 +292,18 @@ public class Auth0IamService implements IamService {
         return auth0Role;
     }
 
-    private com.auth0.json.mgmt.users.User getAuth0UserByUsername(String username) {
+    private com.auth0.json.mgmt.users.User getAuth0UserByEmail(String email) {
         try {
-            List<com.auth0.json.mgmt.users.User> matchingUsers = getManagementAPI().users().list(new UserFilter().withQuery("username:\"" + username + "\"")).execute().getBody().getItems();
+            List<com.auth0.json.mgmt.users.User> matchingUsers = getManagementAPI().users().list(new UserFilter().withQuery("email:\"" + email + "\"")).execute().getBody().getItems();
             if (matchingUsers.isEmpty()) {
-                throw new OAuth2UserNotFoundException("User not found: " + username);
+                throw new OAuth2UserNotFoundException("User not found: " + email);
             } else if (matchingUsers.size() > 1) {
-                logger.error("More than one user found in Auth0 tenant with username: {}", username);
-                throw new OrganisationException("More than one user found with username: " + username);
+                logger.error("More than one user found in Auth0 tenant with email: {}", email);
+                throw new OrganisationException("More than one user found with email: " + email);
             }
             return matchingUsers.get(0);
         } catch (Auth0Exception e) {
-            logger.error("Failed to retrieve the user {} in Auth0", username, e);
+            logger.error("Failed to retrieve the user {} in Auth0", email, e);
             throw new OrganisationException("Failed to retrieve the user");
         }
     }
