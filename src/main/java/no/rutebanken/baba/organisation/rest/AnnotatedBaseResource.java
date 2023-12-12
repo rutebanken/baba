@@ -35,13 +35,14 @@ import java.util.List;
 
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
 
-@PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
+
 @Tags(value = {
 		@Tag(name = "AnnotatedBaseResource", description = "Annotated Base Resource")
 })
 public abstract class AnnotatedBaseResource<E extends VersionedEntity, D extends BaseDTO> extends BaseResource<E, D> {
 
 	@POST
+	@PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
 	public Response create(D dto, @Context UriInfo uriInfo) {
 		return super.createEntity(dto, uriInfo);
 	}
@@ -49,6 +50,7 @@ public abstract class AnnotatedBaseResource<E extends VersionedEntity, D extends
 
 	@PUT
 	@Path("{id}")
+	@PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
 	public void update(@PathParam("id") String id, D dto) {
 		super.updateEntity(id, dto);
 	}
@@ -56,17 +58,20 @@ public abstract class AnnotatedBaseResource<E extends VersionedEntity, D extends
 
 	@GET
 	@Path("{id}")
+	@PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
 	public D get(@PathParam("id") String id) {
 		return super.getEntity(id);
 	}
 
 	@DELETE
 	@Path("{id}")
+	@PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
 	public void delete(@PathParam("id") String id) {
 		super.deleteEntity(id);
 	}
 
 	@GET
+	@PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
 	public List<D> listAll() {
 		return super.listAllEntities();
 	}
