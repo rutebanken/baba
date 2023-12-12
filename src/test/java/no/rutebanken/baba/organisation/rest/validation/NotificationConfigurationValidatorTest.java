@@ -16,7 +16,6 @@
 
 package no.rutebanken.baba.organisation.rest.validation;
 
-import com.google.common.collect.Sets;
 import no.rutebanken.baba.organisation.model.user.NotificationType;
 import no.rutebanken.baba.organisation.model.user.eventfilter.JobState;
 import no.rutebanken.baba.organisation.rest.dto.user.EventFilterDTO;
@@ -55,7 +54,7 @@ class NotificationConfigurationValidatorTest {
     @Test
     void validateCrudFilterWithoutEntityClassificationsFails() {
         Set<NotificationConfigDTO> config = withCrudFilter();
-        config.iterator().next().eventFilter.entityClassificationRefs.clear();
+        config.iterator().next().eventFilter.entityClassificationRefs = Set.of();
         Assertions.assertThrows(IllegalArgumentException.class, () ->  validator.validate("user", config));
     }
 
@@ -89,7 +88,7 @@ class NotificationConfigurationValidatorTest {
     @Test
     void validateJobFilterWithoutStatenFails() {
         Set<NotificationConfigDTO> config = withJobFilter();
-        config.iterator().next().eventFilter.states = new HashSet<>();
+        config.iterator().next().eventFilter.states = Set.of();
         Assertions.assertThrows(IllegalArgumentException.class, () ->  validator.validate("user", config));
     }
 
@@ -99,10 +98,10 @@ class NotificationConfigurationValidatorTest {
         configDTO.notificationType = NotificationType.EMAIL;
 
         EventFilterDTO eventFilter = new EventFilterDTO(EventFilterDTO.EventFilterType.CRUD);
-        eventFilter.entityClassificationRefs = Sets.newHashSet("ref1");
+        eventFilter.entityClassificationRefs = Set.of("ref1");
         configDTO.eventFilter = eventFilter;
 
-        return Sets.newHashSet(configDTO);
+        return Set.of(configDTO);
     }
 
 
@@ -111,11 +110,11 @@ class NotificationConfigurationValidatorTest {
         configDTO.notificationType = NotificationType.EMAIL;
 
         EventFilterDTO eventFilter = new EventFilterDTO(EventFilterDTO.EventFilterType.JOB);
-        eventFilter.actions = Sets.newHashSet("BUILD");
+        eventFilter.actions = Set.of("BUILD");
         eventFilter.jobDomain = EventFilterDTO.JobDomain.GEOCODER;
-        eventFilter.states = Sets.newHashSet(JobState.FAILED);
+        eventFilter.states = Set.of(JobState.FAILED);
         configDTO.eventFilter = eventFilter;
 
-        return Sets.newHashSet(configDTO);
+        return Set.of(configDTO);
     }
 }

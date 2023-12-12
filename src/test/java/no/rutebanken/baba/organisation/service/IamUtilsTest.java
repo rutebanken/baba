@@ -16,7 +16,6 @@
 
 package no.rutebanken.baba.organisation.service;
 
-import com.google.common.collect.Sets;
 import no.rutebanken.baba.organisation.model.organisation.AdministrativeZone;
 import no.rutebanken.baba.organisation.model.organisation.Authority;
 import no.rutebanken.baba.organisation.model.organisation.Organisation;
@@ -29,7 +28,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.rutebanken.helper.organisation.RoleAssignment;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -73,10 +71,10 @@ class IamUtilsTest {
         Assertions.assertEquals(organisation.getPrivateCode(), iamRoleAssignment.getOrganisation());
 
 
-        Set<String> expectedCodes = Sets.newHashSet(entityClassification.getPrivateCode(), "!" + entityClassificationNegated.getPrivateCode());
+        Set<String> expectedCodes = Set.of(entityClassification.getPrivateCode(), "!" + entityClassificationNegated.getPrivateCode());
         List<String> classificationCodeList = iamRoleAssignment.getEntityClassifications().get(entityType.getPrivateCode());
         Assertions.assertEquals(expectedCodes,
-                new HashSet<>(classificationCodeList));
+                Set.copyOf(classificationCodeList));
 
         Assertions.assertEquals("KVE:TopographicPlace:05", iamRoleAssignment.getAdministrativeZone());
     }

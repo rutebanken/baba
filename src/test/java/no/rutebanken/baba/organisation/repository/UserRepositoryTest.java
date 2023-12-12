@@ -16,7 +16,6 @@
 
 package no.rutebanken.baba.organisation.repository;
 
-import com.google.common.collect.Sets;
 import no.rutebanken.baba.organisation.model.responsibility.ResponsibilityRoleAssignment;
 import no.rutebanken.baba.organisation.model.responsibility.ResponsibilitySet;
 import no.rutebanken.baba.organisation.model.responsibility.Role;
@@ -28,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import java.util.Set;
 
 
 class UserRepositoryTest extends BaseIntegrationTest {
@@ -69,7 +69,7 @@ class UserRepositoryTest extends BaseIntegrationTest {
         ResponsibilityRoleAssignment responsibilityRoleAssignment =
                 ResponsibilityRoleAssignment.builder().withPrivateCode("pCode").withResponsibleOrganisation(defaultOrganisation)
                         .withTypeOfResponsibilityRole(role).withCodeSpace(defaultCodeSpace).build();
-        ResponsibilitySet responsibilitySet = new ResponsibilitySet(defaultCodeSpace, "pCode", "name", Sets.newHashSet(responsibilityRoleAssignment));
+        ResponsibilitySet responsibilitySet = new ResponsibilitySet(defaultCodeSpace, "pCode", "name", Set.of(responsibilityRoleAssignment));
 
         responsibilitySet = responsibilitySetRepository.save(responsibilitySet);
 
@@ -77,7 +77,7 @@ class UserRepositoryTest extends BaseIntegrationTest {
                 userRepository.saveAndFlush(User.builder()
                                                     .withUsername("userWithRespSet").withPrivateCode("userWithRespSet")
                                                     .withOrganisation(defaultOrganisation)
-                                                    .withResponsibilitySets(Sets.newHashSet(responsibilitySet))
+                                                    .withResponsibilitySets(Set.of(responsibilitySet))
                                                     .withContactDetails(minimalContactDetails())
                                                     .build());
         User userWithoutRespSet = userRepository.saveAndFlush(User.builder().withUsername("userWithoutRespSet").withPrivateCode("userWithoutRespSet").withOrganisation(defaultOrganisation).withContactDetails(minimalContactDetails()).build());

@@ -16,7 +16,6 @@
 
 package no.rutebanken.baba.organisation.rest;
 
-import com.google.common.collect.Sets;
 import no.rutebanken.baba.organisation.TestConstantsOrganisation;
 import no.rutebanken.baba.organisation.model.user.NotificationType;
 import no.rutebanken.baba.organisation.model.user.eventfilter.JobState;
@@ -31,7 +30,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 
-import java.util.HashSet;
 import java.util.Set;
 
 class NotificationConfigurationResourceTest extends BaseIntegrationTest {
@@ -59,12 +57,12 @@ class NotificationConfigurationResourceTest extends BaseIntegrationTest {
 
         String url = url(TestConstantsOrganisation.USER_USERNAME);
 
-        Set<NotificationConfigDTO> config = Sets.newHashSet(new NotificationConfigDTO(NotificationType.EMAIL, true, crudEventFilter()),
+        Set<NotificationConfigDTO> config = Set.of(new NotificationConfigDTO(NotificationType.EMAIL, true, crudEventFilter()),
                 new NotificationConfigDTO(NotificationType.WEB, false, jobEventFilter()));
         restTemplate.put(url, config, String.class);
         assertConfig(config);
 
-        Set<NotificationConfigDTO> updateConfig = Sets.newHashSet(new NotificationConfigDTO(NotificationType.EMAIL, true, jobEventFilter()));
+        Set<NotificationConfigDTO> updateConfig = Set.of(new NotificationConfigDTO(NotificationType.EMAIL, true, jobEventFilter()));
         restTemplate.put(url, updateConfig);
         assertConfig(updateConfig);
 
@@ -78,25 +76,25 @@ class NotificationConfigurationResourceTest extends BaseIntegrationTest {
 
     private EventFilterDTO crudEventFilter() {
         EventFilterDTO eventFilterDTO = new EventFilterDTO(EventFilterDTO.EventFilterType.CRUD);
-        eventFilterDTO.entityClassificationRefs = Sets.newHashSet(TestConstantsOrganisation.ENTITY_CLASSIFICATION_ID);
+        eventFilterDTO.entityClassificationRefs = Set.of(TestConstantsOrganisation.ENTITY_CLASSIFICATION_ID);
 
-        eventFilterDTO.administrativeZoneRefs = new HashSet<>(ResourceTestUtils.addAdminZones(restTemplate, "z1", "z2"));
+        eventFilterDTO.administrativeZoneRefs = Set.copyOf(ResourceTestUtils.addAdminZones(restTemplate, "z1", "z2"));
         return eventFilterDTO;
     }
 
     private EventFilterDTO jobEventFilter() {
         EventFilterDTO eventFilterDTO = new EventFilterDTO(EventFilterDTO.EventFilterType.JOB);
         eventFilterDTO.organisationRef = TestConstantsOrganisation.ORGANISATION_ID;
-        eventFilterDTO.actions = Sets.newHashSet("VALIDATION_LEVEL_1");
+        eventFilterDTO.actions = Set.of("VALIDATION_LEVEL_1");
         eventFilterDTO.jobDomain = EventFilterDTO.JobDomain.TIMETABLE;
-        eventFilterDTO.states = Sets.newHashSet(JobState.FAILED);
+        eventFilterDTO.states = Set.of(JobState.FAILED);
         return eventFilterDTO;
     }
 
 
     protected void assertConfig(Set<NotificationConfigDTO> inConfig) {
         ResponseEntity<NotificationConfigDTO[]> rsp = restTemplate.getForEntity(url(TestConstantsOrganisation.USER_USERNAME), NotificationConfigDTO[].class);
-        Set<NotificationConfigDTO> outConfig = Sets.newHashSet(rsp.getBody());
+        Set<NotificationConfigDTO> outConfig = Set.of(rsp.getBody());
 
 
         if (CollectionUtils.isEmpty(inConfig)) {
@@ -120,7 +118,7 @@ class NotificationConfigurationResourceTest extends BaseIntegrationTest {
 
     @Test
     void createInvalidNotificationConfig() {
-        Set<NotificationConfigDTO> inConfig = Sets.newHashSet(
+        Set<NotificationConfigDTO> inConfig = Set.of(
                 new NotificationConfigDTO(null, true, jobEventFilter()));
         restTemplate.put(PATH, inConfig);
 

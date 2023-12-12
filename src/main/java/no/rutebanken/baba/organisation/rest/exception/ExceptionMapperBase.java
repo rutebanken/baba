@@ -16,7 +16,6 @@
 
 package no.rutebanken.baba.organisation.rest.exception;
 
-import com.google.common.collect.Sets;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import jakarta.persistence.EntityExistsException;
@@ -36,8 +35,8 @@ public abstract class ExceptionMapperBase {
 	protected ExceptionMapperBase() {
 		mapping = new EnumMap<>(Response.Status.class);
 		mapping.put(Response.Status.BAD_REQUEST,
-				Sets.newHashSet(ValidationException.class, OptimisticLockException.class, EntityNotFoundException.class, DataIntegrityViolationException.class));
-		mapping.put(Response.Status.CONFLICT, Sets.newHashSet(EntityExistsException.class));
+				Set.of(ValidationException.class, OptimisticLockException.class, EntityNotFoundException.class, DataIntegrityViolationException.class));
+		mapping.put(Response.Status.CONFLICT, Set.of(EntityExistsException.class));
 	}
 
 	protected Response buildResponse(Throwable t) {
