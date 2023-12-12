@@ -46,7 +46,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
 import java.util.List;
 
@@ -88,16 +87,15 @@ public class UserResource extends BaseResource<User, UserDTO> {
     @POST
     public Response create(UserDTO dto, @Context UriInfo uriInfo) {
         User user = createEntity(dto);
-        String password;
         try {
-            password = iamService.createUser(user);
+            iamService.createUser(user);
         } catch (RuntimeException e) {
             LOGGER.warn("Creation of new user in IAM failed. Removing user from local storage. Exception: {}", e.getMessage(), e);
             deleteEntity(user.getId());
             throw e;
         }
         newUserEmailSender.sendEmail(user);
-        return buildCreatedResponse(uriInfo, user, password);
+        return buildCreatedResponse(uriInfo, user);
     }
 
     @PUT
@@ -117,11 +115,10 @@ public class UserResource extends BaseResource<User, UserDTO> {
 
     @POST
     @Path("{id}/resetPassword")
-    public String resetPassword(@PathParam("id") String id) {
+    public void resetPassword(@PathParam("id") String id) {
         User user = getExisting(id);
-        String password = iamService.resetPassword(user);
+        iamService.resetPassword(user);
         newUserEmailSender.sendEmail(user);
-        return password;
     }
 
     @GET
@@ -149,10 +146,4 @@ public class UserResource extends BaseResource<User, UserDTO> {
         return validator;
     }
 
-
-    protected Response buildCreatedResponse(UriInfo uriInfo, User entity, String newPassword) {
-        UriBuilder builder = uriInfo.getAbsolutePathBuilder();
-        builder.path(entity.getId());
-        return Response.created(builder.build()).entity(newPassword).build();
-    }
 }

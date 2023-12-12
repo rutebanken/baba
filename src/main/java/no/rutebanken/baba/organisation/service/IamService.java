@@ -22,11 +22,11 @@ import no.rutebanken.baba.organisation.model.user.User;
 
 public interface IamService {
 
-	String createUser(User user);
+	void createUser(User user);
 
 	void updateUser(User user);
 
-	String resetPassword(User user);
+	void resetPassword(User user);
 
 	void removeUser(User user);
 

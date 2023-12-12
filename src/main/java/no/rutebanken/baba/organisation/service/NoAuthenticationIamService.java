@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import static no.rutebanken.baba.organisation.service.IamUtils.generatePassword;
-
 @Service
 @Profile("test")
 public class NoAuthenticationIamService implements IamService {
@@ -17,9 +15,8 @@ public class NoAuthenticationIamService implements IamService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public String createUser(User user) {
+    public void createUser(User user) {
         logger.info("Authentication disabled! Ignored createUser: {}", user.getUsername());
-        return generatePassword();
     }
 
     @Override
@@ -28,9 +25,8 @@ public class NoAuthenticationIamService implements IamService {
     }
 
     @Override
-    public String resetPassword(User user) {
+    public void resetPassword(User user) {
         logger.info("Authentication disabled! Ignored resetPassword: {}", user.getUsername());
-        return generatePassword();
     }
 
     @Override

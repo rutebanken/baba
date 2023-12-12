@@ -59,7 +59,6 @@ class UserResourceIntegrationTest extends BaseIntegrationTest {
         ContactDetailsDTO createContactDetails = new ContactDetailsDTO("first", "last", "phone", "email@email.com");
         UserDTO createUser = createUser("userName", TestConstantsOrganisation.ORGANISATION_ID, createContactDetails);
         ResponseEntity<String> createResponse = restTemplate.postForEntity(PATH, createUser, String.class);
-        Assertions.assertNotNull(createResponse.getBody());
         URI uri = createResponse.getHeaders().getLocation();
         assertUser(createUser, uri);
 
@@ -79,8 +78,7 @@ class UserResourceIntegrationTest extends BaseIntegrationTest {
 
 
         ResponseEntity<String> resetPasswordResponse = restTemplate.postForEntity(uri.getPath() + "/resetPassword", createUser, String.class);
-        Assertions.assertNotNull(resetPasswordResponse.getBody());
-        Assertions.assertNotEquals(resetPasswordResponse.getBody(), createResponse.getBody());
+        Assertions.assertNotEquals(HttpStatus.OK, resetPasswordResponse.getStatusCode());
 
         restTemplate.delete(uri);
 
