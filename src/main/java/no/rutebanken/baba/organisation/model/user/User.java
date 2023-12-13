@@ -45,6 +45,7 @@ public class User extends VersionedEntity {
     @Unique
     private String username;
 
+    @NotNull
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private ContactDetails contactDetails;
 

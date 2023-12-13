@@ -263,13 +263,10 @@ public class Auth0IamService implements IamService {
 
         com.auth0.json.mgmt.users.User auth0User = new com.auth0.json.mgmt.users.User(AUTH0_CONNECTION);
         auth0User.setUsername(user.getUsername());
-
-        if (user.getContactDetails() != null) {
-            auth0User.setGivenName(user.getContactDetails().getFirstName());
-            auth0User.setFamilyName(user.getContactDetails().getLastName());
-            auth0User.setEmail(user.getContactDetails().getEmail());
-            auth0User.setName(auth0User.getGivenName() + ' ' + auth0User.getFamilyName());
-        }
+        auth0User.setGivenName(user.getContactDetails().getFirstName());
+        auth0User.setFamilyName(user.getContactDetails().getLastName());
+        auth0User.setEmail(user.getContactDetails().getEmail());
+        auth0User.setName(auth0User.getGivenName() + ' ' + auth0User.getFamilyName());
 
         if (user.getResponsibilitySets() != null) {
             Map<String, Object> attributes = new HashMap<>();
@@ -299,7 +296,7 @@ public class Auth0IamService implements IamService {
         try {
             List<com.auth0.json.mgmt.users.User> matchingUsers = getManagementAPI().users().list(new UserFilter().withQuery("username:\"" + username + "\"")).execute().getBody().getItems();
             if (matchingUsers.isEmpty()) {
-                throw new OAuth2UserNotFoundException("User not found: " + username);
+                throw new OAuth2UserNotFoundException("User not found in Auth0: " + username);
             } else if (matchingUsers.size() > 1) {
                 logger.error("More than one user found in Auth0 tenant with username: {}", username);
                 throw new OrganisationException("More than one user found with username: " + username);
