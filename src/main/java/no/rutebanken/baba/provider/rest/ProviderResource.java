@@ -28,7 +28,6 @@ import no.rutebanken.baba.provider.repository.ProviderRepository;
 import no.rutebanken.baba.security.ProviderAuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -50,14 +49,17 @@ public class ProviderResource {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProviderResource.class);
 
-    @Autowired
-    private ProviderRepository providerRepository;
+    private final ProviderRepository providerRepository;
 
-    @Autowired
-    private ChouetteReferentialService chouetteReferentialService;
+    private final ChouetteReferentialService chouetteReferentialService;
 
-    @Autowired
-    private ProviderAuthenticationService providerAuthenticationService;
+    private final ProviderAuthenticationService providerAuthenticationService;
+
+    public ProviderResource(ProviderRepository providerRepository, ChouetteReferentialService chouetteReferentialService, ProviderAuthenticationService providerAuthenticationService) {
+        this.providerRepository = providerRepository;
+        this.chouetteReferentialService = chouetteReferentialService;
+        this.providerAuthenticationService = providerAuthenticationService;
+    }
 
     @GET
     @Path("/{providerId}")

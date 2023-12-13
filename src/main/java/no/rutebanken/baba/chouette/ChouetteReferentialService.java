@@ -1,7 +1,6 @@
 package no.rutebanken.baba.chouette;
 
 import no.rutebanken.baba.provider.domain.Provider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.regex.Pattern;
@@ -14,8 +13,11 @@ public class ChouetteReferentialService {
 
     private static final Pattern SCHEMA_PATTERN = Pattern.compile("^(rb_)?[a-z]{3}$");
 
-    @Autowired
-    private ChouetteReferentialRestClient chouetteReferentialRestClient;
+    private final ChouetteReferentialRestClient chouetteReferentialRestClient;
+
+    public ChouetteReferentialService(ChouetteReferentialRestClient chouetteReferentialRestClient) {
+        this.chouetteReferentialRestClient = chouetteReferentialRestClient;
+    }
 
     public void createChouetteReferential(Provider provider) {
         ChouetteReferentialInfo referential = new ChouetteReferentialInfo(provider);

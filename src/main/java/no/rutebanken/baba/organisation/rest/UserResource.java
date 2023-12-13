@@ -30,7 +30,6 @@ import no.rutebanken.baba.organisation.rest.validation.UserValidator;
 import no.rutebanken.baba.organisation.service.IamService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -61,17 +60,20 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 })
 public class UserResource extends BaseResource<User, UserDTO> {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
-    @Autowired
-    private UserRepository repository;
-    @Autowired
-    private UserMapper mapper;
-    @Autowired
-    private UserValidator validator;
-    @Autowired
-    private IamService iamService;
+    private final UserRepository repository;
+    private final UserMapper mapper;
+    private final UserValidator validator;
+    private final IamService iamService;
 
-    @Autowired
-    private NewUserEmailSender newUserEmailSender;
+    private final NewUserEmailSender newUserEmailSender;
+
+    public UserResource(UserRepository repository, UserMapper mapper, UserValidator validator, IamService iamService, NewUserEmailSender newUserEmailSender) {
+        this.repository = repository;
+        this.mapper = mapper;
+        this.validator = validator;
+        this.iamService = iamService;
+        this.newUserEmailSender = newUserEmailSender;
+    }
 
     @GET
     @Path("{id}")

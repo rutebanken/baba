@@ -19,15 +19,17 @@ package no.rutebanken.baba.organisation.rest.validation;
 import no.rutebanken.baba.organisation.model.VersionedEntity;
 import no.rutebanken.baba.organisation.repository.ResponsibilitySetRepository;
 import no.rutebanken.baba.organisation.rest.dto.TypeDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 @Service
 public class TypeValidator<E extends VersionedEntity> implements DTOValidator<E, TypeDTO> {
 
-    @Autowired
-    private ResponsibilitySetRepository responsibilitySetRepository;
+    private final ResponsibilitySetRepository responsibilitySetRepository;
+
+    public TypeValidator(ResponsibilitySetRepository responsibilitySetRepository) {
+        this.responsibilitySetRepository = responsibilitySetRepository;
+    }
 
     @Override
     public void validateCreate(TypeDTO dto) {

@@ -26,7 +26,6 @@ import no.rutebanken.baba.organisation.rest.mapper.DTOMapper;
 import no.rutebanken.baba.organisation.rest.mapper.EntityTypeMapper;
 import no.rutebanken.baba.organisation.rest.validation.DTOValidator;
 import no.rutebanken.baba.organisation.rest.validation.EntityTypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,12 +45,15 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 })
 public class EntityTypeResource extends AnnotatedBaseResource<EntityType, EntityTypeDTO> {
 
-	@Autowired
-	private EntityTypeRepository repository;
-	@Autowired
-	private EntityTypeMapper mapper;
-	@Autowired
-	private EntityTypeValidator validator;
+	private final EntityTypeRepository repository;
+	private final EntityTypeMapper mapper;
+	private final EntityTypeValidator validator;
+
+	public EntityTypeResource(EntityTypeRepository repository, EntityTypeMapper mapper, EntityTypeValidator validator) {
+		this.repository = repository;
+		this.mapper = mapper;
+		this.validator = validator;
+	}
 
 	@Override
 	protected Class<EntityType> getEntityClass() {

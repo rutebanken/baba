@@ -26,7 +26,6 @@ import no.rutebanken.baba.organisation.rest.mapper.CodeSpaceMapper;
 import no.rutebanken.baba.organisation.rest.mapper.DTOMapper;
 import no.rutebanken.baba.organisation.rest.validation.CodeSpaceValidator;
 import no.rutebanken.baba.organisation.rest.validation.DTOValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,14 +46,17 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 public class CodeSpaceResource extends AnnotatedBaseResource<CodeSpace, CodeSpaceDTO> {
 
 
-	@Autowired
-	private CodeSpaceRepository repository;
+	private final CodeSpaceRepository repository;
 
-	@Autowired
-	private CodeSpaceValidator validator;
+	private final CodeSpaceValidator validator;
 
-	@Autowired
-	private CodeSpaceMapper mapper;
+	private final CodeSpaceMapper mapper;
+
+	public CodeSpaceResource(CodeSpaceRepository repository, CodeSpaceValidator validator, CodeSpaceMapper mapper) {
+		this.repository = repository;
+		this.validator = validator;
+		this.mapper = mapper;
+	}
 
 
 	@Override
