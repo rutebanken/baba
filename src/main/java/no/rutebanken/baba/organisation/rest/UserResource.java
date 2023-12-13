@@ -19,6 +19,7 @@ package no.rutebanken.baba.organisation.rest;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import no.rutebanken.baba.organisation.email.NewUserEmailSender;
+import no.rutebanken.baba.organisation.model.OrganisationException;
 import no.rutebanken.baba.organisation.model.user.User;
 import no.rutebanken.baba.organisation.repository.UserRepository;
 import no.rutebanken.baba.organisation.repository.VersionedEntityRepository;
@@ -94,7 +95,7 @@ public class UserResource extends BaseResource<User, UserDTO> {
         } catch (RuntimeException e) {
             LOGGER.warn("Creation of new user in IAM failed. Removing user from local storage. Exception: {}", e.getMessage(), e);
             deleteEntity(user.getId());
-            throw e;
+            throw new OrganisationException("Creation of new user in IAM failed", e);
         }
         newUserEmailSender.sendEmail(user);
         return buildCreatedResponse(uriInfo, user);

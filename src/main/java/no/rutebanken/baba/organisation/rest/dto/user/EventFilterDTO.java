@@ -39,8 +39,6 @@ public class EventFilterDTO {
 
     public String organisationRef;
 
-    // TODO components/subclasses?
-
     // Job event filter values
     public JobDomain jobDomain;
 

@@ -133,9 +133,9 @@ public class NotificationConfigurationMapper {
         EventFilter eventFilter;
         if (EventFilterDTO.EventFilterType.CRUD.equals(dto.type)) {
             CrudEventFilter crudEventFilter = new CrudEventFilter();
-            crudEventFilter.setEntityClassifications(dto.entityClassificationRefs.stream().map(ecr -> entityClassificationRepository.getOneByPublicId(ecr)).collect(Collectors.toSet()));
+            crudEventFilter.setEntityClassifications(dto.entityClassificationRefs.stream().map(entityClassificationRepository::getOneByPublicId).collect(Collectors.toSet()));
             if (!CollectionUtils.isEmpty(dto.administrativeZoneRefs)) {
-                crudEventFilter.setAdministrativeZones(dto.administrativeZoneRefs.stream().map(adz -> administrativeZoneRepository.getOneByPublicId(adz)).collect(Collectors.toSet()));
+                crudEventFilter.setAdministrativeZones(dto.administrativeZoneRefs.stream().map(administrativeZoneRepository::getOneByPublicId).collect(Collectors.toSet()));
             }
             eventFilter = crudEventFilter;
         } else if (EventFilterDTO.EventFilterType.JOB.equals(dto.type)) {

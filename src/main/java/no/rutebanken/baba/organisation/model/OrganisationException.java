@@ -22,5 +22,8 @@ public class OrganisationException extends RuntimeException {
         super(message);
     }
 
+    public OrganisationException(String message, Throwable throwable) {
+        super(message, throwable);
 
+    }
 }

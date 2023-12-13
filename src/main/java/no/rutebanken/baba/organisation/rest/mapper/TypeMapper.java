@@ -37,8 +37,8 @@ public class TypeMapper<R extends VersionedEntity & TypeEntity> implements DTOMa
 		dto.name = entity.getName();
 		dto.id = entity.getId();
 		dto.privateCode = entity.getPrivateCode();
-		if (entity instanceof CodeSpaceEntity) {
-			dto.codeSpace = ((CodeSpaceEntity) entity).getCodeSpace().getId();
+		if (entity instanceof CodeSpaceEntity codeSpaceEntity) {
+			dto.codeSpace = codeSpaceEntity.getCodeSpace().getId();
 		}
 		return dto;
 	}
@@ -48,8 +48,8 @@ public class TypeMapper<R extends VersionedEntity & TypeEntity> implements DTOMa
 		R entity = createInstance(clazz);
 
 		entity.setPrivateCode(dto.privateCode);
-		if (entity instanceof CodeSpaceEntity) {
-			((CodeSpaceEntity) entity).setCodeSpace(codeSpaceRepository.getOneByPublicId(dto.codeSpace));
+		if (entity instanceof CodeSpaceEntity codeSpaceEntity) {
+			codeSpaceEntity.setCodeSpace(codeSpaceRepository.getOneByPublicId(dto.codeSpace));
 		}
 
 		return updateFromDTO(dto, entity);

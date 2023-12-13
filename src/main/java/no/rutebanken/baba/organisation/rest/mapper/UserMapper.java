@@ -91,7 +91,7 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
         if (CollectionUtils.isEmpty(dto.responsibilitySetRefs)) {
             entity.setResponsibilitySets(new HashSet<>());
         } else {
-            entity.setResponsibilitySets(dto.responsibilitySetRefs.stream().map(ref -> responsibilitySetRepository.getOneByPublicId(ref)).collect(Collectors.toSet()));
+            entity.setResponsibilitySets(dto.responsibilitySetRefs.stream().map(responsibilitySetRepository::getOneByPublicId).collect(Collectors.toSet()));
         }
 
         return entity;
@@ -124,7 +124,7 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
 
     private List<String> toRefList(Set<ResponsibilitySet> responsibilitySetSet) {
         if (responsibilitySetSet == null) {
-            return null;
+            return List.of();
         }
         return responsibilitySetSet.stream().map(CodeSpaceEntity::getId).toList();
     }

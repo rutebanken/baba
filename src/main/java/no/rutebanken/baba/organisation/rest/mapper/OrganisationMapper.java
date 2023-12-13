@@ -127,7 +127,7 @@ public class OrganisationMapper implements DTOMapper<Organisation, OrganisationD
 	private OrganisationPart fromDTO(OrganisationPartDTO dto, OrganisationPart entity) {
 		entity.setName(dto.name);
 		if (!CollectionUtils.isEmpty(dto.administrativeZoneRefs)) {
-			entity.setAdministrativeZones(dto.administrativeZoneRefs.stream().map(az -> administrativeZoneRepository.getOneByPublicId(az)).collect(Collectors.toSet()));
+			entity.setAdministrativeZones(dto.administrativeZoneRefs.stream().map(administrativeZoneRepository::getOneByPublicId).collect(Collectors.toSet()));
 		} else {
 			entity.setAdministrativeZones(new HashSet<>());
 		}
