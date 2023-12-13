@@ -16,7 +16,6 @@
 
 package no.rutebanken.baba.organisation.repository;
 
-import com.google.common.collect.Sets;
 import no.rutebanken.baba.organisation.model.responsibility.ResponsibilityRoleAssignment;
 import no.rutebanken.baba.organisation.model.responsibility.ResponsibilitySet;
 import no.rutebanken.baba.organisation.model.responsibility.Role;
@@ -25,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 class ResponsibilitySetRepositoryTest extends BaseIntegrationTest {
@@ -45,8 +44,8 @@ class ResponsibilitySetRepositoryTest extends BaseIntegrationTest {
         ResponsibilitySet only2 = createSet("setOnly2", createRoleAssignment(role2));
         ResponsibilitySet both = createSet("setBoth", createRoleAssignment(role1), createRoleAssignment(role2));
 
-        Assertions.assertEquals(Sets.newHashSet(only1, both), new HashSet<>(responsibilitySetRepository.getResponsibilitySetsReferringTo(role1)));
-        Assertions.assertEquals(Sets.newHashSet(only2, both), new HashSet<>(responsibilitySetRepository.getResponsibilitySetsReferringTo(role2)));
+        Assertions.assertEquals(Set.of(only1, both),Set.copyOf(responsibilitySetRepository.getResponsibilitySetsReferringTo(role1)));
+        Assertions.assertEquals(Set.of(only2, both), Set.copyOf(responsibilitySetRepository.getResponsibilitySetsReferringTo(role2)));
     }
 
     private ResponsibilitySet createSet(String name, ResponsibilityRoleAssignment... roles) {

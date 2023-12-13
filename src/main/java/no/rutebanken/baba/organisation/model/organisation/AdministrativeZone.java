@@ -16,7 +16,6 @@
 
 package no.rutebanken.baba.organisation.model.organisation;
 
-import com.google.common.base.Joiner;
 import no.rutebanken.baba.organisation.model.CodeSpaceEntity;
 import org.locationtech.jts.geom.Polygon;
 
@@ -103,7 +102,7 @@ public class AdministrativeZone extends CodeSpaceEntity {
      */
     @Transient
     public String getRoleAssignmentId() {
-        return Joiner.on(":").join(getSource(), ROLE_ASSIGNMENT_TYPE_NAME, getPrivateCode());
+        return String.join(":", getSource(), ROLE_ASSIGNMENT_TYPE_NAME, getPrivateCode());
     }
 
 }

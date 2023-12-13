@@ -16,8 +16,6 @@
 
 package no.rutebanken.baba.organisation.model;
 
-import com.google.common.base.Joiner;
-
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
@@ -43,7 +41,7 @@ public abstract class CodeSpaceEntity extends VersionedEntity {
 
 	@Override
 	public String getId() {
-		return Joiner.on(":").join(codeSpace.getXmlns(), getType(), getPrivateCode());
+		return String.join(":", codeSpace.getXmlns(), getType(), getPrivateCode());
 	}
 
 

@@ -16,7 +16,6 @@
 
 package no.rutebanken.baba.organisation.model;
 
-import com.google.common.base.Joiner;
 import org.springframework.util.StringUtils;
 
 public record Id(String codeSpace, String type, String privateCode) {
@@ -44,7 +43,7 @@ public record Id(String codeSpace, String type, String privateCode) {
 
 
 	public String toString() {
-		return Joiner.on(SEPARATOR_CHAR).join(codeSpace, privateCode);
+		return String.join(SEPARATOR_CHAR, codeSpace, privateCode);
 	}
 
 }

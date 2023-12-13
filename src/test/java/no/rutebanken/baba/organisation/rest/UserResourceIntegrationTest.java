@@ -16,7 +16,6 @@
 
 package no.rutebanken.baba.organisation.rest;
 
-import com.google.common.collect.Sets;
 import no.rutebanken.baba.organisation.TestConstantsOrganisation;
 import no.rutebanken.baba.organisation.model.user.NotificationType;
 import no.rutebanken.baba.organisation.model.user.eventfilter.JobState;
@@ -94,7 +93,7 @@ class UserResourceIntegrationTest extends BaseIntegrationTest {
         URI uri = restTemplate.postForLocation(PATH, user);
         assertUser(user, uri);
 
-        Set<NotificationConfigDTO> config = Sets.newHashSet(new NotificationConfigDTO(NotificationType.WEB, false, jobEventFilter("action", JobState.FAILED)));
+        Set<NotificationConfigDTO> config = Set.of(new NotificationConfigDTO(NotificationType.WEB, false, jobEventFilter("action", JobState.FAILED)));
         ResourceTestUtils.setNotificationConfig(restTemplate, user.username, config);
 
         user.contactDetails.firstName = "changeFirstName";
@@ -196,9 +195,9 @@ class UserResourceIntegrationTest extends BaseIntegrationTest {
 
     private EventFilterDTO jobEventFilter(String action, JobState jobState) {
         EventFilterDTO eventFilterDTO = new EventFilterDTO(EventFilterDTO.EventFilterType.JOB);
-        eventFilterDTO.actions = Sets.newHashSet(action);
+        eventFilterDTO.actions = Set.of(action);
         eventFilterDTO.jobDomain = EventFilterDTO.JobDomain.TIMETABLE;
-        eventFilterDTO.states = Sets.newHashSet(jobState);
+        eventFilterDTO.states = Set.of(jobState);
         return eventFilterDTO;
     }
 }

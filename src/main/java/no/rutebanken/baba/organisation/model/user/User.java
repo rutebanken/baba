@@ -16,7 +16,6 @@
 
 package no.rutebanken.baba.organisation.model.user;
 
-import com.google.common.base.Joiner;
 import no.rutebanken.baba.organisation.model.VersionedEntity;
 import no.rutebanken.baba.organisation.model.organisation.Organisation;
 import no.rutebanken.baba.organisation.model.responsibility.ResponsibilitySet;
@@ -116,7 +115,7 @@ public class User extends VersionedEntity {
 
     @Override
     public String getId() {
-        return Joiner.on(":").join(getType(), getPrivateCode());
+        return String.join(":", getType(), getPrivateCode());
     }
 
 
