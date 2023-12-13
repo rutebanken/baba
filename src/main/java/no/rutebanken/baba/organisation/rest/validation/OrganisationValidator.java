@@ -51,9 +51,4 @@ public class OrganisationValidator implements DTOValidator<Organisation, Organis
         Assert.hasLength(dto.name, "parts.name required");
     }
 
-    @Override
-    public void validateDelete(Organisation entity) {
-        // TODO check whether in user
-    }
-
 }

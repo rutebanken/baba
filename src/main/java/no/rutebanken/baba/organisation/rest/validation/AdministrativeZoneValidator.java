@@ -43,8 +43,4 @@ public class AdministrativeZoneValidator implements DTOValidator<AdministrativeZ
 		Assert.notNull(dto.type,"type required");
 	}
 
-	@Override
-	public void validateDelete(AdministrativeZone entity) {
-		// TODO check whether in user
-	}
 }

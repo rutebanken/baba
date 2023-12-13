@@ -25,5 +25,5 @@ public interface DTOValidator<E extends VersionedEntity, D extends BaseDTO> {
 
 	void validateUpdate(D dto, E entity);
 
-	void validateDelete(E entity);
+	default void validateDelete(E entity) {}
 }
