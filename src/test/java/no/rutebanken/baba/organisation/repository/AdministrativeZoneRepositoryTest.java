@@ -25,6 +25,8 @@ import org.locationtech.jts.geom.LinearRing;
 import org.locationtech.jts.geom.Polygon;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 class AdministrativeZoneRepositoryTest extends BaseIntegrationTest {
 
@@ -48,5 +50,6 @@ class AdministrativeZoneRepositoryTest extends BaseIntegrationTest {
 		zone.setPolygon(poly);
 
 		administrativeZoneRepository.saveAndFlush(zone);
+		assertNotNull(administrativeZoneRepository.getOneByPublicIdIfExists(zone.getId()));
 	}
 }
