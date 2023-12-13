@@ -32,7 +32,6 @@ import no.rutebanken.baba.organisation.rest.mapper.TypeMapper;
 import no.rutebanken.baba.organisation.rest.validation.DTOValidator;
 import no.rutebanken.baba.organisation.rest.validation.TypeValidator;
 import no.rutebanken.baba.organisation.service.IamService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,18 +51,21 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 })
 public class RoleResource extends BaseResource<Role, TypeDTO> {
 
-	@Autowired
-	private TypeMapper<Role> mapper;
+	private final TypeMapper<Role> mapper;
 
-	@Autowired
-	private RoleRepository repository;
+	private final RoleRepository repository;
 
-	@Autowired
-	private TypeValidator<Role> validator;
+	private final TypeValidator<Role> validator;
 
 
-	@Autowired
-	private IamService iamService;
+	private final IamService iamService;
+
+	public RoleResource(TypeMapper<Role> mapper, RoleRepository repository, TypeValidator<Role> validator, IamService iamService) {
+		this.mapper = mapper;
+		this.repository = repository;
+		this.validator = validator;
+		this.iamService = iamService;
+	}
 
 	@GET
 	@Path("{id}")

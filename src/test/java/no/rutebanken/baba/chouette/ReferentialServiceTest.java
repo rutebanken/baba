@@ -8,7 +8,7 @@ class ReferentialServiceTest {
     @Test
     void testValidateSchemaName() {
 
-        ChouetteReferentialService referentialService = new ChouetteReferentialService();
+        ChouetteReferentialService referentialService = new ChouetteReferentialService(null);
         Assertions.assertTrue(referentialService.validateSchemaName("abc"));
         Assertions.assertTrue(referentialService.validateSchemaName("rb_abc"));
         Assertions.assertFalse(referentialService.validateSchemaName("abcd"));

@@ -23,7 +23,6 @@ import no.rutebanken.baba.organisation.repository.UserRepository;
 import no.rutebanken.baba.organisation.rest.dto.user.NotificationConfigDTO;
 import no.rutebanken.baba.organisation.rest.mapper.NotificationConfigurationMapper;
 import no.rutebanken.baba.organisation.rest.validation.NotificationConfigurationValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -51,12 +50,15 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 })
 public class NotificationConfigurationResource {
 
-    @Autowired
-    private UserRepository repository;
-    @Autowired
-    private NotificationConfigurationMapper mapper;
-    @Autowired
-    private NotificationConfigurationValidator validator;
+    private final UserRepository repository;
+    private final NotificationConfigurationMapper mapper;
+    private final NotificationConfigurationValidator validator;
+
+    public NotificationConfigurationResource(UserRepository repository, NotificationConfigurationMapper mapper, NotificationConfigurationValidator validator) {
+        this.repository = repository;
+        this.mapper = mapper;
+        this.validator = validator;
+    }
 
     @GET
     @PreAuthorize("#userName == authentication.name or hasRole('" + ROLE_ORGANISATION_EDIT + "')")

@@ -17,7 +17,6 @@ import no.rutebanken.baba.organisation.repository.RoleRepository;
 import no.rutebanken.baba.organisation.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -39,25 +38,32 @@ public class Auth0IamService implements IamService {
     private static final String AUTH0_CONNECTION = "Username-Password-Authentication";
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Value("#{'${iam.auth0.default.roles:rutebanken}'.split(',')}")
-    private List<String> defaultRoles;
+    private final List<String> defaultRoles;
 
-    @Value("${iam.auth0.admin.domain}")
-    private String domain;
+    private final String domain;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-    @Autowired
-    private AuthAPI authAPI;
+    private final AuthAPI authAPI;
 
     private TokenHolder tokenHolder;
     private Instant accessTokenRetrievedAt;
     private ManagementAPI managementAPI;
     private final Clock clock = Clock.systemUTC();
+
+    public Auth0IamService(UserRepository userRepository,
+                           RoleRepository roleRepository,
+                           AuthAPI authAPI,
+                           @Value("#{'${iam.auth0.default.roles:rutebanken}'.split(',')}") List<String> defaultRoles,
+                           @Value("${iam.auth0.admin.domain}") String domain){
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.authAPI = authAPI;
+        this.defaultRoles = defaultRoles;
+        this.domain = domain;
+    }
 
     @Override
     public void createUser(User user) {

@@ -21,7 +21,6 @@ import no.rutebanken.baba.organisation.repository.UserRepository;
 import no.rutebanken.baba.organisation.rest.dto.responsibility.EntityClassificationAssignmentDTO;
 import no.rutebanken.baba.organisation.rest.dto.responsibility.ResponsibilityRoleAssignmentDTO;
 import no.rutebanken.baba.organisation.rest.dto.responsibility.ResponsibilitySetDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -32,8 +31,11 @@ import java.util.Set;
 @Service
 public class ResponsibilitySetValidator implements DTOValidator<ResponsibilitySet, ResponsibilitySetDTO> {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public ResponsibilitySetValidator(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public void validateCreate(ResponsibilitySetDTO dto) {

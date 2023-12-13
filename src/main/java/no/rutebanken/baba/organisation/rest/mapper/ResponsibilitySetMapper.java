@@ -29,7 +29,6 @@ import no.rutebanken.baba.organisation.repository.RoleRepository;
 import no.rutebanken.baba.organisation.rest.dto.responsibility.EntityClassificationAssignmentDTO;
 import no.rutebanken.baba.organisation.rest.dto.responsibility.ResponsibilityRoleAssignmentDTO;
 import no.rutebanken.baba.organisation.rest.dto.responsibility.ResponsibilitySetDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -40,20 +39,23 @@ import java.util.stream.Collectors;
 
 @Service
 public class ResponsibilitySetMapper implements DTOMapper<ResponsibilitySet, ResponsibilitySetDTO> {
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-    @Autowired
-    private OrganisationRepository organisationRepository;
+    private final OrganisationRepository organisationRepository;
 
-    @Autowired
-    private AdministrativeZoneRepository administrativeZoneRepository;
+    private final AdministrativeZoneRepository administrativeZoneRepository;
 
-    @Autowired
-    private EntityClassificationRepository entityClassificationRepository;
+    private final EntityClassificationRepository entityClassificationRepository;
 
-    @Autowired
-    protected CodeSpaceRepository codeSpaceRepository;
+    protected final CodeSpaceRepository codeSpaceRepository;
+
+    public ResponsibilitySetMapper(RoleRepository roleRepository, OrganisationRepository organisationRepository, AdministrativeZoneRepository administrativeZoneRepository, EntityClassificationRepository entityClassificationRepository, CodeSpaceRepository codeSpaceRepository) {
+        this.roleRepository = roleRepository;
+        this.organisationRepository = organisationRepository;
+        this.administrativeZoneRepository = administrativeZoneRepository;
+        this.entityClassificationRepository = entityClassificationRepository;
+        this.codeSpaceRepository = codeSpaceRepository;
+    }
 
     public ResponsibilitySet createFromDTO(ResponsibilitySetDTO dto, Class<ResponsibilitySet> clazz) {
         ResponsibilitySet entity = new ResponsibilitySet();

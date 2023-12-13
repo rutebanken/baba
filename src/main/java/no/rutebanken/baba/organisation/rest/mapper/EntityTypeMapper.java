@@ -21,7 +21,6 @@ import no.rutebanken.baba.organisation.model.responsibility.EntityType;
 import no.rutebanken.baba.organisation.repository.CodeSpaceRepository;
 import no.rutebanken.baba.organisation.rest.dto.TypeDTO;
 import no.rutebanken.baba.organisation.rest.dto.responsibility.EntityTypeDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -31,11 +30,14 @@ import java.util.Set;
 @Service
 public class EntityTypeMapper implements DTOMapper<EntityType, EntityTypeDTO> {
 
-    @Autowired
-    private TypeMapper<EntityClassification> classificationTypeMapper;
+    private final TypeMapper<EntityClassification> classificationTypeMapper;
 
-    @Autowired
-    protected CodeSpaceRepository codeSpaceRepository;
+    protected final CodeSpaceRepository codeSpaceRepository;
+
+    public EntityTypeMapper(TypeMapper<EntityClassification> classificationTypeMapper, CodeSpaceRepository codeSpaceRepository) {
+        this.classificationTypeMapper = classificationTypeMapper;
+        this.codeSpaceRepository = codeSpaceRepository;
+    }
 
 
     @Override

@@ -32,7 +32,6 @@ import no.rutebanken.baba.organisation.repository.EntityTypeRepository;
 import no.rutebanken.baba.organisation.rest.dto.TypeDTO;
 import no.rutebanken.baba.organisation.rest.mapper.TypeMapper;
 import no.rutebanken.baba.organisation.rest.validation.TypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -54,16 +53,19 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 })
 public class EntityClassificationResource {
 
-    @Autowired
-    private EntityClassificationRepository repository;
+    private final EntityClassificationRepository repository;
 
-    @Autowired
-    private EntityTypeRepository entityTypeRepository;
+    private final EntityTypeRepository entityTypeRepository;
 
-    @Autowired
-    private TypeMapper<EntityClassification> mapper;
-    @Autowired
-    private TypeValidator<EntityClassification> validator;
+    private final TypeMapper<EntityClassification> mapper;
+    private final TypeValidator<EntityClassification> validator;
+
+    public EntityClassificationResource(EntityClassificationRepository repository, EntityTypeRepository entityTypeRepository, TypeMapper<EntityClassification> mapper, TypeValidator<EntityClassification> validator) {
+        this.repository = repository;
+        this.entityTypeRepository = entityTypeRepository;
+        this.mapper = mapper;
+        this.validator = validator;
+    }
 
     @POST
     @Operation(summary = "Create a new entity classification")

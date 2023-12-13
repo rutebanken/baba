@@ -30,7 +30,6 @@ import no.rutebanken.baba.organisation.rest.dto.responsibility.EntityClassificat
 import no.rutebanken.baba.organisation.rest.dto.responsibility.EntityTypeDTO;
 import no.rutebanken.baba.organisation.rest.dto.user.EventFilterDTO;
 import no.rutebanken.baba.organisation.rest.dto.user.NotificationConfigDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -42,17 +41,20 @@ import java.util.stream.Collectors;
 @Service
 public class NotificationConfigurationMapper {
 
-    @Autowired
-    private EntityClassificationRepository entityClassificationRepository;
+    private final EntityClassificationRepository entityClassificationRepository;
 
-    @Autowired
-    private AdministrativeZoneRepository administrativeZoneRepository;
+    private final AdministrativeZoneRepository administrativeZoneRepository;
 
-    @Autowired
-    private OrganisationRepository organisationRepository;
+    private final OrganisationRepository organisationRepository;
 
-    @Autowired
-    private OrganisationMapper organisationMapper;
+    private final OrganisationMapper organisationMapper;
+
+    public NotificationConfigurationMapper(EntityClassificationRepository entityClassificationRepository, AdministrativeZoneRepository administrativeZoneRepository, OrganisationRepository organisationRepository, OrganisationMapper organisationMapper) {
+        this.entityClassificationRepository = entityClassificationRepository;
+        this.administrativeZoneRepository = administrativeZoneRepository;
+        this.organisationRepository = organisationRepository;
+        this.organisationMapper = organisationMapper;
+    }
 
 
     public Set<NotificationConfigDTO> toDTO(Collection<NotificationConfiguration> entity, boolean fullDetails) {

@@ -27,7 +27,6 @@ import no.rutebanken.baba.organisation.rest.mapper.ResponsibilitySetMapper;
 import no.rutebanken.baba.organisation.rest.validation.DTOValidator;
 import no.rutebanken.baba.organisation.rest.validation.ResponsibilitySetValidator;
 import no.rutebanken.baba.organisation.service.IamService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,17 +48,20 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 })
 public class ResponsibilitySetResource extends AnnotatedBaseResource<ResponsibilitySet, ResponsibilitySetDTO> {
 
-	@Autowired
-	private ResponsibilitySetRepository repository;
+	private final ResponsibilitySetRepository repository;
 
-	@Autowired
-	private ResponsibilitySetMapper mapper;
+	private final ResponsibilitySetMapper mapper;
 
-	@Autowired
-	private ResponsibilitySetValidator validator;
+	private final ResponsibilitySetValidator validator;
 
-	@Autowired
-	private IamService iamService;
+	private final IamService iamService;
+
+	public ResponsibilitySetResource(ResponsibilitySetRepository repository, ResponsibilitySetMapper mapper, ResponsibilitySetValidator validator, IamService iamService) {
+		this.repository = repository;
+		this.mapper = mapper;
+		this.validator = validator;
+		this.iamService = iamService;
+	}
 
 
 	@Override

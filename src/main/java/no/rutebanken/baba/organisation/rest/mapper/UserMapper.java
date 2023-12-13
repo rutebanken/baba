@@ -24,7 +24,6 @@ import no.rutebanken.baba.organisation.repository.OrganisationRepository;
 import no.rutebanken.baba.organisation.repository.ResponsibilitySetRepository;
 import no.rutebanken.baba.organisation.rest.dto.user.ContactDetailsDTO;
 import no.rutebanken.baba.organisation.rest.dto.user.UserDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -37,21 +36,24 @@ import java.util.stream.Collectors;
 @Service
 public class UserMapper implements DTOMapper<User, UserDTO> {
 
-    @Autowired
-    private OrganisationRepository organisationRepository;
+    private final OrganisationRepository organisationRepository;
 
-    @Autowired
-    private ResponsibilitySetRepository responsibilitySetRepository;
+    private final ResponsibilitySetRepository responsibilitySetRepository;
 
 
-    @Autowired
-    private OrganisationMapper organisationMapper;
+    private final OrganisationMapper organisationMapper;
 
-    @Autowired
-    private ResponsibilitySetMapper responsibilitySetMapper;
+    private final ResponsibilitySetMapper responsibilitySetMapper;
 
-    @Autowired
-    private NotificationConfigurationMapper notificationConfigurationMapper;
+    private final NotificationConfigurationMapper notificationConfigurationMapper;
+
+    public UserMapper(OrganisationRepository organisationRepository, ResponsibilitySetRepository responsibilitySetRepository, OrganisationMapper organisationMapper, ResponsibilitySetMapper responsibilitySetMapper, NotificationConfigurationMapper notificationConfigurationMapper) {
+        this.organisationRepository = organisationRepository;
+        this.responsibilitySetRepository = responsibilitySetRepository;
+        this.organisationMapper = organisationMapper;
+        this.responsibilitySetMapper = responsibilitySetMapper;
+        this.notificationConfigurationMapper = notificationConfigurationMapper;
+    }
 
     public UserDTO toDTO(User org, boolean fullDetails) {
         UserDTO dto = new UserDTO();

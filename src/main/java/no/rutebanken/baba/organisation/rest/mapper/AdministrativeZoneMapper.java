@@ -22,7 +22,6 @@ import no.rutebanken.baba.organisation.model.organisation.AdministrativeZone;
 import no.rutebanken.baba.organisation.repository.CodeSpaceRepository;
 import no.rutebanken.baba.organisation.rest.dto.organisation.AdministrativeZoneDTO;
 import org.locationtech.jts.geom.Polygon;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.wololo.jts2geojson.GeoJSONReader;
 import org.wololo.jts2geojson.GeoJSONWriter;
@@ -36,8 +35,11 @@ public class AdministrativeZoneMapper implements DTOMapper<AdministrativeZone, A
     private final GeoJSONReader reader = new GeoJSONReader();
 
 
-    @Autowired
-    protected CodeSpaceRepository codeSpaceRepository;
+    protected final CodeSpaceRepository codeSpaceRepository;
+
+    public AdministrativeZoneMapper(CodeSpaceRepository codeSpaceRepository) {
+        this.codeSpaceRepository = codeSpaceRepository;
+    }
 
 
     public AdministrativeZoneDTO toDTO(AdministrativeZone entity, boolean fullDetails) {

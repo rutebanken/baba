@@ -27,7 +27,6 @@ import no.rutebanken.baba.organisation.rest.mapper.AdministrativeZoneMapper;
 import no.rutebanken.baba.organisation.rest.mapper.DTOMapper;
 import no.rutebanken.baba.organisation.rest.validation.AdministrativeZoneValidator;
 import no.rutebanken.baba.organisation.rest.validation.DTOValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,12 +48,15 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 public class AdministrativeZoneResource extends AnnotatedBaseResource<AdministrativeZone, AdministrativeZoneDTO> {
 
 
-    @Autowired
-    private AdministrativeZoneRepository repository;
-    @Autowired
-    private AdministrativeZoneMapper mapper;
-    @Autowired
-    private AdministrativeZoneValidator validator;
+    private final AdministrativeZoneRepository repository;
+    private final AdministrativeZoneMapper mapper;
+    private final AdministrativeZoneValidator validator;
+
+    public AdministrativeZoneResource(AdministrativeZoneRepository repository, AdministrativeZoneMapper mapper, AdministrativeZoneValidator validator) {
+        this.repository = repository;
+        this.mapper = mapper;
+        this.validator = validator;
+    }
 
     @Override
     protected VersionedEntityRepository<AdministrativeZone> getRepository() {
