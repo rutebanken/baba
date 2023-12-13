@@ -21,10 +21,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
-import java.io.Serializable;
 
 @MappedSuperclass
-public abstract class VersionedEntity implements Serializable {
+public abstract class VersionedEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "versioned_entity_seq")

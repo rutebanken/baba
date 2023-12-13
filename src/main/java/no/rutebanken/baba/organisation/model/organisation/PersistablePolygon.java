@@ -20,13 +20,12 @@ import jakarta.persistence.*;
 import org.locationtech.jts.geom.Polygon;
 
 import jakarta.validation.constraints.NotNull;
-import java.io.Serializable;
 
 /**
  * Wrapper class to enable lazy loading of polygons.
  */
 @Entity
-public class PersistablePolygon implements Serializable {
+public class PersistablePolygon {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "persistable_polygon_seq")
