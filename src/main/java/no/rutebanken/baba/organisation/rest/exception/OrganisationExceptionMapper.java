@@ -22,6 +22,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
+import org.springframework.http.HttpStatus;
 
 @Provider
 public class OrganisationExceptionMapper implements ExceptionMapper<OrganisationException> {
@@ -29,7 +30,7 @@ public class OrganisationExceptionMapper implements ExceptionMapper<Organisation
 	@Override
 	public Response toResponse(OrganisationException e) {
 		return Response
-				       .status(e.getStatusCode())
+				       .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
 				       .type(MediaType.TEXT_PLAIN)
 				       .entity(e.getMessage())
 				       .build();

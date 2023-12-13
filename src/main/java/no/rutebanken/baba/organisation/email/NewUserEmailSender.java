@@ -19,7 +19,6 @@ package no.rutebanken.baba.organisation.email;
 import no.rutebanken.baba.organisation.model.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -30,24 +29,26 @@ import java.util.Locale;
 @Service
 public class NewUserEmailSender {
     private static final Logger LOGGER = LoggerFactory.getLogger(NewUserEmailSender.class);
-    @Autowired
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
+    private final NewUserEmailFormatter newUserEmailFormatter;
+    private final String emailFrom;
+    private final String emailLanguageDefault;
+    private final boolean sendEmailEnabled;
 
-    @Autowired
-    private NewUserEmailFormatter newUserEmailFormatter;
-
-    @Value("${new.user.email.from:noreply@entur.org}")
-    private String emailFrom;
-
-    @Value("${new.user.email.language.default:no}")
-    private String emailLanguageDefault;
-
-
-    @Value("${new.user.email.enabled:true}")
-    private boolean sendEmailEnabled;
+    public NewUserEmailSender(JavaMailSender mailSender,
+                              NewUserEmailFormatter newUserEmailFormatter,
+                              @Value("${new.user.email.from:noreply@entur.org}") String emailFrom,
+                              @Value("${new.user.email.language.default:no}") String emailLanguageDefault,
+                              @Value("${new.user.email.enabled:true}") boolean sendEmailEnabled
+                              ) {
+        this.mailSender = mailSender;
+        this.newUserEmailFormatter = newUserEmailFormatter;
+        this.emailFrom = emailFrom;
+        this.emailLanguageDefault = emailLanguageDefault;
+        this.sendEmailEnabled = sendEmailEnabled;
+    }
 
     public void sendEmail(User user) {
-        // TODO get users default from user
         Locale locale = new Locale.Builder().setLanguage(emailLanguageDefault).build();
         sendEmail(user.getContactDetails().getEmail(), newUserEmailFormatter.getSubject(locale), newUserEmailFormatter.formatMessage(user, locale));
     }

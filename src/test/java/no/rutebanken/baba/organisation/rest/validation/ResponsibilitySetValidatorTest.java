@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 class ResponsibilitySetValidatorTest {
 
 
-    private final ResponsibilitySetValidator responsibilitySetValidator = new ResponsibilitySetValidator();
+    private final ResponsibilitySetValidator responsibilitySetValidator = new ResponsibilitySetValidator(null);
 
 
     @Test

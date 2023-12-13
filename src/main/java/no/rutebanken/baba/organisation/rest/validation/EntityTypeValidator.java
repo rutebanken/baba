@@ -49,8 +49,4 @@ public class EntityTypeValidator implements DTOValidator<EntityType, EntityTypeD
         }
     }
 
-    @Override
-    public void validateDelete(EntityType entity) {
-        // TODO check whether in user
-    }
 }

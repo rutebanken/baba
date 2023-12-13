@@ -54,12 +54,6 @@ public class UserValidator implements DTOValidator<User, UserDTO> {
 
     }
 
-    @Override
-    public void validateDelete(User entity) {
-        // TODO check whether in user
-    }
-
-
     public static boolean isValidEmailAddress(String email) {
         boolean result = true;
         try {

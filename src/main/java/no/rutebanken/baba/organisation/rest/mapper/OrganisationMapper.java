@@ -25,7 +25,6 @@ import no.rutebanken.baba.organisation.repository.AdministrativeZoneRepository;
 import no.rutebanken.baba.organisation.repository.CodeSpaceRepository;
 import no.rutebanken.baba.organisation.rest.dto.organisation.OrganisationDTO;
 import no.rutebanken.baba.organisation.rest.dto.organisation.OrganisationPartDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -38,11 +37,14 @@ import java.util.stream.Collectors;
 @Service
 public class OrganisationMapper implements DTOMapper<Organisation, OrganisationDTO> {
 
-	@Autowired
-	protected CodeSpaceRepository codeSpaceRepository;
+	protected final CodeSpaceRepository codeSpaceRepository;
 
-	@Autowired
-	private AdministrativeZoneRepository administrativeZoneRepository;
+	private final AdministrativeZoneRepository administrativeZoneRepository;
+
+	public OrganisationMapper(CodeSpaceRepository codeSpaceRepository, AdministrativeZoneRepository administrativeZoneRepository) {
+		this.codeSpaceRepository = codeSpaceRepository;
+		this.administrativeZoneRepository = administrativeZoneRepository;
+	}
 
 	public OrganisationDTO toDTO(Organisation entity, boolean fullDetails) {
 		OrganisationDTO dto = new OrganisationDTO();
@@ -125,7 +127,7 @@ public class OrganisationMapper implements DTOMapper<Organisation, OrganisationD
 	private OrganisationPart fromDTO(OrganisationPartDTO dto, OrganisationPart entity) {
 		entity.setName(dto.name);
 		if (!CollectionUtils.isEmpty(dto.administrativeZoneRefs)) {
-			entity.setAdministrativeZones(dto.administrativeZoneRefs.stream().map(az -> administrativeZoneRepository.getOneByPublicId(az)).collect(Collectors.toSet()));
+			entity.setAdministrativeZones(dto.administrativeZoneRefs.stream().map(administrativeZoneRepository::getOneByPublicId).collect(Collectors.toSet()));
 		} else {
 			entity.setAdministrativeZones(new HashSet<>());
 		}

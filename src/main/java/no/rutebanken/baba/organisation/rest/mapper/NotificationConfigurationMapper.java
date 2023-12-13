@@ -30,7 +30,6 @@ import no.rutebanken.baba.organisation.rest.dto.responsibility.EntityClassificat
 import no.rutebanken.baba.organisation.rest.dto.responsibility.EntityTypeDTO;
 import no.rutebanken.baba.organisation.rest.dto.user.EventFilterDTO;
 import no.rutebanken.baba.organisation.rest.dto.user.NotificationConfigDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -42,17 +41,20 @@ import java.util.stream.Collectors;
 @Service
 public class NotificationConfigurationMapper {
 
-    @Autowired
-    private EntityClassificationRepository entityClassificationRepository;
+    private final EntityClassificationRepository entityClassificationRepository;
 
-    @Autowired
-    private AdministrativeZoneRepository administrativeZoneRepository;
+    private final AdministrativeZoneRepository administrativeZoneRepository;
 
-    @Autowired
-    private OrganisationRepository organisationRepository;
+    private final OrganisationRepository organisationRepository;
 
-    @Autowired
-    private OrganisationMapper organisationMapper;
+    private final OrganisationMapper organisationMapper;
+
+    public NotificationConfigurationMapper(EntityClassificationRepository entityClassificationRepository, AdministrativeZoneRepository administrativeZoneRepository, OrganisationRepository organisationRepository, OrganisationMapper organisationMapper) {
+        this.entityClassificationRepository = entityClassificationRepository;
+        this.administrativeZoneRepository = administrativeZoneRepository;
+        this.organisationRepository = organisationRepository;
+        this.organisationMapper = organisationMapper;
+    }
 
 
     public Set<NotificationConfigDTO> toDTO(Collection<NotificationConfiguration> entity, boolean fullDetails) {
@@ -131,9 +133,9 @@ public class NotificationConfigurationMapper {
         EventFilter eventFilter;
         if (EventFilterDTO.EventFilterType.CRUD.equals(dto.type)) {
             CrudEventFilter crudEventFilter = new CrudEventFilter();
-            crudEventFilter.setEntityClassifications(dto.entityClassificationRefs.stream().map(ecr -> entityClassificationRepository.getOneByPublicId(ecr)).collect(Collectors.toSet()));
+            crudEventFilter.setEntityClassifications(dto.entityClassificationRefs.stream().map(entityClassificationRepository::getOneByPublicId).collect(Collectors.toSet()));
             if (!CollectionUtils.isEmpty(dto.administrativeZoneRefs)) {
-                crudEventFilter.setAdministrativeZones(dto.administrativeZoneRefs.stream().map(adz -> administrativeZoneRepository.getOneByPublicId(adz)).collect(Collectors.toSet()));
+                crudEventFilter.setAdministrativeZones(dto.administrativeZoneRefs.stream().map(administrativeZoneRepository::getOneByPublicId).collect(Collectors.toSet()));
             }
             eventFilter = crudEventFilter;
         } else if (EventFilterDTO.EventFilterType.JOB.equals(dto.type)) {

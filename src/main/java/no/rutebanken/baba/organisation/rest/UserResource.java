@@ -19,6 +19,7 @@ package no.rutebanken.baba.organisation.rest;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import no.rutebanken.baba.organisation.email.NewUserEmailSender;
+import no.rutebanken.baba.organisation.model.OrganisationException;
 import no.rutebanken.baba.organisation.model.user.User;
 import no.rutebanken.baba.organisation.repository.UserRepository;
 import no.rutebanken.baba.organisation.repository.VersionedEntityRepository;
@@ -30,7 +31,6 @@ import no.rutebanken.baba.organisation.rest.validation.UserValidator;
 import no.rutebanken.baba.organisation.service.IamService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -61,17 +61,20 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 })
 public class UserResource extends BaseResource<User, UserDTO> {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
-    @Autowired
-    private UserRepository repository;
-    @Autowired
-    private UserMapper mapper;
-    @Autowired
-    private UserValidator validator;
-    @Autowired
-    private IamService iamService;
+    private final UserRepository repository;
+    private final UserMapper mapper;
+    private final UserValidator validator;
+    private final IamService iamService;
 
-    @Autowired
-    private NewUserEmailSender newUserEmailSender;
+    private final NewUserEmailSender newUserEmailSender;
+
+    public UserResource(UserRepository repository, UserMapper mapper, UserValidator validator, IamService iamService, NewUserEmailSender newUserEmailSender) {
+        this.repository = repository;
+        this.mapper = mapper;
+        this.validator = validator;
+        this.iamService = iamService;
+        this.newUserEmailSender = newUserEmailSender;
+    }
 
     @GET
     @Path("{id}")
@@ -92,7 +95,7 @@ public class UserResource extends BaseResource<User, UserDTO> {
         } catch (RuntimeException e) {
             LOGGER.warn("Creation of new user in IAM failed. Removing user from local storage. Exception: {}", e.getMessage(), e);
             deleteEntity(user.getId());
-            throw e;
+            throw new OrganisationException("Creation of new user in IAM failed", e);
         }
         newUserEmailSender.sendEmail(user);
         return buildCreatedResponse(uriInfo, user);

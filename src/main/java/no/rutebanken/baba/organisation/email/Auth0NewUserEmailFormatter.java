@@ -19,7 +19,6 @@ package no.rutebanken.baba.organisation.email;
 import freemarker.template.Configuration;
 import no.rutebanken.baba.exceptions.BabaException;
 import no.rutebanken.baba.organisation.model.user.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Profile;
@@ -34,18 +33,21 @@ import java.util.Map;
 @Profile({"auth0 | test"})
 public class Auth0NewUserEmailFormatter implements NewUserEmailFormatter {
 
-    @Autowired
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
+    private final Configuration freemarkerConfiguration;
+    private final String userGuideLink;
+    
+    private final String contactInfoEmail;
 
-    @Autowired
-    private Configuration freemarkerConfiguration;
-
-    @Value("${email.link.user.guide:https://enturas.atlassian.net/wiki/spaces/PUBLIC/pages/1444216931/Using+our+services}")
-    private String userGuideLink;
-
-
-    @Value("${email.contact.info:kollektivdata@entur.org}")
-    private String contactInfoEmail;
+    public Auth0NewUserEmailFormatter(MessageSource messageSource,
+                                      Configuration freemarkerConfiguration,
+                                      @Value("${email.link.user.guide:https://enturas.atlassian.net/wiki/spaces/PUBLIC/pages/1444216931/Using+our+services}") String userGuideLink,
+                                      @Value("${email.contact.info:kollektivdata@entur.org}") String contactInfoEmail) {
+        this.messageSource = messageSource;
+        this.freemarkerConfiguration = freemarkerConfiguration;
+        this.userGuideLink = userGuideLink;
+        this.contactInfoEmail = contactInfoEmail;
+    }
 
 
     @Override

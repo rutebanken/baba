@@ -17,7 +17,6 @@ import no.rutebanken.baba.organisation.repository.RoleRepository;
 import no.rutebanken.baba.organisation.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -39,25 +38,32 @@ public class Auth0IamService implements IamService {
     private static final String AUTH0_CONNECTION = "Username-Password-Authentication";
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Value("#{'${iam.auth0.default.roles:rutebanken}'.split(',')}")
-    private List<String> defaultRoles;
+    private final List<String> defaultRoles;
 
-    @Value("${iam.auth0.admin.domain}")
-    private String domain;
+    private final String domain;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-    @Autowired
-    private AuthAPI authAPI;
+    private final AuthAPI authAPI;
 
     private TokenHolder tokenHolder;
     private Instant accessTokenRetrievedAt;
     private ManagementAPI managementAPI;
     private final Clock clock = Clock.systemUTC();
+
+    public Auth0IamService(UserRepository userRepository,
+                           RoleRepository roleRepository,
+                           AuthAPI authAPI,
+                           @Value("#{'${iam.auth0.default.roles:rutebanken}'.split(',')}") List<String> defaultRoles,
+                           @Value("${iam.auth0.admin.domain}") String domain){
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.authAPI = authAPI;
+        this.defaultRoles = defaultRoles;
+        this.domain = domain;
+    }
 
     @Override
     public void createUser(User user) {
@@ -257,13 +263,10 @@ public class Auth0IamService implements IamService {
 
         com.auth0.json.mgmt.users.User auth0User = new com.auth0.json.mgmt.users.User(AUTH0_CONNECTION);
         auth0User.setUsername(user.getUsername());
-
-        if (user.getContactDetails() != null) {
-            auth0User.setGivenName(user.getContactDetails().getFirstName());
-            auth0User.setFamilyName(user.getContactDetails().getLastName());
-            auth0User.setEmail(user.getContactDetails().getEmail());
-            auth0User.setName(auth0User.getGivenName() + ' ' + auth0User.getFamilyName());
-        }
+        auth0User.setGivenName(user.getContactDetails().getFirstName());
+        auth0User.setFamilyName(user.getContactDetails().getLastName());
+        auth0User.setEmail(user.getContactDetails().getEmail());
+        auth0User.setName(auth0User.getGivenName() + ' ' + auth0User.getFamilyName());
 
         if (user.getResponsibilitySets() != null) {
             Map<String, Object> attributes = new HashMap<>();
@@ -293,7 +296,7 @@ public class Auth0IamService implements IamService {
         try {
             List<com.auth0.json.mgmt.users.User> matchingUsers = getManagementAPI().users().list(new UserFilter().withQuery("username:\"" + username + "\"")).execute().getBody().getItems();
             if (matchingUsers.isEmpty()) {
-                throw new OAuth2UserNotFoundException("User not found: " + username);
+                throw new OAuth2UserNotFoundException("User not found in Auth0: " + username);
             } else if (matchingUsers.size() > 1) {
                 logger.error("More than one user found in Auth0 tenant with username: {}", username);
                 throw new OrganisationException("More than one user found with username: " + username);

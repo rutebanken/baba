@@ -22,21 +22,23 @@ import no.rutebanken.baba.organisation.model.TypeEntity;
 import no.rutebanken.baba.organisation.model.VersionedEntity;
 import no.rutebanken.baba.organisation.repository.CodeSpaceRepository;
 import no.rutebanken.baba.organisation.rest.dto.TypeDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TypeMapper<R extends VersionedEntity & TypeEntity> implements DTOMapper<R, TypeDTO> {
-	@Autowired
-	protected CodeSpaceRepository codeSpaceRepository;
+	protected final CodeSpaceRepository codeSpaceRepository;
+
+	public TypeMapper(CodeSpaceRepository codeSpaceRepository) {
+		this.codeSpaceRepository = codeSpaceRepository;
+	}
 
 	public TypeDTO toDTO(R entity, boolean fullDetails) {
 		TypeDTO dto = new TypeDTO();
 		dto.name = entity.getName();
 		dto.id = entity.getId();
 		dto.privateCode = entity.getPrivateCode();
-		if (entity instanceof CodeSpaceEntity) {
-			dto.codeSpace = ((CodeSpaceEntity) entity).getCodeSpace().getId();
+		if (entity instanceof CodeSpaceEntity codeSpaceEntity) {
+			dto.codeSpace = codeSpaceEntity.getCodeSpace().getId();
 		}
 		return dto;
 	}
@@ -46,8 +48,8 @@ public class TypeMapper<R extends VersionedEntity & TypeEntity> implements DTOMa
 		R entity = createInstance(clazz);
 
 		entity.setPrivateCode(dto.privateCode);
-		if (entity instanceof CodeSpaceEntity) {
-			((CodeSpaceEntity) entity).setCodeSpace(codeSpaceRepository.getOneByPublicId(dto.codeSpace));
+		if (entity instanceof CodeSpaceEntity codeSpaceEntity) {
+			codeSpaceEntity.setCodeSpace(codeSpaceRepository.getOneByPublicId(dto.codeSpace));
 		}
 
 		return updateFromDTO(dto, entity);

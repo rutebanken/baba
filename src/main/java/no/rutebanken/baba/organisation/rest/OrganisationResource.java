@@ -27,7 +27,6 @@ import no.rutebanken.baba.organisation.rest.mapper.DTOMapper;
 import no.rutebanken.baba.organisation.rest.mapper.OrganisationMapper;
 import no.rutebanken.baba.organisation.rest.validation.DTOValidator;
 import no.rutebanken.baba.organisation.rest.validation.OrganisationValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,12 +47,15 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 public class OrganisationResource extends AnnotatedBaseResource<Organisation, OrganisationDTO> {
 
 
-	@Autowired
-	private OrganisationRepository repository;
-	@Autowired
-	private OrganisationMapper mapper;
-	@Autowired
-	private OrganisationValidator validator;
+	private final OrganisationRepository repository;
+	private final OrganisationMapper mapper;
+	private final OrganisationValidator validator;
+
+	public OrganisationResource(OrganisationRepository repository, OrganisationMapper mapper, OrganisationValidator validator) {
+		this.repository = repository;
+		this.mapper = mapper;
+		this.validator = validator;
+	}
 
 	@Override
 	protected Class<Organisation> getEntityClass() {
