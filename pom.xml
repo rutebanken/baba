@@ -48,7 +48,7 @@
         <wololo.version>0.18.1</wololo.version>
         <commons-io.version>2.15.1</commons-io.version>
         <passay.version>1.6.4</passay.version>
-        <spring-cloud-gcp-dependencies.version>4.9.0</spring-cloud-gcp-dependencies.version>
+        <spring-cloud-gcp-dependencies.version>5.0.0</spring-cloud-gcp-dependencies.version>
 
 
         <rest-assured.version>5.4.0</rest-assured.version>
