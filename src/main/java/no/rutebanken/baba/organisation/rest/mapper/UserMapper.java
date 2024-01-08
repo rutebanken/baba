@@ -47,7 +47,11 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
 
     private final NotificationConfigurationMapper notificationConfigurationMapper;
 
-    public UserMapper(OrganisationRepository organisationRepository, ResponsibilitySetRepository responsibilitySetRepository, OrganisationMapper organisationMapper, ResponsibilitySetMapper responsibilitySetMapper, NotificationConfigurationMapper notificationConfigurationMapper) {
+    public UserMapper(OrganisationRepository organisationRepository,
+                      ResponsibilitySetRepository responsibilitySetRepository,
+                      OrganisationMapper organisationMapper,
+                      ResponsibilitySetMapper responsibilitySetMapper,
+                      NotificationConfigurationMapper notificationConfigurationMapper) {
         this.organisationRepository = organisationRepository;
         this.responsibilitySetRepository = responsibilitySetRepository;
         this.organisationMapper = organisationMapper;
@@ -59,6 +63,7 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
         UserDTO dto = new UserDTO();
         dto.id = org.getId();
         dto.username = org.getUsername();
+        dto.personalAccount = org.isPersonalAccount();
 
         dto.contactDetails = toDTO(org.getContactDetails());
 
@@ -83,6 +88,9 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
     }
 
     public User updateFromDTO(UserDTO dto, User entity) {
+
+        entity.setPersonalAccount(dto.personalAccount);
+
         entity.setContactDetails(fromDTO(dto.contactDetails));
 
         if (dto.organisationRef != null) {

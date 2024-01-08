@@ -41,7 +41,7 @@ insert into responsibility_set_roles (responsibility_Set_pk,roles_pk) values (1,
 insert into responsibility_set_roles (responsibility_Set_pk,roles_pk) values (2,3);
 
 insert into contact_details (pk, email,first_name, last_name, phone) values (1,'test@test.org','First','Last','0047 23232323');
-insert into user_account (pk,entity_version,lock_version,private_code,username,contact_details_pk,organisation_pk) values (1,1,1,'testUserCode','testuser',1,1);
+insert into user_account (pk,entity_version,lock_version,private_code,username, personal_account, contact_details_pk,organisation_pk) values (1,1,1,'testUserCode','testuser',true, 1,1);
 
 alter sequence entity_classification_assignment_seq restart with 20000;
 alter sequence persistable_polygon_seq restart with 20000;
