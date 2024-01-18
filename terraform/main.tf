@@ -9,34 +9,18 @@ provider "kubernetes" {
   version = ">= 2.13.1"
 }
 
-resource "kubernetes_secret" "ror-baba-secret" {
-  metadata {
-    name = "${var.labels.team}-${var.labels.app}-secret"
-    namespace = var.kube_namespace
-  }
-
-  data = {
-    "baba-db-username" = var.ror-baba-db-username
-    "baba-db-password" = var.ror-baba-db-password
-    "baba-smtp-username" = var.ror-baba-smtp-username
-    "baba-smtp-password" = var.ror-baba-smtp-password
-    "baba-auth0-secret" = var.ror-baba-auth0-secret
-
-  }
-}
-
 resource "google_sql_database_instance" "db_instance" {
-  name = "baba-db-pg13"
+  name             = "baba-db-pg13"
   database_version = "POSTGRES_13"
-  project = var.gcp_resources_project
-  region = var.db_region
+  project          = var.gcp_resources_project
+  region           = var.db_region
 
   settings {
     location_preference {
       zone = var.db_zone
     }
-    tier = var.db_tier
-    user_labels = var.labels
+    tier              = var.db_tier
+    user_labels       = var.labels
     availability_type = var.db_availability
     backup_configuration {
       enabled = true
@@ -53,18 +37,27 @@ resource "google_sql_database_instance" "db_instance" {
       require_ssl = true
     }
   }
+}
 
+data "google_secret_manager_secret_version" "db_username" {
+  secret  = "SPRING_DATASOURCE_USERNAME"
+  project = var.gcp_resources_project
+}
+
+data "google_secret_manager_secret_version" "db_password" {
+  secret  = "SPRING_DATASOURCE_PASSWORD"
+  project = var.gcp_resources_project
 }
 
 resource "google_sql_database" "db" {
-  name = "baba"
-  project = var.gcp_resources_project
+  name     = "baba"
+  project  = var.gcp_resources_project
   instance = google_sql_database_instance.db_instance.name
 }
 
 resource "google_sql_user" "db-user" {
-  name = var.ror-baba-db-username
-  project = var.gcp_resources_project
+  project  = var.gcp_resources_project
   instance = google_sql_database_instance.db_instance.name
-  password = var.ror-baba-db-password
+  name     = data.google_secret_manager_secret_version.db_username.secret_data
+  password = data.google_secret_manager_secret_version.db_password.secret_data
 }
