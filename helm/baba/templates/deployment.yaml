@@ -39,31 +39,13 @@ spec:
             {{- end}}
             - name: TZ
               value: Europe/Oslo
-            - name: SPRING_MAIL_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  key: baba-smtp-username
-                  name: ror-baba-secret
-            - name: SPRING_MAIL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: baba-smtp-password
-                  name: ror-baba-secret
-            - name: SPRING_DATASOURCE_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  key: baba-db-username
-                  name: ror-baba-secret
-            - name: SPRING_DATASOURCE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: baba-db-password
-                  name: ror-baba-secret
-            - name: IAM_AUTH0_ADMIN_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  key: baba-auth0-secret
-                  name: ror-baba-secret
+          envFrom:
+            - secretRef:
+                name: auth-credentials
+            - secretRef:
+                name: smtp-credentials
+            - secretRef:
+                name: psql-credentials
           ports:
             - containerPort: 8080
               name: http
@@ -90,7 +72,6 @@ spec:
             timeoutSeconds: 5
           resources:
             limits:
-              cpu: 1000m
               memory: 800Mi
             requests:
               cpu: 100m

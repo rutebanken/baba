@@ -1,0 +1,18 @@
+image:
+  identifier: <+artifacts.primary.image>
+  imagePullPolicy: Always
+
+service:
+  http:
+    externalPort: 80
+    internalPort: 8080
+
+secrets:
+  psql-credentials:
+    - SPRING_DATASOURCE_USERNAME
+    - SPRING_DATASOURCE_PASSWORD
+  smtp-credentials:
+    - SPRING_MAIL_USERNAME
+    - SPRING_MAIL_PASSWORD
+  auth-credentials:
+    - IAM_AUTH0_ADMIN_CLIENT_SECRET
