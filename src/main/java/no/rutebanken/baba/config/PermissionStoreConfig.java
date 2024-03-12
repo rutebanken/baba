@@ -17,7 +17,7 @@
 package no.rutebanken.baba.config;
 
 import no.rutebanken.baba.permissionstore.service.DefaultPermissionStoreService;
-import no.rutebanken.baba.permissionstore.service.PermissionStoreResource;
+import no.rutebanken.baba.permissionstore.service.PermissionStoreClient;
 import no.rutebanken.baba.permissionstore.service.PermissionStoreService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -30,17 +30,17 @@ public class PermissionStoreConfig {
 
     @Bean
     @Profile("!test")
-    PermissionStoreResource permissionStoreResource(
+    PermissionStoreClient permissionStoreResource(
             @Qualifier("permissionStoreWebClient") WebClient orgRegisterClient
     ) {
-        return new PermissionStoreResource(orgRegisterClient);
+        return new PermissionStoreClient(orgRegisterClient);
     }
 
     @Bean
     @Profile("!test")
-    PermissionStoreService permissionStoreService(PermissionStoreResource permissionStoreResource) {
+    PermissionStoreService permissionStoreService(PermissionStoreClient permissionStoreClient) {
         return new DefaultPermissionStoreService(
-                permissionStoreResource
+                permissionStoreClient
         );
     }
 }

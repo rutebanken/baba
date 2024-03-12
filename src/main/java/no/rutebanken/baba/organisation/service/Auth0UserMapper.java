@@ -52,16 +52,14 @@ public class Auth0UserMapper {
 
         com.auth0.json.mgmt.users.User auth0User = new com.auth0.json.mgmt.users.User();
 
-        Map<String, Object> attributes;
+        // the Auth0 API will not overwrite the existing metadata, it will merge it,
+        // thus it is not necessary to retrieve the existing metadata.
+        Map<String, Object> attributes = new HashMap<>();
         if (existingAuth0User == null) {
-            attributes = new HashMap<>();
-            attributes.put(ROR_CREATED_BY_ROR, "true");
             auth0User.setPassword(generatePassword().toCharArray());
-
-        } else {
-            // the Auth0 API will not overwrite the existing metadata, it will merge it,
-            // thus it is not necessary to retrieve the existing metadata.
-            attributes = new HashMap<>();
+            if (!isFederated) {
+                attributes.put(ROR_CREATED_BY_ROR, "true");
+             }
         }
 
         if (!isFederated) {

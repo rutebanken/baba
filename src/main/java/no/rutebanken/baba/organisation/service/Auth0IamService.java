@@ -10,6 +10,7 @@ import no.rutebanken.baba.organisation.model.responsibility.Role;
 import no.rutebanken.baba.organisation.model.user.User;
 import no.rutebanken.baba.organisation.repository.RoleRepository;
 import no.rutebanken.baba.organisation.repository.UserRepository;
+import no.rutebanken.baba.permissionstore.service.PermissionStoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +24,8 @@ import java.util.stream.Collectors;
 @Profile("auth0")
 public class Auth0IamService implements IamService {
 
+    private static final String ROR_ROLES = "ror_roles";
+
     private static final String ROR_CREATED_BY_ROR = "ror_created_by_ror";
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final List<String> defaultRoles;
@@ -30,11 +33,13 @@ public class Auth0IamService implements IamService {
     private final RoleRepository roleRepository;
     private final Auth0ManagementApi auth0ManagementAPI;
     private final Auth0UserMapper auth0UserMapper;
+    private final PermissionStoreService permissionStoreService;
 
     public Auth0IamService(UserRepository userRepository,
                            RoleRepository roleRepository,
                            AuthAPI authAPI,
                            Auth0UserMapper auth0UserMapper,
+                           PermissionStoreService permissionStoreService,
                            @Value("#{'${iam.auth0.default.roles:rutebanken}'.split(',')}") List<String> defaultRoles,
                            @Value("${iam.auth0.admin.domain}") String domain) {
         this.userRepository = userRepository;
@@ -42,6 +47,7 @@ public class Auth0IamService implements IamService {
         this.defaultRoles = defaultRoles;
         this.auth0ManagementAPI = new Auth0ManagementApi(authAPI, domain);
         this.auth0UserMapper = auth0UserMapper;
+        this.permissionStoreService = permissionStoreService;
     }
 
     @Override
@@ -71,17 +77,28 @@ public class Auth0IamService implements IamService {
             logger.warn("Ignoring user removal for user {} that does not exist in the Auth0 tenant", user.getUsername());
             return;
         }
-        if (!"true".equals(existingAuth0User.getAppMetadata().get(ROR_CREATED_BY_ROR))) {
-            logger.info("Ignoring user removal for user {} that was not created by RoR", user.getUsername());
-            // TODO keep user but remove metadata and roles
-            return;
-        }
+
+        // delete RoR metadata
+        // TODO delete RoR roles.
         try {
-            auth0ManagementAPI.getManagementAPI().users().delete(existingAuth0User.getId()).execute();
-            logger.info("User {} successfully removed from Auth0", user.getUsername());
+            com.auth0.json.mgmt.users.User updatedAuth0User = new com.auth0.json.mgmt.users.User();
+            updatedAuth0User.setAppMetadata(Map.of(ROR_ROLES, List.of()));
+            auth0ManagementAPI.getManagementAPI().users().update(existingAuth0User.getId(), updatedAuth0User).execute();
+            logger.info("RoR metadata for user {} successfully removed from Auth0", user.getUsername());
         } catch (Auth0Exception e) {
-            logger.error("Failed to remove user {} from Auth0", user.getUsername(), e);
-            throw new OrganisationException("Failed to remove user from Auth0");
+            logger.error("Failed to remove RoR metadata of user {} from Auth0", user.getUsername(), e);
+            throw new OrganisationException("Failed to remove user metadata from Auth0");
+        }
+
+        // delete user if it was created by RoR
+        if ("true".equals(existingAuth0User.getAppMetadata().get(ROR_CREATED_BY_ROR))) {
+            try {
+                auth0ManagementAPI.getManagementAPI().users().delete(existingAuth0User.getId()).execute();
+                logger.info("User {} successfully removed from Auth0", user.getUsername());
+            } catch (Auth0Exception e) {
+                logger.error("Failed to remove user {} from Auth0", user.getUsername(), e);
+                throw new OrganisationException("Failed to remove user from Auth0");
+            }
         }
     }
 
@@ -128,7 +145,8 @@ public class Auth0IamService implements IamService {
 
     private boolean isFederated(String email) {
         Objects.requireNonNull(email);
-        return email.toLowerCase(Locale.ROOT).endsWith("entur.org") || email.toLowerCase(Locale.ROOT).endsWith("gmail.com");
+        return permissionStoreService.isFederated(email);
+
     }
 
     private boolean hasUser(User user) {
@@ -169,6 +187,7 @@ public class Auth0IamService implements IamService {
         com.auth0.json.mgmt.users.User existingAuth0User = getAuth0UserByEmail(user.getContactDetails().getEmail());
         com.auth0.json.mgmt.users.User updatedAuth0User = auth0UserMapper.mapToUpdatedPrimaryAuth0User(user, existingAuth0User);
         try {
+
             //  TODO update only metadata if user not created by RoR
             auth0ManagementAPI.getManagementAPI().users().update(existingAuth0User.getId(), updatedAuth0User).execute();
             updateRoles(user, existingAuth0User, roleRepository.findAll());

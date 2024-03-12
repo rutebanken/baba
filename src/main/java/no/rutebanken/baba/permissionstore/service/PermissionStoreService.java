@@ -17,8 +17,5 @@
 package no.rutebanken.baba.permissionstore.service;
 
 public interface PermissionStoreService {
-
-    PermissionStoreUser getUser(String userId);
-
     boolean isFederated(String email);
 }
