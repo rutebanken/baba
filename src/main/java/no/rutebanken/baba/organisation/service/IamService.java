@@ -22,7 +22,11 @@ import no.rutebanken.baba.organisation.model.user.User;
 
 public interface IamService {
 
-	void createOrUpdate(User user);
+	/**
+	 * Remove a user from the tenant.
+	 * Return true if the user account was created and false if it was updated.
+	 */
+	boolean createOrUpdate(User user);
 
 	void removeUser(User user);
 

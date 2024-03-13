@@ -98,14 +98,17 @@ public class UserResource extends BaseResource<User, UserDTO> {
     public Response create(UserDTO dto, @Context UriInfo uriInfo) {
         User user = createEntity(dto);
         if (user.isPersonalAccount()) {
+            boolean created;
             try {
-                iamService.createOrUpdate(user);
+                created = iamService.createOrUpdate(user);
             } catch (RuntimeException e) {
                 LOGGER.warn("Creation of new user in IAM failed. Removing user from local storage. Exception: {}", e.getMessage(), e);
                 deleteEntity(user.getId());
                 throw new OrganisationException("Creation of new user in IAM failed", e);
             }
-            newUserEmailSender.sendEmail(user);
+            if (created) {
+                newUserEmailSender.sendEmail(user);
+            }
         }
         return buildCreatedResponse(uriInfo, user);
     }

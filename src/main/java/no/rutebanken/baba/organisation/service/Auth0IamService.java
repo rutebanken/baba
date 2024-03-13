@@ -50,18 +50,45 @@ public class Auth0IamService implements IamService {
     }
 
     @Override
-    public void createOrUpdate(User user) {
+    public boolean createOrUpdate(User user) {
+        return switch (getAuth0AccountStatus(user)) {
+            case FEDERATED_ACCOUNT_PRESENT -> {
+                updateFederatedUser(user);
+                yield false;
+            }
+            case FEDERATED_ACCOUNT_MISSING_ALREADY_PREPROVISIONED -> {
+                updatePreProvisionedFederatedUser(user);
+                yield false;
+            }
+            case FEDERATED_ACCOUNT_MISSING_NOT_PREPROVISIONED -> {
+                preProvisionFederatedUser(user);
+                yield true;
+            }
+            case PRIMARY_ACCOUNT_PRESENT -> {
+                updatePrimaryUser(user);
+                yield false;
+            }
+            case PRIMARY_ACCOUNT_MISSING -> {
+                createPrimaryUser(user);
+                yield true;
+            }
+        };
+    }
+
+    private Auth0AccountStatus getAuth0AccountStatus(User user) {
         if (isFederated(user.getContactDetails().getEmail())) {
             if (hasUser(user)) {
-                updateFederatedUser(user);
+                return Auth0AccountStatus.FEDERATED_ACCOUNT_PRESENT;
+            } else if (hasPreProvisionedUser(user)) {
+                return Auth0AccountStatus.FEDERATED_ACCOUNT_MISSING_ALREADY_PREPROVISIONED;
             } else {
-                preProvisionFederatedUser(user);
+                return Auth0AccountStatus.FEDERATED_ACCOUNT_MISSING_NOT_PREPROVISIONED;
             }
         } else {
             if (hasUser(user)) {
-                updatePrimaryUser(user);
+                return Auth0AccountStatus.PRIMARY_ACCOUNT_PRESENT;
             } else {
-                createPrimaryUser(user);
+                return Auth0AccountStatus.PRIMARY_ACCOUNT_MISSING;
             }
         }
     }
@@ -164,10 +191,23 @@ public class Auth0IamService implements IamService {
 
     /**
      * Return true if the user exists already in the Auth0 tenant, either as a primary user or a federated user.
+     * Pre-provisioned user are excluded.
      */
     private boolean hasUser(User user) {
         try {
             getAuth0UserByEmail(user.getContactDetails().getEmail());
+            return true;
+        } catch (OAuth2UserNotFoundException nfe) {
+            return false;
+        }
+    }
+
+    /**
+     * Return true if the federated user has already a pre-provisioned account.
+     */
+    private boolean hasPreProvisionedUser(User user) {
+        try {
+            getAuth0UserByEmail(user.getContactDetails().getEmail(), true);
             return true;
         } catch (OAuth2UserNotFoundException nfe) {
             return false;
@@ -198,14 +238,21 @@ public class Auth0IamService implements IamService {
 
     /**
      * Update a primary user in the local Auth0 user-password database.
+     * If the user was not created by RoR, only roles and metadata are updated.
      */
     private void updatePrimaryUser(User user) {
         logger.info("Updating primary user {} in Auth0", user.getUsername());
         com.auth0.json.mgmt.users.User existingAuth0User = getAuth0UserByEmail(user.getContactDetails().getEmail());
         com.auth0.json.mgmt.users.User updatedAuth0User = auth0UserMapper.mapToUpdatedPrimaryAuth0User(user, existingAuth0User);
-        try {
 
-            //  TODO update only metadata if user not created by RoR
+        if (!isCreatedByRoR(existingAuth0User)) {
+            updatedAuth0User.setGivenName(null);
+            updatedAuth0User.setFamilyName(null);
+            updatedAuth0User.setName(null);
+            updatedAuth0User.setEmail(null);
+        }
+
+        try {
             auth0ManagementAPI.getManagementAPI().users().update(existingAuth0User.getId(), updatedAuth0User).execute();
             updateRoles(user, existingAuth0User, getAllSystemRoles());
             logger.info("User {} successfully updated in Auth0", user.getUsername());
@@ -217,6 +264,7 @@ public class Auth0IamService implements IamService {
     }
 
     /**
+     * Create a new account in the pre-provisioning database.
      * Copy roles and metadata for the given federated user into the pre-provisioning database.
      * When the user logs in for the first time, Auth0 will automatically apply the roles and metadata to the user account.
      * Other user fields are ignored (email, name, ...)
@@ -233,9 +281,28 @@ public class Auth0IamService implements IamService {
             logger.error("User creation failed for user {}", user, e);
             if (createdUser != null) {
                 logger.info("Attempting to remove user {}", user);
+                //TODO remove from preprovisioning database
                 removeUser(user);
             }
             throw new OrganisationException("User creation failed");
+        }
+    }
+
+    /**
+     * Update an existing account in the pre-provisioning database.
+     */
+    private void updatePreProvisionedFederatedUser(User user) {
+        logger.info("Updating pre-provisioned user {} in Auth0", user.getUsername());
+        com.auth0.json.mgmt.users.User existingAuth0User = getAuth0UserByEmail(user.getContactDetails().getEmail(), true);
+        com.auth0.json.mgmt.users.User updatedAuth0User = auth0UserMapper.mapToAlreadyPreProvisionedFederatedAuth0User(user, existingAuth0User);
+        try {
+            auth0ManagementAPI.getManagementAPI().users().update(existingAuth0User.getId(), updatedAuth0User).execute();
+            updateRoles(user, existingAuth0User, getAllSystemRoles());
+            logger.info("User {} successfully updated in Auth0", user.getUsername());
+
+        } catch (Exception e) {
+            logger.error("User update in Auth0 failed for user {}", user.getUsername(), e);
+            throw new OrganisationException("User update in Auth0 failed");
         }
 
     }
@@ -318,8 +385,26 @@ public class Auth0IamService implements IamService {
     }
 
     private com.auth0.json.mgmt.users.User getAuth0UserByEmail(String email) {
+        return getAuth0UserByEmail(email, false);
+    }
+
+
+    private com.auth0.json.mgmt.users.User getAuth0UserByEmail(String email, boolean preProvisioning) {
+        String query;
+        //TODO replace hardcoded preprovisioning
+        if (preProvisioning) {
+            query = "email:\"" + email + "\" AND identities.connection:\"preprovisioning\"";
+        } else {
+            query = "email:\"" + email + "\" AND NOT identities.connection:\"preprovisioning\"";
+        }
+
         try {
-            List<com.auth0.json.mgmt.users.User> matchingUsers = auth0ManagementAPI.getManagementAPI().users().list(new UserFilter().withQuery("email:\"" + email + "\"")).execute().getBody().getItems();
+            List<com.auth0.json.mgmt.users.User> matchingUsers = auth0ManagementAPI.getManagementAPI()
+                    .users()
+                    .list(new UserFilter().withQuery(query))
+                    .execute()
+                    .getBody()
+                    .getItems();
             if (matchingUsers.isEmpty()) {
                 throw new OAuth2UserNotFoundException("User not found in Auth0: " + email);
             } else if (matchingUsers.size() > 1) {
@@ -362,4 +447,14 @@ public class Auth0IamService implements IamService {
         }
         return roleNames;
     }
+
+
+    private enum Auth0AccountStatus {
+        FEDERATED_ACCOUNT_PRESENT,
+        FEDERATED_ACCOUNT_MISSING_ALREADY_PREPROVISIONED,
+        FEDERATED_ACCOUNT_MISSING_NOT_PREPROVISIONED,
+        PRIMARY_ACCOUNT_PRESENT,
+        PRIMARY_ACCOUNT_MISSING
+    }
+
 }

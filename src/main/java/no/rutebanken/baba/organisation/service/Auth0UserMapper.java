@@ -47,6 +47,10 @@ public class Auth0UserMapper {
         return toAuth0User(user, null, true, true);
     }
 
+    public com.auth0.json.mgmt.users.User mapToAlreadyPreProvisionedFederatedAuth0User(User user, com.auth0.json.mgmt.users.User existingAuth0User) {
+        return toAuth0User(user, existingAuth0User, true, true);
+    }
+
 
     private com.auth0.json.mgmt.users.User toAuth0User(User user, com.auth0.json.mgmt.users.User existingAuth0User, boolean isFederated, boolean isPreProvisioned) {
 
