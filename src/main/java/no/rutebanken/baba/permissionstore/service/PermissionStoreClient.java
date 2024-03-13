@@ -15,8 +15,6 @@
 
 package no.rutebanken.baba.permissionstore.service;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.util.retry.Retry;
@@ -27,14 +25,12 @@ import java.util.function.Predicate;
 /**
  * Client for accessing the Permission Store API.
  */
-@Service
 public class PermissionStoreClient {
     private static final long MAX_RETRY_ATTEMPTS = 3;
 
     private final WebClient webClient;
 
-    public PermissionStoreClient(
-            @Qualifier("permissionStoreWebClient") WebClient permissionStoreWebClient
+    public PermissionStoreClient(WebClient permissionStoreWebClient
     ) {
         this.webClient = permissionStoreWebClient;
     }

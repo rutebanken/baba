@@ -31,9 +31,9 @@ public class PermissionStoreConfig {
     @Bean
     @Profile("!test")
     PermissionStoreClient permissionStoreResource(
-            @Qualifier("permissionStoreWebClient") WebClient orgRegisterClient
+            @Qualifier("permissionStoreWebClient") WebClient permissionStoreWebClient
     ) {
-        return new PermissionStoreClient(orgRegisterClient);
+        return new PermissionStoreClient(permissionStoreWebClient);
     }
 
     @Bean
