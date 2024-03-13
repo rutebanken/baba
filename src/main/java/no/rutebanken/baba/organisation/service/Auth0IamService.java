@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 public class Auth0IamService implements IamService {
 
     private static final String ROR_ROLES = "ror_roles";
-
     private static final String ROR_CREATED_BY_ROR = "ror_created_by_ror";
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final List<String> defaultRoles;
@@ -79,7 +78,6 @@ public class Auth0IamService implements IamService {
         }
 
         // delete RoR metadata
-        // TODO delete RoR roles.
         try {
             com.auth0.json.mgmt.users.User updatedAuth0User = new com.auth0.json.mgmt.users.User();
             updatedAuth0User.setAppMetadata(Map.of(ROR_ROLES, List.of()));
@@ -90,8 +88,12 @@ public class Auth0IamService implements IamService {
             throw new OrganisationException("Failed to remove user metadata from Auth0");
         }
 
-        // delete user if it was created by RoR
-        if ("true".equals(existingAuth0User.getAppMetadata().get(ROR_CREATED_BY_ROR))) {
+        // delete RoR roles.
+        user.setResponsibilitySets(Set.of());
+        updateRoles(user, existingAuth0User, getAllSystemRoles());
+
+        // delete user only if it was created by RoR
+        if (isCreatedByRoR(existingAuth0User)) {
             try {
                 auth0ManagementAPI.getManagementAPI().users().delete(existingAuth0User.getId()).execute();
                 logger.info("User {} successfully removed from Auth0", user.getUsername());
@@ -131,7 +133,7 @@ public class Auth0IamService implements IamService {
     @Override
     public void updateResponsibilitySet(ResponsibilitySet responsibilitySet) {
         logger.info("Updating responsibility set {} in Auth0", responsibilitySet.getId());
-        List<Role> systemRoles = roleRepository.findAll();
+        List<Role> systemRoles = getAllSystemRoles();
         try {
             userRepository.findUsersWithResponsibilitySet(responsibilitySet).forEach(u -> {
                 com.auth0.json.mgmt.users.User auth0User = getAuth0UserByEmail(u.getContactDetails().getEmail());
@@ -143,12 +145,26 @@ public class Auth0IamService implements IamService {
         }
     }
 
+    /**
+     * Return true if the Auth0 user account was created by RoR.
+     * This excludes primary users that were created directly in Entur Partner and federated users.
+     */
+    private static boolean isCreatedByRoR(com.auth0.json.mgmt.users.User existingAuth0User) {
+        return "true".equals(existingAuth0User.getAppMetadata().get(ROR_CREATED_BY_ROR));
+    }
+
+    /**
+     * Return true if the email address belongs to a federated domain.
+     */
     private boolean isFederated(String email) {
         Objects.requireNonNull(email);
         return permissionStoreService.isFederated(email);
 
     }
 
+    /**
+     * Return true if the user exists already in the Auth0 tenant, either as a primary user or a federated user.
+     */
     private boolean hasUser(User user) {
         try {
             getAuth0UserByEmail(user.getContactDetails().getEmail());
@@ -168,7 +184,7 @@ public class Auth0IamService implements IamService {
         try {
             createdUser = auth0ManagementAPI.getManagementAPI().users().create(auth0User).execute().getBody();
             logger.info("Created user {} with Auth0 id {}", user.getUsername(), createdUser.getId());
-            updateRoles(user, createdUser, roleRepository.findAll());
+            updateRoles(user, createdUser, getAllSystemRoles());
         } catch (Exception e) {
             logger.error("User creation failed for user {}", user, e);
             if (createdUser != null) {
@@ -178,6 +194,7 @@ public class Auth0IamService implements IamService {
             throw new OrganisationException("User creation failed");
         }
     }
+
 
     /**
      * Update a primary user in the local Auth0 user-password database.
@@ -190,7 +207,7 @@ public class Auth0IamService implements IamService {
 
             //  TODO update only metadata if user not created by RoR
             auth0ManagementAPI.getManagementAPI().users().update(existingAuth0User.getId(), updatedAuth0User).execute();
-            updateRoles(user, existingAuth0User, roleRepository.findAll());
+            updateRoles(user, existingAuth0User, getAllSystemRoles());
             logger.info("User {} successfully updated in Auth0", user.getUsername());
 
         } catch (Exception e) {
@@ -201,7 +218,7 @@ public class Auth0IamService implements IamService {
 
     /**
      * Copy roles and metadata for the given federated user into the pre-provisioning database.
-     * When the user logs in for the first time, Auth0 will automatically apply the roles and metadata to the user.
+     * When the user logs in for the first time, Auth0 will automatically apply the roles and metadata to the user account.
      * Other user fields are ignored (email, name, ...)
      */
     private void preProvisionFederatedUser(User user) {
@@ -211,7 +228,7 @@ public class Auth0IamService implements IamService {
         try {
             createdUser = auth0ManagementAPI.getManagementAPI().users().create(auth0User).execute().getBody();
             logger.info("Created user {} with Auth0 id {}", user.getUsername(), createdUser.getId());
-            updateRoles(user, createdUser, roleRepository.findAll());
+            updateRoles(user, createdUser, getAllSystemRoles());
         } catch (Exception e) {
             logger.error("User creation failed for user {}", user, e);
             if (createdUser != null) {
@@ -225,7 +242,7 @@ public class Auth0IamService implements IamService {
 
     /**
      * Update roles and metadata for the given federated user.
-     * Other user fields are ignored (email, name, ...)
+     * Other fields are ignored (email, name, ...)
      */
     private void updateFederatedUser(User user) {
         logger.info("Updating federated user {} in Auth0", user.getUsername());
@@ -233,7 +250,7 @@ public class Auth0IamService implements IamService {
         com.auth0.json.mgmt.users.User updatedAuth0User = auth0UserMapper.mapToUpdatedFederatedAuth0User(user, existingAuth0User);
         try {
             auth0ManagementAPI.getManagementAPI().users().update(existingAuth0User.getId(), updatedAuth0User).execute();
-            updateRoles(user, existingAuth0User, roleRepository.findAll());
+            updateRoles(user, existingAuth0User, getAllSystemRoles());
             logger.info("User {} successfully updated in Auth0", user.getUsername());
 
         } catch (Exception e) {
@@ -241,6 +258,13 @@ public class Auth0IamService implements IamService {
             throw new OrganisationException("User update in Auth0 failed");
         }
 
+    }
+
+    /**
+     * Return all roles defined in the role repository.
+     */
+    private List<Role> getAllSystemRoles() {
+        return roleRepository.findAll();
     }
 
 
