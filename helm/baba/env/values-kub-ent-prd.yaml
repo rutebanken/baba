@@ -20,7 +20,7 @@ auth0:
     internal:
       url: https://internal.entur.org/
     partner:
-      url: https://partner.entur.org
+      url: https://partner.entur.org/
   admin:
     client:
       id: GLBqcAUgBKVLby3ur9KTqvqraTUmnXvD
