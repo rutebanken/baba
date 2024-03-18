@@ -19,6 +19,8 @@ auth0:
   entur:
     internal:
       url: https://internal.dev.entur.org/
+    partner:
+      url: https://partner.dev.entur.org
   admin:
     client:
       id: dXrBh0VYvPEbz3tCTQzSudyde5hK93mL
