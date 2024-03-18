@@ -20,6 +20,8 @@ auth0:
   entur:
     internal:
       url: https://internal.staging.entur.org/
+    partner:
+      url: https://partner.staging.entur.org
   admin:
     client:
       id: JyhRpz2uzDSEKuNdUQMD10wm7y5qiePT
