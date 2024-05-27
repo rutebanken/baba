@@ -29,7 +29,7 @@ public class ChouetteReferentialInfo {
     public ChouetteReferentialInfo(Provider provider) {
 
         this.schemaName = provider.getChouetteInfo().referential;
-        this.dataspaceFormat = provider.getChouetteInfo().dataFormat;
+        this.dataspaceFormat = "";
         this.dataspaceProjection = "";
         this.dataspaceName = provider.getName();
         this.organisationName = provider.getChouetteInfo().organisation;
