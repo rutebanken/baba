@@ -33,13 +33,11 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 
-import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
-
 @Component
 @Produces("application/json")
 @Path("code_spaces")
 @Transactional
-@PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
+@PreAuthorize("@userContextService.isOrganisationAdmin()")
 @Tags(value = {
 		@Tag(name = "CodeSpaceResource", description = "Code space resource")
 })

@@ -40,6 +40,8 @@ data:
     baba.oauth2.resourceserver.auth0.ror.jwt.issuer-uri={{ .Values.auth0.ror.url }}
     baba.oauth2.resourceserver.auth0.ror.jwt.audience={{ .Values.auth0.ror.audience }}
 
+    # Authorization
+    baba.security.user-context-service=token-based
 
     server.port={{ .Values.service.http.internalPort }}
     server.compression.enabled=true

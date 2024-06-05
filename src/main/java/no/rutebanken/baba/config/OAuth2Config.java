@@ -16,10 +16,8 @@
 
 package no.rutebanken.baba.config;
 
-import org.entur.oauth2.JwtRoleAssignmentExtractor;
 import org.entur.oauth2.multiissuer.MultiIssuerAuthenticationManagerResolver;
 import org.entur.oauth2.multiissuer.MultiIssuerAuthenticationManagerResolverBuilder;
-import org.rutebanken.helper.organisation.RoleAssignmentExtractor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,16 +28,6 @@ import org.springframework.context.annotation.Profile;
  */
 @Configuration
 public class OAuth2Config {
-
-    /**
-     * Extract role assignments from a JWT token.
-     *
-     */
-    @Bean
-    public RoleAssignmentExtractor roleAssignmentExtractor() {
-        return new JwtRoleAssignmentExtractor();
-    }
-
 
     @Bean
     @Profile("!test")
