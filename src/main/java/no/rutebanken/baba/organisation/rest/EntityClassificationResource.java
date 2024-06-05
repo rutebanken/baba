@@ -41,13 +41,11 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
-
 @Component
 @Path("entity_types/{entityTypeId}/entity_classifications")
 @Produces("application/json")
 @Transactional
-@PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
+@PreAuthorize("@userContextService.isOrganizationAdmin()")
 @Tags(value = {
         @Tag(name = "EntityClassificationResource", description = "Entity classification resource")
 })

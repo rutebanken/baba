@@ -35,13 +35,11 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 
-import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
-
 @Component
 @Path("administrative_zones")
 @Produces("application/json")
 @Transactional
-@PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
+@PreAuthorize("@userContextService.isOrganizationAdmin()")
 @Tags(value = {
         @Tag(name = "AdministrativeZoneResource", description ="Administrative zone resource")
 })

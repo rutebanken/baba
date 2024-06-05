@@ -25,17 +25,13 @@ import no.rutebanken.baba.exceptions.ReferentialAlreadyExistException;
 import no.rutebanken.baba.provider.domain.Provider;
 import no.rutebanken.baba.provider.domain.TransportMode;
 import no.rutebanken.baba.provider.repository.ProviderRepository;
-import no.rutebanken.baba.security.ProviderAuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-
-import static org.rutebanken.helper.organisation.AuthorizationConstants.*;
 
 
 @Component
@@ -44,7 +40,6 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.*;
 @Tags(value = {
         @Tag(name = "ProviderResource", description = "Provider resource")
 })
-@PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "')")
 public class ProviderResource {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProviderResource.class);
@@ -53,17 +48,15 @@ public class ProviderResource {
 
     private final ChouetteReferentialService chouetteReferentialService;
 
-    private final ProviderAuthenticationService providerAuthenticationService;
 
-    public ProviderResource(ProviderRepository providerRepository, ChouetteReferentialService chouetteReferentialService, ProviderAuthenticationService providerAuthenticationService) {
+    public ProviderResource(ProviderRepository providerRepository, ChouetteReferentialService chouetteReferentialService) {
         this.providerRepository = providerRepository;
         this.chouetteReferentialService = chouetteReferentialService;
-        this.providerAuthenticationService = providerAuthenticationService;
     }
 
     @GET
     @Path("/{providerId}")
-    @PreAuthorize("hasAnyRole('" + ROLE_ROUTE_DATA_ADMIN + "','" + ROLE_ROUTE_DATA_VIEW_ALL + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#providerId)")
+    @PreAuthorize("@userContextService.canViewProvider(#providerId)")
     public Provider getProvider(@PathParam("providerId") Long providerId) {
         LOGGER.debug("Returning provider with id '{}'", providerId);
         Provider provider = providerRepository.getProvider(providerId);
@@ -75,6 +68,8 @@ public class ProviderResource {
 
     @DELETE
     @Path("/{providerId}")
+    @PreAuthorize("@userContextService.isRouteDataAdmin()")
+
     public void deleteProvider(@PathParam("providerId") Long providerId) {
         LOGGER.info("Deleting provider with id '{}'", providerId);
         Provider provider = providerRepository.getProvider(providerId);
@@ -87,6 +82,7 @@ public class ProviderResource {
 
     @PUT
     @Path("/{providerId}")
+    @PreAuthorize("@userContextService.isRouteDataAdmin()")
     public void updateProvider(Provider provider) {
         LOGGER.info("Updating provider {}", provider);
         Long providerId = provider.getId();
@@ -99,6 +95,7 @@ public class ProviderResource {
     }
 
     @POST
+    @PreAuthorize("@userContextService.isRouteDataAdmin()")
     public Provider createProvider(Provider provider) {
         LOGGER.info("Creating provider {}", provider);
         String referential = provider.getChouetteInfo().referential;
@@ -121,21 +118,15 @@ public class ProviderResource {
      * Route data administrators, editors and viewers can access this method, but they will retrieve only the providers they have access to.
      */
     @GET
-    @PreAuthorize("hasAnyRole('" + ROLE_ROUTE_DATA_ADMIN + "','" + ROLE_ROUTE_DATA_EDIT + "','" + ROLE_ROUTE_DATA_VIEW_ALL + "')")
+    @PostFilter("@userContextService.canViewProvider(filterObject.getId())")
     public Collection<Provider> getProviders() {
-        Collection<Provider> providers = providerRepository.getProviders();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (providerAuthenticationService.canViewAllProviders(authentication)) {
-            LOGGER.debug("Returning all providers.");
-            return providers;
-        }
-        LOGGER.debug("Returning authorized providers.");
-        return providers.stream().filter(provider -> providerAuthenticationService.hasRoleForProvider(authentication, ROLE_ROUTE_DATA_EDIT, provider.getId())).toList();
+        return providerRepository.getProviders();
     }
 
 
     @GET
     @Path("transport_modes")
+    @PreAuthorize("@userContextService.isRouteDataAdmin()")
     public TransportMode[] getTransportModes() {
         return TransportMode.values();
     }

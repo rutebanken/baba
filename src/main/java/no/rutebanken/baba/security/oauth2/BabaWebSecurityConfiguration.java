@@ -1,6 +1,10 @@
 package no.rutebanken.baba.security.oauth2;
 
+import no.rutebanken.baba.security.FullAccessUserContextService;
+import no.rutebanken.baba.security.UserContextService;
 import org.entur.oauth2.multiissuer.MultiIssuerAuthenticationManagerResolver;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -54,6 +58,17 @@ public class BabaWebSecurityConfiguration {
                 )
                 .oauth2ResourceServer(configurer -> configurer.authenticationManagerResolver(multiIssuerAuthenticationManagerResolver));
         return http.build();
+    }
+
+
+    @ConditionalOnMissingBean
+    @ConditionalOnProperty(
+            value = "baba.security.user-context-service",
+            havingValue = "full-access"
+    )
+    @Bean
+    public UserContextService userContextService() {
+        return new FullAccessUserContextService();
     }
 
 }

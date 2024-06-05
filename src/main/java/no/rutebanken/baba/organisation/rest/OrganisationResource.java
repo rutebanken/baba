@@ -34,13 +34,11 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 
-import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
-
 @Component
 @Path("")
 @Produces("application/json")
 @Transactional
-@PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
+@PreAuthorize("@userContextService.isOrganizationAdmin()")
 @Tags(value = {
 		@Tag(name = "OrganisationResource", description ="Organisation resource")
 })

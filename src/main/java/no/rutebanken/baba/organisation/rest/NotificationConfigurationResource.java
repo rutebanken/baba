@@ -38,13 +38,11 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import java.util.Set;
 
-import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
-
 @Component
 @Path("users/{userName}/notification_configurations")
 @Produces("application/json")
 @Transactional
-@PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
+@PreAuthorize("@userContextService.isOrganizationAdmin()")
 @Tags(value = {
         @Tag(name = "NotificationConfigurationResource", description ="Notification configuration resource")
 })
@@ -61,7 +59,7 @@ public class NotificationConfigurationResource {
     }
 
     @GET
-    @PreAuthorize("#userName == authentication.name or hasRole('" + ROLE_ORGANISATION_EDIT + "')")
+    @PreAuthorize("#userName == authentication.name or @userContextService.isOrganizationAdmin()")
     public Set<NotificationConfigDTO> get(@PathParam("userName") String userName, @QueryParam("full") boolean fullObject) {
         User entity = getUser(userName);
         return mapper.toDTO(entity.getNotificationConfigurations(),false);
@@ -69,7 +67,7 @@ public class NotificationConfigurationResource {
 
 
     @PUT
-    @PreAuthorize("#userName == authentication.name or hasRole('" + ROLE_ORGANISATION_EDIT + "')")
+    @PreAuthorize("#userName == authentication.name or @userContextService.isOrganizationAdmin()")
     public void createOrUpdate(@PathParam("userName") String userName, Set<NotificationConfigDTO> config) {
         validator.validate(userName, config);
         User user = getUser(userName.toLowerCase());
@@ -79,7 +77,7 @@ public class NotificationConfigurationResource {
 
 
     @DELETE
-    @PreAuthorize("#userName == authentication.name or hasRole('" + ROLE_ORGANISATION_EDIT + "')")
+    @PreAuthorize("#userName == authentication.name or @userContextService.isOrganizationAdmin()")
     public void delete(@PathParam("userName") String userName) {
         User user = getUser(userName);
         user.getNotificationConfigurations().clear();

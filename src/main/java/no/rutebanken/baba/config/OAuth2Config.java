@@ -16,7 +16,10 @@
 
 package no.rutebanken.baba.config;
 
-import org.entur.oauth2.JwtRoleAssignmentExtractor;
+import no.rutebanken.baba.provider.repository.ProviderRepository;
+import no.rutebanken.baba.security.OAuth2TokenUserContextService;
+import no.rutebanken.baba.security.JwtRoleAssignmentExtractor;
+import no.rutebanken.baba.security.UserContextService;
 import org.entur.oauth2.multiissuer.MultiIssuerAuthenticationManagerResolver;
 import org.entur.oauth2.multiissuer.MultiIssuerAuthenticationManagerResolverBuilder;
 import org.rutebanken.helper.organisation.RoleAssignmentExtractor;
@@ -38,6 +41,16 @@ public class OAuth2Config {
     @Bean
     public RoleAssignmentExtractor roleAssignmentExtractor() {
         return new JwtRoleAssignmentExtractor();
+    }
+
+
+    @Bean
+    public UserContextService userContextService(ProviderRepository providerRepository,
+                                                 RoleAssignmentExtractor roleAssignmentExtractor) {
+        return new OAuth2TokenUserContextService(
+                providerRepository,
+                roleAssignmentExtractor
+        );
     }
 
 
