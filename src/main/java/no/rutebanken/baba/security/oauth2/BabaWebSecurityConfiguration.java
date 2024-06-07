@@ -55,5 +55,4 @@ public class BabaWebSecurityConfiguration {
                 .oauth2ResourceServer(configurer -> configurer.authenticationManagerResolver(multiIssuerAuthenticationManagerResolver));
         return http.build();
     }
-
 }

@@ -41,6 +41,9 @@ public class JpaProviderRepository implements ProviderRepository {
 
     @Override
     public Provider getProvider(Long id) {
+		if(id == null) {
+			return null;
+		}
         return entityManager.find(Provider.class, id);
     }
 

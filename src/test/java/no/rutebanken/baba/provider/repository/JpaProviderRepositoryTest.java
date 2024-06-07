@@ -47,6 +47,16 @@ class JpaProviderRepositoryTest extends BaseIntegrationTest {
                                                            new ChouetteInfo(1L, "flybussekspressen", "flybussekspressen", "Rutebanken", "admin@rutebanken.org")));
     }
 
+    @Test
+    void testGetProviderByNullLongId() {
+        Assertions.assertNull(repository.getProvider((Long) null));
+    }
+
+    @Test
+    void testGetProviderByNullStringId() {
+        Assertions.assertNull(repository.getProvider((String) null));
+    }
+
 
     @Test
     void testCreateAndUpdateAndDeleteProvider() {
