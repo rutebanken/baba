@@ -56,7 +56,7 @@ public class ProviderResource {
 
     @GET
     @Path("/{providerId}")
-    @PreAuthorize("@userContextService.canViewRouteData(#providerId)")
+    @PreAuthorize("@authorizationService.canViewRouteData(#providerId)")
     public Provider getProvider(@PathParam("providerId") Long providerId) {
         LOGGER.debug("Returning provider with id '{}'", providerId);
         Provider provider = providerRepository.getProvider(providerId);
@@ -68,7 +68,7 @@ public class ProviderResource {
 
     @DELETE
     @Path("/{providerId}")
-    @PreAuthorize("@userContextService.isRouteDataAdmin()")
+    @PreAuthorize("@authorizationService.isRouteDataAdmin()")
 
     public void deleteProvider(@PathParam("providerId") Long providerId) {
         LOGGER.info("Deleting provider with id '{}'", providerId);
@@ -82,7 +82,7 @@ public class ProviderResource {
 
     @PUT
     @Path("/{providerId}")
-    @PreAuthorize("@userContextService.isRouteDataAdmin()")
+    @PreAuthorize("@authorizationService.isRouteDataAdmin()")
     public void updateProvider(Provider provider) {
         LOGGER.info("Updating provider {}", provider);
         Long providerId = provider.getId();
@@ -95,7 +95,7 @@ public class ProviderResource {
     }
 
     @POST
-    @PreAuthorize("@userContextService.isRouteDataAdmin()")
+    @PreAuthorize("@authorizationService.isRouteDataAdmin()")
     public Provider createProvider(Provider provider) {
         LOGGER.info("Creating provider {}", provider);
         String referential = provider.getChouetteInfo().referential;
@@ -118,7 +118,7 @@ public class ProviderResource {
      * Route data administrators, editors and viewers can access this method, but they will retrieve only the providers they have access to.
      */
     @GET
-    @PostFilter("@userContextService.canViewRouteData(filterObject.getId())")
+    @PostFilter("@authorizationService.canViewRouteData(filterObject.getId())")
     public Collection<Provider> getProviders() {
         return providerRepository.getProviders();
     }
@@ -126,7 +126,7 @@ public class ProviderResource {
 
     @GET
     @Path("transport_modes")
-    @PreAuthorize("@userContextService.isRouteDataAdmin()")
+    @PreAuthorize("@authorizationService.isRouteDataAdmin()")
     public TransportMode[] getTransportModes() {
         return TransportMode.values();
     }

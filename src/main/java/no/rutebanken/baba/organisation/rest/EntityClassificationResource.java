@@ -45,7 +45,7 @@ import java.util.List;
 @Path("entity_types/{entityTypeId}/entity_classifications")
 @Produces("application/json")
 @Transactional
-@PreAuthorize("@userContextService.isOrganisationAdmin()")
+@PreAuthorize("@authorizationService.isOrganisationAdmin()")
 @Tags(value = {
         @Tag(name = "EntityClassificationResource", description = "Entity classification resource")
 })

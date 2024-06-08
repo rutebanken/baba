@@ -42,7 +42,7 @@ import java.util.Set;
 @Path("users/{userName}/notification_configurations")
 @Produces("application/json")
 @Transactional
-@PreAuthorize("@userContextService.isOrganisationAdmin()")
+@PreAuthorize("@authorizationService.isOrganisationAdmin()")
 @Tags(value = {
         @Tag(name = "NotificationConfigurationResource", description ="Notification configuration resource")
 })
@@ -59,7 +59,7 @@ public class NotificationConfigurationResource {
     }
 
     @GET
-    @PreAuthorize("#userName == authentication.name or @userContextService.isOrganisationAdmin()")
+    @PreAuthorize("#userName == authentication.name or @authorizationService.isOrganisationAdmin()")
     public Set<NotificationConfigDTO> get(@PathParam("userName") String userName, @QueryParam("full") boolean fullObject) {
         User entity = getUser(userName);
         return mapper.toDTO(entity.getNotificationConfigurations(),false);
@@ -67,7 +67,7 @@ public class NotificationConfigurationResource {
 
 
     @PUT
-    @PreAuthorize("#userName == authentication.name or @userContextService.isOrganisationAdmin()")
+    @PreAuthorize("#userName == authentication.name or @authorizationService.isOrganisationAdmin()")
     public void createOrUpdate(@PathParam("userName") String userName, Set<NotificationConfigDTO> config) {
         validator.validate(userName, config);
         User user = getUser(userName.toLowerCase());
@@ -77,7 +77,7 @@ public class NotificationConfigurationResource {
 
 
     @DELETE
-    @PreAuthorize("#userName == authentication.name or @userContextService.isOrganisationAdmin()")
+    @PreAuthorize("#userName == authentication.name or @authorizationService.isOrganisationAdmin()")
     public void delete(@PathParam("userName") String userName) {
         User user = getUser(userName);
         user.getNotificationConfigurations().clear();

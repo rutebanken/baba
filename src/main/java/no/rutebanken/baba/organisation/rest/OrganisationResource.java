@@ -38,7 +38,7 @@ import jakarta.ws.rs.Produces;
 @Path("")
 @Produces("application/json")
 @Transactional
-@PreAuthorize("@userContextService.isOrganisationAdmin()")
+@PreAuthorize("@authorizationService.isOrganisationAdmin()")
 @Tags(value = {
 		@Tag(name = "OrganisationResource", description ="Organisation resource")
 })

@@ -53,7 +53,7 @@ import java.util.List;
 @Path("users")
 @Produces("application/json")
 @Transactional
-@PreAuthorize("@userContextService.isOrganisationAdmin()")
+@PreAuthorize("@authorizationService.isOrganisationAdmin()")
 @Tags(value = {
         @Tag(name = "UserResource", description ="User resource")
 })

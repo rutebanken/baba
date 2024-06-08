@@ -40,7 +40,7 @@ import java.util.List;
 public abstract class AnnotatedBaseResource<E extends VersionedEntity, D extends BaseDTO> extends BaseResource<E, D> {
 
 	@POST
-	@PreAuthorize("@userContextService.isOrganisationAdmin()")
+	@PreAuthorize("@authorizationService.isOrganisationAdmin()")
 	public Response create(D dto, @Context UriInfo uriInfo) {
 		return super.createEntity(dto, uriInfo);
 	}
@@ -48,7 +48,7 @@ public abstract class AnnotatedBaseResource<E extends VersionedEntity, D extends
 
 	@PUT
 	@Path("{id}")
-	@PreAuthorize("@userContextService.isOrganisationAdmin()")
+	@PreAuthorize("@authorizationService.isOrganisationAdmin()")
 	public void update(@PathParam("id") String id, D dto) {
 		super.updateEntity(id, dto);
 	}
@@ -56,20 +56,20 @@ public abstract class AnnotatedBaseResource<E extends VersionedEntity, D extends
 
 	@GET
 	@Path("{id}")
-	@PreAuthorize("@userContextService.isOrganisationAdmin()")
+	@PreAuthorize("@authorizationService.isOrganisationAdmin()")
 	public D get(@PathParam("id") String id) {
 		return super.getEntity(id);
 	}
 
 	@DELETE
 	@Path("{id}")
-	@PreAuthorize("@userContextService.isOrganisationAdmin()")
+	@PreAuthorize("@authorizationService.isOrganisationAdmin()")
 	public void delete(@PathParam("id") String id) {
 		super.deleteEntity(id);
 	}
 
 	@GET
-	@PreAuthorize("@userContextService.isOrganisationAdmin()")
+	@PreAuthorize("@authorizationService.isOrganisationAdmin()")
 	public List<D> listAll() {
 		return super.listAllEntities();
 	}
