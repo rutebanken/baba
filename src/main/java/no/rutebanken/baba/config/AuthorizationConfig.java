@@ -54,7 +54,7 @@ public class AuthorizationConfig {
             havingValue = "full-access"
     )
     @Bean("authorizationService")
-    public AuthorizationService<Long> fullAccessAuthorization() {
+    public AuthorizationService<Long> fullAccessAuthorizationService() {
         return new FullAccessAuthorizationService();
     }
 
