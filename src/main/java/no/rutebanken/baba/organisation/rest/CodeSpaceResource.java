@@ -37,7 +37,7 @@ import jakarta.ws.rs.Produces;
 @Produces("application/json")
 @Path("code_spaces")
 @Transactional
-@PreAuthorize("@userContextService.isOrganisationAdmin()")
+@PreAuthorize("@authorizationService.isOrganisationAdmin()")
 @Tags(value = {
 		@Tag(name = "CodeSpaceResource", description = "Code space resource")
 })

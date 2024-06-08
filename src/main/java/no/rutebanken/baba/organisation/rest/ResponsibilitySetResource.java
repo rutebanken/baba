@@ -40,7 +40,7 @@ import jakarta.ws.rs.Produces;
 @Path("responsibility_sets")
 @Produces("application/json")
 @Transactional
-@PreAuthorize("@userContextService.isOrganisationAdmin()")
+@PreAuthorize("@authorizationService.isOrganisationAdmin()")
 @Tags(value = {
 		@Tag(name = "ResponsibilitySetResource", description ="Responsibility set resource")
 })
