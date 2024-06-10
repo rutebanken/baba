@@ -44,10 +44,9 @@ public class AuthorizationConfig {
     @Bean("authorizationService")
     public AuthorizationService<Long> tokenBasedAuthorizationService(ProviderRepository providerRepository, RoleAssignmentExtractor roleAssignmentExtractor) {
         return new DefaultAuthorizationService<>(
-                providerId -> providerRepository.getProvider(providerId) == null ? null : providerRepository.getProvider(providerId).getChouetteInfo().xmlns,
+                providerId -> providerRepository.getProvider(providerId) == null ? null : providerRepository.getProvider(providerId).getChouetteInfo().referential.toUpperCase(),
                 roleAssignmentExtractor);
     }
-
 
     @ConditionalOnProperty(
             value = "baba.security.authorization-service",
