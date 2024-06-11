@@ -21,6 +21,7 @@ import no.rutebanken.baba.filter.CorsResponseFilter;
 import no.rutebanken.baba.organisation.rest.*;
 import no.rutebanken.baba.organisation.rest.exception.*;
 import no.rutebanken.baba.provider.rest.ProviderResource;
+import no.rutebanken.baba.provider.rest.UserContextResource;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -89,6 +90,7 @@ public class JerseyConfig {
             register(CorsResponseFilter.class);
 
             register(ProviderResource.class);
+            register(UserContextResource.class);
 
             register(NotAuthenticatedExceptionMapper.class);
             register(PersistenceExceptionMapper.class);
