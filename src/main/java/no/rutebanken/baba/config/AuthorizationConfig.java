@@ -18,10 +18,12 @@ package no.rutebanken.baba.config;
 
 import no.rutebanken.baba.provider.repository.ProviderRepository;
 import org.entur.oauth2.JwtRoleAssignmentExtractor;
+import org.entur.oauth2.user.JwtUserInfoExtractor;
 import org.rutebanken.helper.organisation.RoleAssignmentExtractor;
 import org.rutebanken.helper.organisation.authorization.AuthorizationService;
 import org.rutebanken.helper.organisation.authorization.DefaultAuthorizationService;
 import org.rutebanken.helper.organisation.authorization.FullAccessAuthorizationService;
+import org.rutebanken.helper.organisation.user.UserInfoExtractor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,6 +37,11 @@ public class AuthorizationConfig {
     @Bean
     public RoleAssignmentExtractor roleAssignmentExtractor() {
         return new JwtRoleAssignmentExtractor();
+    }
+
+    @Bean
+    public UserInfoExtractor userInfoExtractor() {
+        return new JwtUserInfoExtractor();
     }
 
     @ConditionalOnProperty(
