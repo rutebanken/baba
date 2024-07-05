@@ -51,7 +51,7 @@
         <spring-cloud-gcp-dependencies.version>5.4.3</spring-cloud-gcp-dependencies.version>
 
 
-        <rest-assured.version>5.4.0</rest-assured.version>
+        <rest-assured.version>5.5.0</rest-assured.version>
 
         <!-- empty argLine property, the value is set up by Jacoco during unit tests execution -->
         <argLine/>
