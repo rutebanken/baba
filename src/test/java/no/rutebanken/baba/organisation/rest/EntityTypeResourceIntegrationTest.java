@@ -86,7 +86,7 @@ class EntityTypeResourceIntegrationTest extends BaseIntegrationTest {
 		URI uri = restTemplate.postForLocation(PATH, entityType);
 		EntityTypeDTO createdType = assertEntityType(entityType, uri);
 
-		createdType.classifications.get(0).name = "newName";
+		createdType.classifications.getFirst().name = "newName";
 		createdType.classifications.remove(1);
 
 		TypeDTO classification3 = createClassification("c3", "n3");
