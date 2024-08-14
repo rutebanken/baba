@@ -55,7 +55,7 @@ public class JpaProviderRepository implements ProviderRepository {
 		} else if (resultList.size() > 1) {
 			throw new IllegalStateException("Found more than one provider with referential name " + referential);
 		} else {
-			return resultList.get(0);
+			return resultList.getFirst();
 		}
 	}
 
