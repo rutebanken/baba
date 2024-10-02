@@ -43,7 +43,7 @@
         <entur.helpers.version>2.32</entur.helpers.version>
         <auth0.version>2.13.0</auth0.version>
         <postgis-jdbc.version>2024.1.0</postgis-jdbc.version>
-        <swagger-jersey2.version>2.2.24</swagger-jersey2.version>
+        <swagger-jersey2.version>2.2.25</swagger-jersey2.version>
         <javax.jdo.jdo-api.version>3.2.1</javax.jdo.jdo-api.version>
         <wololo.version>0.18.1</wololo.version>
         <commons-io.version>2.17.0</commons-io.version>
