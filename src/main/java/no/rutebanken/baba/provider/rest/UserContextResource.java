@@ -31,7 +31,6 @@ public class UserContextResource {
     }
 
     @GET
-    @Path("")
     @PreAuthorize("isAuthenticated()")
     public UserContext getUserContext() {
         return new UserContext(
