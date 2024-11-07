@@ -45,7 +45,7 @@ class IamUtilsTest {
         entityType.setPrivateCode("StopPlace");
 
         EntityClassification entityClassification = new EntityClassification();
-        entityClassification.setPrivateCode("*");
+        entityClassification.setPrivateCode(EntityClassification.ALL_TYPES);
         entityClassification.setEntityType(entityType);
         EntityClassificationAssignment entityClassificationAssignment = new EntityClassificationAssignment(entityClassification, orgRegRoleAssignment, true);
         orgRegRoleAssignment.getResponsibleEntityClassifications().add(entityClassificationAssignment);

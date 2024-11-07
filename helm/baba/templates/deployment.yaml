@@ -35,8 +35,8 @@ spec:
             - name: JDK_JAVA_OPTIONS
               value: -server -Xmx500m -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90
                 -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -Dspring.config.location=/etc/application-config/application.properties
-                -Dfile.encoding=UTF-8  {{- if .Values.monitoringEnabled}} -Dcom.sun.management.jmxremote.port=9999  -Dcom.sun.management.jmxremote.rmi.port=9998 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1
-            {{- end}}
+                -Dfile.encoding=UTF-8  {{- if .Values.monitoringEnabled }} -Dcom.sun.management.jmxremote.port=9999  -Dcom.sun.management.jmxremote.rmi.port=9998 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1
+            {{- end }}
             - name: TZ
               value: Europe/Oslo
           envFrom:
