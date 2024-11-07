@@ -68,8 +68,6 @@ class JpaProviderRepositoryTest extends BaseIntegrationTest {
         Provider providerForUpdate = repository.getProvider(newProvider.id);
 
         repository.updateProvider(providerForUpdate);
-        Provider providerForVerification = repository.getProvider(newProvider.id);
-
         repository.deleteProvider(newProvider.id);
 
         Provider noProvider = repository.getProvider(newProvider.id);
