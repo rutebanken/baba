@@ -18,7 +18,6 @@ package no.rutebanken.baba;
 
 import no.rutebanken.baba.organisation.model.CodeSpace;
 import no.rutebanken.baba.organisation.repository.BaseRepositoryImpl;
-import no.rutebanken.baba.provider.domain.Provider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -29,7 +28,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication(exclude={UserDetailsServiceAutoConfiguration.class})
 @EnableJpaRepositories(basePackages = {"no.rutebanken.baba.organisation.repository"},
         repositoryBaseClass = BaseRepositoryImpl.class)
-@EntityScan(basePackageClasses = {CodeSpace.class, Provider.class, Jsr310JpaConverters.class})
+@EntityScan(basePackageClasses = {CodeSpace.class, Jsr310JpaConverters.class})
 public class App {
 
     public static void main(String[] args) {

@@ -20,8 +20,6 @@ import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 import no.rutebanken.baba.filter.CorsResponseFilter;
 import no.rutebanken.baba.organisation.rest.*;
 import no.rutebanken.baba.organisation.rest.exception.*;
-import no.rutebanken.baba.provider.rest.ProviderResource;
-import no.rutebanken.baba.provider.rest.UserContextResource;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -30,7 +28,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class JerseyConfig {
-
 
     @Bean
     public ServletRegistrationBean<ServletContainer> organisationsAPIJerseyConfig() {
@@ -41,19 +38,6 @@ public class JerseyConfig {
         publicJersey.setLoadOnStartup(0);
         publicJersey.getInitParameters().put("swagger.scanner.id", "organisations-scanner");
         publicJersey.getInitParameters().put("swagger.config.id", "organisations-swagger-doc");
-        return publicJersey;
-    }
-
-
-    @Bean
-    public ServletRegistrationBean<ServletContainer> providersAPIJerseyConfig() {
-        ServletRegistrationBean<ServletContainer> publicJersey
-                = new ServletRegistrationBean<>(new ServletContainer(new ProvidersAPIConfig()));
-        publicJersey.addUrlMappings("/services/providers/*");
-        publicJersey.setName("ProvidersAPI");
-        publicJersey.setLoadOnStartup(0);
-        publicJersey.getInitParameters().put("swagger.scanner.id", "providers-scanner");
-        publicJersey.getInitParameters().put("swagger.config.id", "providers-swagger-doc");
         return publicJersey;
     }
 
@@ -83,25 +67,4 @@ public class JerseyConfig {
         }
 
     }
-
-    private static class ProvidersAPIConfig extends ResourceConfig {
-
-        public ProvidersAPIConfig() {
-            register(CorsResponseFilter.class);
-
-            register(ProviderResource.class);
-            register(UserContextResource.class);
-
-            register(NotAuthenticatedExceptionMapper.class);
-            register(PersistenceExceptionMapper.class);
-            register(SpringExceptionMapper.class);
-            register(IllegalArgumentExceptionMapper.class);
-            register(AccessDeniedExceptionMapper.class);
-            register(OrganisationExceptionMapper.class);
-
-            register(OpenApiResource.class);
-        }
-
-    }
-
 }

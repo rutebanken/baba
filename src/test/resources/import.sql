@@ -1,14 +1,4 @@
-insert into chouette_info(id, xmlns, xmlnsurl, referential, organisation, cuser, data_format,enable_validation,allow_create_missing_stop_place, enable_stop_place_id_mapping, enable_clean_import, enable_auto_import, enable_auto_validation, enable_blocks_export, generate_dated_service_journey_ids, google_upload, google_qa_upload) values (1, 'flybussekspressen', 'http://www.ns.1','flybussekspressen', 'Rutebanken', 'admin@rutebanken.org', 'R12',false,true,true,false,true,true, false, false, false, false);
-insert into chouette_info(id, xmlns, xmlnsurl, referential, organisation, cuser, data_format,enable_validation,allow_create_missing_stop_place, enable_stop_place_id_mapping, enable_clean_import, enable_auto_import, enable_auto_validation, enable_blocks_export, generate_dated_service_journey_ids, google_upload, google_qa_upload) values (2, 'flybussekspressen2', 'http://www.ns.2','flybussekspressen2', 'Rutebanken2', 'admin2@rutebanken.org', 'R12',false,true,true,false,true,true, false, false, false, false);
-insert into chouette_info(id, xmlns, xmlnsurl, referential, organisation, cuser, data_format,enable_validation,allow_create_missing_stop_place, enable_stop_place_id_mapping, enable_clean_import, enable_auto_import, enable_auto_validation, enable_blocks_export, generate_dated_service_journey_ids, google_upload, google_qa_upload) values (3, 'rb_flybussekspressen', 'http://www.ns.2','rb_flybussekspressen', 'Rutebanken', 'admin2@rutebanken.org', 'R12',false,true,true,false,true,true, false, false, false, false);
-
-insert into provider(id, name, chouette_info_id) values (42, 'Flybussekspressen', 1);
-insert into provider(id, name, chouette_info_id) values (43, 'Flybussekspressen2', 2);
-insert into provider(id, name, chouette_info_id) values (44, 'rb_Flybussekspressen', 3);
-
 insert into code_space (pk, entity_version,lock_version,private_code, xmlns,xmlns_url) VALUES (1,1,1,'tst','TST','http://www.rutebanken.org/ns/tst');
-
-
 
 insert into role (pk, entity_version,lock_version,private_code,name) VALUES (1,1,1,'testRole1','Test role 1');
 insert into role (pk, entity_version,lock_version,private_code,name) VALUES (2,1,1,'testRole2','Test role 2');
@@ -47,7 +37,5 @@ alter sequence entity_classification_assignment_seq restart with 20000;
 alter sequence persistable_polygon_seq restart with 20000;
 alter sequence contact_details_seq restart with 20000;
 alter sequence notification_configuration_seq restart with 20000;
-alter sequence chouette_info_seq restart with 20000;
-alter sequence provider_seq restart with 20000;
 alter sequence event_filter_seq restart with 20000;
 alter sequence versioned_entity_seq restart with 20000;
