@@ -45,7 +45,6 @@ public class BabaWebSecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/services/organisations/openapi.json")).permitAll()
-                        .requestMatchers(AntPathRequestMatcher.antMatcher("/services/providers/openapi.json")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/actuator/prometheus")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/actuator/health")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/actuator/health/liveness")).permitAll()

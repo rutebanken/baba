@@ -16,7 +16,6 @@
 
 package no.rutebanken.baba.config;
 
-import no.rutebanken.baba.provider.repository.ProviderRepository;
 import org.entur.oauth2.JwtRoleAssignmentExtractor;
 import org.entur.oauth2.user.JwtUserInfoExtractor;
 import org.rutebanken.helper.organisation.RoleAssignmentExtractor;
@@ -49,10 +48,8 @@ public class AuthorizationConfig {
             havingValue = "token-based"
     )
     @Bean("authorizationService")
-    public AuthorizationService<Long> tokenBasedAuthorizationService(ProviderRepository providerRepository, RoleAssignmentExtractor roleAssignmentExtractor) {
-        return new DefaultAuthorizationService<>(
-                providerId -> providerRepository.getProvider(providerId) == null ? null : providerRepository.getProvider(providerId).getChouetteInfo().referential.toUpperCase(),
-                roleAssignmentExtractor);
+    public AuthorizationService<Long> tokenBasedAuthorizationService(RoleAssignmentExtractor roleAssignmentExtractor) {
+        return new DefaultAuthorizationService<>(roleAssignmentExtractor);
     }
 
     @ConditionalOnProperty(
