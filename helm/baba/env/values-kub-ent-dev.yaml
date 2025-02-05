@@ -2,9 +2,6 @@ replicas: 2
 gcp:
   databaseInstance: ent-baba-dev:europe-west1:baba-db-pg13
 
-chouette:
-  service: http://chouette.dev.entur.internal
-
 ingress:
   domain: .dev.entur.io
   organizations:

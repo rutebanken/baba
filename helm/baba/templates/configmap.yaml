@@ -31,9 +31,6 @@ data:
     new.user.email.enabled=true
     new.user.email.from={{ .Values.mail.newUserFrom}}
 
-    # Chouette
-    chouette.rest.referential.base.url={{ .Values.chouette.service }}/chouette_iev/referentials
-
     # Auth0
     iam.auth0.admin.domain={{ .Values.auth0.admin.domain }}
     iam.auth0.admin.client.id={{ .Values.auth0.admin.client.id }}
